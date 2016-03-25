@@ -102,7 +102,7 @@ Or on Windows, use command-line console and run
 
 ## License
 
-Release under MIT License. A great portion of code is adapted from [PyCon Taiwan 2016 website]'s source code.
+Release under MIT License. A great portion of code is adapted from [PyCon Taiwan 2016 website]'s source code under license MIT.
 
 
 [Anaconda]: https://www.continuum.io/downloads
