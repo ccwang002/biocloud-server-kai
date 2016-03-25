@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/1.9/ref/settings/
 """
 
 from os.path import abspath, dirname, join, exists
+# from django.core.urlresolvers import reverse_lazy
 
 # Build paths inside the project like this: join(BASE_DIR, "directory")
 BASE_DIR = dirname(dirname(dirname(abspath(__file__))))
@@ -148,13 +149,27 @@ STATIC_ROOT = join(BASE_DIR, 'assets')
 
 STATICFILES_DIRS = [join(BASE_DIR, 'static')]
 
-# List of finder classes that know how to find static files in
-# various locations.
+# list of finder classes that know how to find static files in
+# various locations
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
     'compressor.finders.CompressorFinder',
 )
+
+
+# URL settings.
+
+# LOGIN_URL = reverse_lazy('login')
+
+# LOGOUT_URL = reverse_lazy('logout')
+
+# LOGIN_REDIRECT_URL = reverse_lazy('user_dashboard')
+
+
+# Third-party app and custom settings.
+
+# AUTH_USER_MODEL = 'users.User'
 
 # Third-party app and custom setting.
 
