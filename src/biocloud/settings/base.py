@@ -177,6 +177,8 @@ AUTH_USER_MODEL = 'users.EmailUser'
 
 LIBSASS_SOURCEMAPS = True
 
+LIBSASS_PRECISION = 10
+
 COMPRESS_PRECOMPILERS = (
     ('text/x-scss', 'django_libsass.SassCompiler'),
 )
