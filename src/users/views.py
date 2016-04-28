@@ -122,7 +122,7 @@ def password_reset(request):
 def password_reset_done(request):
     messages.success(request, ugettext(
         'An email is sent to your email account. Please check your inbox for '
-        'furthur instructions to reset your password.'
+        'further instructions to reset your password.'
     ))
     return redirect('login')
 
