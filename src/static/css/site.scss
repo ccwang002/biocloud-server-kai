@@ -1,0 +1,27 @@
+/* Site-wide stylesheet
+ *
+ * All pages should include this stylesheet. It imports all bootstrap related
+ * variables, mixins, and styles with proper customization.
+ *
+ * For special pages that want to roll out its own SCSS stylesheet, import the
+ * following files so there will not be duplicated style definitions:
+ *
+ *      // Core variables and mixins
+ *      @import "variables";
+ *      @import "bootstrap-variables";
+ *      @import "vendors/bootstrap/variables";
+ *      @import "vendors/bootstrap/mixins";
+ *      @import "mixins";
+ */
+
+// Import site-wide variables
+@import "variables";
+
+// Import custom Bootstrap variables
+@import "bootstrap-variables";
+
+// Import Bootstrap for Sass
+@import "bootstrap";
+
+// Import site-wide mixins
+@import "mixins";

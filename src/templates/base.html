@@ -1,19 +1,21 @@
 <!DOCTYPE html>
+
+{% load compress static %}
+
 <head>
 	<meta charset="utf-8" />
 	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 	<meta name="viewport" content="width=device-width, initial-scale=1" />
 	{% block head_tags %}{% endblock head_tags %}
-	{% block css %}
-	<!-- Bootstrap v3.3.6 compiled and minified CSS -->
-	<link rel="stylesheet"
-		href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"
-		integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7"
-		crossorigin="anonymous">
-	{% endblock css %}
+	{% compress css %}
+		{% block css %}
+			<!-- Bootstrap v3.3.6 via SASS-->
+			<link rel="stylesheet" type="text/x-scss" href="{% static 'css/site.scss' %}">
+		{% endblock css %}
+	{% endcompress css %}
 	{% block extra_css %}{% endblock extra_css %}
 	{% block titletag %}
-	<title>{% block title %}{% endblock %} | PyDoc AutoBuild</title>
+		<title>{% block title %}{% endblock %} | PyDoc AutoBuild</title>
 	{% endblock %}
 </head>
 <body>
@@ -23,17 +25,15 @@
 		{% block content %}It works!{% endblock %}
 	</div>
 {% endblock %}
-{% block js %}
-	<!-- jQuery v1.11.3 -->
-	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-	<!-- Bootstrap v3.3.6 compiled and minified Javascript -->
-	<script
-			src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"
-			integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS"
-			crossorigin="anonymous">
-	</script>
-	{% block scripts %}{% endblock %}
-{% endblock js %}
+{% compress js %}
+	{% block js %}
+		<!-- jQuery v2.2.3 -->
+		<script src="{% static 'js/vendors/jquery.js' %}"></script>
+		<!-- Bootstrap v3.3.6 -->
+		<script src="{% static 'js/vendors/bootstrap.js' %}"></script>
+		{% block scripts %}{% endblock %}
+	{% endblock js %}
+{% endcompress js %}
 {% block extra_js %}{% endblock %}
 </body>
 </html>
