@@ -21,7 +21,7 @@ django-libsass >= 0.6, < 0.7
 
 # Better Python shell
 # http://ipython.org/
-ipython >= 4.0, < 4.1
+ipython >= 4.2, < 4.3
 
 # World Timezone Definitions for Python.
 # http://pythonhosted.org/pytz/
