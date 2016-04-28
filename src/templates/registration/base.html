@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block body-class %}registration{% endblock body-class %}
+
+{% block body %}
+	{% include '_includes/nav_simple.html' %}
+	<div class="container">
+		<div class="row">
+			{% block content %}
+			{% endblock content %}
+		</div>
+	</div>
+	{% include '_includes/footer.html' %}
+{% endblock body %}
