@@ -15,7 +15,7 @@
  */
 
 // Import site-wide variables
-@import "variables";
+// @import "variables";
 
 // Import custom Bootstrap variables
 @import "bootstrap-variables";
@@ -24,4 +24,45 @@
 @import "bootstrap";
 
 // Import site-wide mixins
-@import "mixins";
+// @import "mixins";
+
+
+// Navbar
+.navbar-form {
+    margin-right: 0px;
+    margin-left: 0px;
+}
+
+
+// Footer
+.footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    /* Set the fixed height of the footer here */
+    height: 60px;
+    @media screen and (max-width: 767px) {
+        height: 100px;
+    }
+    background-color: $navbar-default-bg;
+    .container {
+        padding: 0 1em;
+        .text-muted {
+            margin: 1em 0px;
+        }
+    }
+}
+
+
+// General styles
+.form-tip {
+    vertical-align: middle;
+}
+
+.alert {
+    > .form-inline,
+    > .form-inline > p {
+        margin-bottom: 0px;
+    }
+}
+
