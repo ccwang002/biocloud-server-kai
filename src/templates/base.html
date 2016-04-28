@@ -17,24 +17,24 @@
 	{% endblock %}
 </head>
 <body>
-	{% block body %}
+{% block body %}
 	{% include '_includes/nav.html' %}
 	<div class="container">
 		{% block content %}It works!{% endblock %}
 	</div>
-	{% endblock %}
-	{% block js %}
-		<!-- jQuery v1.11.3 -->
-		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-		<!-- Bootstrap v3.3.6 compiled and minified Javascript -->
-		<script
+{% endblock %}
+{% block js %}
+	<!-- jQuery v1.11.3 -->
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+	<!-- Bootstrap v3.3.6 compiled and minified Javascript -->
+	<script
 			src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"
 			integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS"
 			crossorigin="anonymous">
-		</script>
-		{% block scripts %}{% endblock %}
-	{% endblock js %}
-	{% block extra_js %}{% endblock %}
+	</script>
+	{% block scripts %}{% endblock %}
+{% endblock js %}
+{% block extra_js %}{% endblock %}
 </body>
 </html>
 
