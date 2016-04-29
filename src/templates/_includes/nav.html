@@ -35,7 +35,9 @@
 			<!-- Right Navbar -->
 			<ul class="nav navbar-nav navbar-right">
 				{% if user.is_authenticated %}
-					<li><a href="{% url 'user_dashboard' %}">Dashboard</a></li>
+					<li class="{% if active == 'dashboard' %}active{% endif %}">
+						<a href="{% url 'user_dashboard' %}">Dashboard</a>
+					</li>
 					<form class="navbar-form navbar-right" action="{% url 'logout' %}" method="post">
 						{% csrf_token %}
 						<input type="hidden" name="next" value="{{ logout_next|default:request.path }}">

@@ -4,6 +4,10 @@
 
 {% block title %}Dashboard - {% block tab_title %}{% endblock %}{% endblock %}
 
+{% block nav %}
+{% include '_includes/nav.html' with active='dashboard' %}
+{% endblock nav %}
+
 {% block content %}
 	<h1>Dashboard <small>User: {{ user.name }} (<code>{{ user.email }}</code>)</small></h1>
 	<div class="dashboard">

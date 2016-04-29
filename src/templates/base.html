@@ -20,7 +20,9 @@
 </head>
 <body>
 {% block body %}
+	{% block nav %}
 	{% include '_includes/nav.html' %}
+	{% endblock nav %}
 	<div class="container">
 		{% block messages %}
 			{% include '_includes/messages.html' %}
