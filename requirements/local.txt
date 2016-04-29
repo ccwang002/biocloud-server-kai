@@ -40,3 +40,7 @@ lxml >= 3.6, < 3.7
 # https://pythonhosted.org/cssselect/
 cssselect >= 0.9.1, < 1.0
 
+# Fabric is a simple, Pythonic tool for remote execution and deployment.
+# We use the Python 3.4+ fork, Fabric3.
+# https://github.com/mathiasertl/fabric
+fabric3 >= 1.10.2.post3
