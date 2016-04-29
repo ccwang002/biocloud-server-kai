@@ -1,4 +1,7 @@
+$dashboard-tab-color: $list-group-link-color;
+$dashboard-tab-hover-color: $list-group-link-hover-color;
 $dashboard-tab-bg: $navbar-default-bg;
+$dashboard-tab-hover-bg: darken($dashboard-tab-bg, 5%);
 
 .dashboard {
     // no padding (gutter) width
@@ -6,9 +9,9 @@ $dashboard-tab-bg: $navbar-default-bg;
 }
 
 .dashboard__tab {
-    @include make-md-column(2, 0px);
+    @include make-sm-column(2, 0px);
 
-    box-sizing: border-box;
+    height: 500px;
     border-right: solid 1px $gray-light;
     padding-left: 1em;
     padding-right: 1em;
@@ -16,20 +19,30 @@ $dashboard-tab-bg: $navbar-default-bg;
 
     &__item {
         display: block;
-        box-sizing: border-box;
         border-bottom: solid 1px $gray-light;
         padding: 1em 0.5em;
         vertical-align: middle;
-        background-color: $dashboard-tab-bg
+        background-color: $dashboard-tab-bg;
+        color: $dashboard-tab-color;
+        text-decoration: none;
 
         &:first-child {
+
         }
+
         &:last-child {
-            border-bottom: none;
+
+        }
+
+        &:hover,
+        &:focus {
+            text-decoration: none;
+            color: $dashboard-tab-hover-color;
+            background-color: $dashboard-tab-hover-bg;
         }
     }
 }
 
 .dashboard__content {
-    @include make-md-column(10);
+    @include make-sm-column(10);
 }
