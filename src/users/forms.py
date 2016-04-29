@@ -6,6 +6,7 @@ from django.contrib.auth.forms import (
     SetPasswordForm as BaseSetPasswordForm,
     ReadOnlyPasswordHashField,
 )
+from django.contrib.auth.password_validation import validate_password
 from django.core.urlresolvers import reverse
 from django.utils.functional import cached_property
 from django.utils.translation import ugettext_lazy as _
@@ -86,6 +87,11 @@ class UserCreationForm(forms.ModelForm):
             self.error_messages['duplicate_email'],
             code='duplicate_email',
         )
+
+    def clean_password1(self):
+        password1 = self.cleaned_data.get('password1')
+        validate_password(password1, user=None)
+        return password1
 
     def clean_password2(self):
         """Check that the two password entries match.
