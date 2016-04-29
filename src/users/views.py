@@ -95,7 +95,7 @@ def user_profile_update(request):
             return redirect('user_dashboard')
     else:
         form = UserProfileUpdateForm(instance=request.user)
-    return render(request, 'users/user_profile_update.html', {
+    return render(request, 'dashboard/profile.html', {
         'form': form, 'logout_next': logout_next,
     })
 

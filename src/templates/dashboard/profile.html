@@ -1,0 +1,18 @@
+{% extends 'dashboard/base.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block tab_title %}Profile Update{% endblock tab_title %}
+
+{% block dashboard_tab %}
+{% include 'dashboard/_includes/tabs.html' with active='profile' %}
+{% endblock dashboard_tab %}
+
+{% block dashboard_content %}
+	<h2>Profile Update</h2>
+	<h3>Infomation</h3>
+	{% crispy form %}
+
+	<h3>Password</h3>
+	<p>Click <a href="{% url 'password_change' %}">here</a> to change to password.</p>
+{% endblock dashboard_content %}

@@ -12,7 +12,9 @@
 	<h1>Dashboard <small>User: {{ user.name }} (<code>{{ user.email }}</code>)</small></h1>
 	<div class="dashboard">
 		<div class="dashboard__tab">
+			{% block dashboard_tab %}
 			{% include 'dashboard/_includes/tabs.html' %}
+			{% endblock dashboard_tab %}
 		</div>
 		<div class="dashboard__content">
 			{% block dashboard_content %}

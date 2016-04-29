@@ -1,4 +1,6 @@
-<a href="#" class="dashboard__tab__item">A</a>
-<a href="#" class="dashboard__tab__item">B</a>
+<a href="{% url 'user_dashboard' %}"
+	class="dashboard__tab__item {% if active == 'home' %}active{% endif %}">Home</a>
+<a href="{% url 'user_profile_update' %}"
+	class="dashboard__tab__item {% if active == 'profile' %}active{% endif %}">Profile Update</a>
 <a href="#" class="dashboard__tab__item">C</a>
 <a href="#" class="dashboard__tab__item">D</a>
