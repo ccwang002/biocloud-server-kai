@@ -5,33 +5,5 @@
 {% block title %}Dashboard{% endblock %}
 
 {% block content %}
-	{% if not user.verified %}
-	<div class="alert alert-warning clearfix" role="alert">
-	  <p>
-			{% blocktrans trimmed %}
-			Please verify your account by clicking the link in the mail we sent to
-			your email inbox.
-			{%  endblocktrans %}
-		</p>
-	  <form method="post" action="{% url 'request_verification' %}"
-					class="form form-inline">
-	    {% csrf_token %}
-	    <p>
-				<span class="form-tip">
-					{% trans 'Did not get the verification mail?' %}
-				</span>
-		    <button type="submit" class="btn btn-link">
-					{% trans 'Request a new one.' %}
-				</button>
-			</p>
-	  </form>
-	</div>
-	{% endif %}
-	{% for message in messages %}
-		<div role="alert"
-				 class="alert {{ message|message_bootstrap_class_str }} clearfix">
-			{{ message }}
-		</div>
-	{% endfor %}
-	<h2>User Dashboard for {{ user }}</h2>
-{% endblock %}
+<h2>User Dashboard for {{ user }}</h2>
+{% endblock content %}

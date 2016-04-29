@@ -22,6 +22,9 @@
 {% block body %}
 	{% include '_includes/nav.html' %}
 	<div class="container">
+		{% block messages %}
+			{% include '_includes/messages.html' %}
+		{% endblock messages %}
 		{% block content %}It works!{% endblock %}
 	</div>
 	{% include '_includes/footer.html' %}
