@@ -118,10 +118,6 @@ class UserCreationForm(forms.ModelForm):
         Returns:
             users.models.EmailUser: user
         """
-        if auth and not commit:
-            raise ValueError(
-                'Can not authenticate user without committing first.'
-            )
         user = super().save(commit=False)
         password = self.cleaned_data.get('password1')
         user.set_password(password)
