@@ -1,0 +1,35 @@
+$dashboard-tab-bg: $navbar-default-bg;
+
+.dashboard {
+    // no padding (gutter) width
+    @include make-row(0px);
+}
+
+.dashboard__tab {
+    @include make-md-column(2, 0px);
+
+    box-sizing: border-box;
+    border-right: solid 1px $gray-light;
+    padding-left: 1em;
+    padding-right: 1em;
+    background-color: $dashboard-tab-bg;
+
+    &__item {
+        display: block;
+        box-sizing: border-box;
+        border-bottom: solid 1px $gray-light;
+        padding: 1em 0.5em;
+        vertical-align: middle;
+        background-color: $dashboard-tab-bg
+
+        &:first-child {
+        }
+        &:last-child {
+            border-bottom: none;
+        }
+    }
+}
+
+.dashboard__content {
+    @include make-md-column(10);
+}

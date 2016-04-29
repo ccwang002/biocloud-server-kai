@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% load i18n handy_helpers %}
+
+{% block title %}Dashboard - {% block tab_title %}{% endblock %}{% endblock %}
+
+{% block content %}
+	<h1>Dashboard <small>User: {{ user.name }} (<code>{{ user.email }}</code>)</small></h1>
+	<div class="dashboard">
+		<div class="dashboard__tab">
+			{% include 'dashboard/_includes/tabs.html' %}
+		</div>
+		<div class="dashboard__content">
+			{% block dashboard_content %}
+			{% endblock dashboard_content %}
+		</div>
+	</div>
+{% endblock content %}

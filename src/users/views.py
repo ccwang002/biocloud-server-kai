@@ -74,7 +74,7 @@ def request_verification(request):
 @login_required
 def user_dashboard(request):
     logout_next = reverse('login')
-    return render(request, 'users/dashboard.html', {
+    return render(request, 'dashboard/welcome_page.html', {
         'logout_next': logout_next,
     })
 
