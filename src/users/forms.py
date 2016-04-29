@@ -141,9 +141,26 @@ class UserProfileUpdateForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = (
-            'name',
+        fields = ('name',)
+
+    @cached_property
+    def helper(self):
+        helper = FormHelper()
+        helper.error_text_inline = False
+        helper.attrs = {
+            'autocomplete': 'off', 'autocorrect': 'off',
+            'autocapitalize': 'off', 'spellcheck': 'false',
+        }
+        helper.layout = Layout(
+            Fieldset(
+                '',
+                Field('name', placeholder=self.fields['name'].label),
+            ),
+            FormActions(
+                Submit('save', _('Update'), css_class=''),
+            )
         )
+        return helper
 
 
 class AdminUserChangeForm(forms.ModelForm):
