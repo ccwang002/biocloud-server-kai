@@ -15,7 +15,7 @@
  */
 
 // Import site-wide variables
-// @import "variables";
+@import "variables";
 
 // Import custom Bootstrap variables
 @import "bootstrap-variables";
@@ -38,14 +38,27 @@
 
 
 // Footer
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+    /* Margin bottom by footer height */
+    margin-bottom: $footer-height + $footer-gap;
+    @media screen and (max-width: $screen-md-max) {
+        margin-bottom: $footer-height-larger + $footer-gap-larger;
+    }
+}
+
 .footer {
     position: absolute;
     bottom: 0;
     width: 100%;
     /* Set the fixed height of the footer here */
-    height: 60px;
-    @media screen and (max-width: 767px) {
-        height: 100px;
+    height: $footer-height;
+    @media screen and (max-width: $screen-md-max) {
+        height: $footer-height-larger;
     }
     background-color: $navbar-default-bg;
     .container {
