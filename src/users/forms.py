@@ -19,7 +19,7 @@ User = get_user_model()
 
 
 class UserCreationForm(forms.ModelForm):
-    """A form to create a new user.
+    """A form to create a new user in Django admin.
 
     Includes all required fields, plus a repeated password.
     """
@@ -39,32 +39,6 @@ class UserCreationForm(forms.ModelForm):
     class Meta:
         model = User
         fields = ('email',)
-
-    @cached_property
-    def helper(self):
-        helper = FormHelper()
-        helper.error_text_inline = False
-        helper.attrs = {
-            'autocomplete': 'off', 'autocorrect': 'off',
-            'autocapitalize': 'off', 'spellcheck': 'false',
-        }
-        # .sr-only class is for screen reader only (won't be shown visibly)
-        # Refer to http://stackoverflow.com/a/27755704 for more explanation
-        helper.label_class = 'sr-only'
-        helper.layout = Layout(
-            Fieldset(
-                '',
-                Field('email', placeholder=self.fields['email'].label),
-                Field('password1', placeholder=self.fields['password1'].label),
-                Field('password2', placeholder=self.fields['password2'].label),
-            ),
-            FormActions(
-                Submit(
-                    'save', _('Create Account'), css_class='btn-lg btn-block',
-                )
-            )
-        )
-        return helper
 
     def clean_email(self):
         """Clean form email.
@@ -110,7 +84,7 @@ class UserCreationForm(forms.ModelForm):
             )
         return password2
 
-    def save(self, commit=True, auth=True):
+    def save(self, commit=True):
         """Save user.
 
         Save the provided password in hashed format.
@@ -121,15 +95,67 @@ class UserCreationForm(forms.ModelForm):
         user = super().save(commit=False)
         password = self.cleaned_data.get('password1')
         user.set_password(password)
-        if not commit:
-            return user
-        user.save()
-        if not auth:
-            return user
-        user = authenticate(
-            email=self.cleaned_data['email'],
-            password=password,
+        if commit:
+            user.save()
+        return user
+
+
+class PublicUserCreationForm(UserCreationForm):
+    """A public user creation form.
+
+    This inherits the basic user creation form `UserCreationForm`,
+    but adds a form helper layout and provides option to log the user in
+    automatically when calling ``save()`` (via ``auth=True``).
+    """
+    @cached_property
+    def helper(self):
+        helper = FormHelper()
+        helper.error_text_inline = False
+        helper.attrs = {
+            'autocomplete': 'off', 'autocorrect': 'off',
+            'autocapitalize': 'off', 'spellcheck': 'false',
+        }
+        # .sr-only class is for screen reader only (won't be shown visibly)
+        # Refer to http://stackoverflow.com/a/27755704 for more explanation
+        helper.label_class = 'sr-only'
+        helper.layout = Layout(
+            Fieldset(
+                '',
+                Field('email', placeholder=self.fields['email'].label),
+                Field('password1', placeholder=self.fields['password1'].label),
+                Field('password2', placeholder=self.fields['password2'].label),
+            ),
+            FormActions(
+                Submit(
+                    'save', _('Create Account'), css_class='btn-lg btn-block',
+                )
+            )
         )
+        return helper
+
+    def save(self, commit=True, auth=True):
+        """Save user.
+
+        Args
+            commit (bool): Whether commit the user to the database
+            auth (bool): If true, the user is automatically logged-in
+                         after saving
+
+        Raises
+            ValueError: If user wants to log in without being committed into
+                        database
+        """
+        if auth and not commit:
+            # User must be in the database records before authentication
+            raise ValueError(
+                'Can not authenticate user with committing first.'
+            )
+        user = super().save(commit=commit)
+        if auth:
+            user = authenticate(
+                email=self.cleaned_data['email'],
+                password=self.cleaned_data.get('password1'),
+            )
         return user
 
 
