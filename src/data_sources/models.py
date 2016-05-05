@@ -1,6 +1,7 @@
 import hashlib
 from django import forms
 from django.conf import settings
+from django.core.exceptions import ValidationError
 from django.core.validators import (
     RegexValidator, MinLengthValidator, MaxLengthValidator
 )
@@ -69,3 +70,64 @@ class DataSource(models.Model):
             '%s/%s (owner: %s)' %
             (self.owner.pk, self.file_path, self.owner.name)
         )
+
+    def get_full_file_path(self):
+        full_file_path = settings.BIOCLOUD_DATA_SOURCES_DIR.joinpath(
+            str(self.owner.pk), self.file_path
+        )
+        return full_file_path
+
+    def clean(self):
+        """Validate the data source existed and has correct checksum.
+
+        The file path has the pattern
+
+        DATA_SOURCES_DIR / owner.pk / file_path
+        """
+
+        # First assert the file path exists
+        full_file_path = self.get_full_file_path()
+        if not full_file_path.exists():
+            raise forms.ValidationError(
+                _('Path %(full_file_path)s dose not exists'),
+                params={'full_file_path': full_file_path},
+                code='file_path_not_exist',
+            )
+
+        if self.checksum:
+            # A checksum is provided. Check if it matches with the checksum
+            # computed from the file content.
+            checksum_from_file = self.checksum_for_file(full_file_path)
+            if self.checksum != checksum_from_file:
+                raise ValidationError(
+                    _(
+                        'Checksum from input (%(model_checksum)s) mismatches '
+                        'with the checksum computed from the file content '
+                        '(%(file_checksum)s).'
+                    ),
+                    params={
+                        'model_checksum': self.checksum,
+                        'file_checksum': checksum_from_file,
+                    },
+                    code='checksum_mismatch',
+                )
+
+    @classmethod
+    def checksum_for_file(cls, path, chunk_bytes=4 * 2**20):
+        """Compute checksum for file
+
+        Args:
+            path (pathlib.Path): Compute the checksum at this file path
+            chunk_bytes (int): Bytes per chunck for computing the checksum.
+                By default is 4MB (= 4 * 2**20).
+        """
+        hash_fun = cls._meta.get_field('checksum').get_hash_fun()
+        checksum = hash_fun()
+        with path.open('rb') as f:
+            while True:
+                buf = f.read(chunk_bytes)
+                if not buf:
+                    break  # file ends
+                checksum.update(buf)
+        return checksum.hexdigest()
+
