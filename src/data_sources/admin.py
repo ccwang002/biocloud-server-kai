@@ -2,6 +2,7 @@ from django.contrib import admin
 from django.utils.translation import ugettext_lazy as _
 
 from .models import DataSource
+from .forms import DataSourceCreateForm
 
 
 class ChecksumBlankListFilter(admin.SimpleListFilter):
@@ -32,3 +33,5 @@ class DataSourceAdmin(admin.ModelAdmin):
         'owner', 'file_path', 'checksum',
     ]
     list_filter = (ChecksumBlankListFilter,)
+
+    form = DataSourceCreateForm
