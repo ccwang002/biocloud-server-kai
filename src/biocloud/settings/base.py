@@ -11,7 +11,9 @@ https://docs.djangoproject.com/en/1.9/ref/settings/
 """
 
 from os.path import abspath, dirname, join, exists
+from pathlib import Path
 from django.core.urlresolvers import reverse_lazy
+from django.conf import ImproperlyConfigured
 
 # Build paths inside the project like this: join(BASE_DIR, "directory")
 BASE_DIR = dirname(dirname(dirname(abspath(__file__))))
@@ -169,11 +171,27 @@ LOGOUT_URL = reverse_lazy('logout')
 LOGIN_REDIRECT_URL = reverse_lazy('user_dashboard')
 
 
-# Third-party app and custom settings.
+# Custom user model
 
 AUTH_USER_MODEL = 'users.EmailUser'
 
-# Third-party app and custom setting.
+
+# BioCloud specific path settings
+
+# env.path() returns an environ.Path object.
+# environ.Path() converts the path itself into str.
+# Path(env.path(...)()) finally converts the str into a pathlib.Path object.
+BIOCLOUD_DATA_SOURCES_DIR = Path(env.path(
+    'BIOCLOUD_DATA_SOURCES_DIR', required=True
+)())
+if not BIOCLOUD_DATA_SOURCES_DIR.is_dir():
+    raise ImproperlyConfigured(
+        "BIOCLOUD_DATA_SOURCES_DIR %s requires to be a directory."
+        % BIOCLOUD_DATA_SOURCES_DIR
+    )
+
+
+# Third-party app and custom settings
 
 LIBSASS_SOURCEMAPS = True
 
