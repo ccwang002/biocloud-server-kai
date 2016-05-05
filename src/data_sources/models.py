@@ -24,7 +24,7 @@ class SHA256ChecksumField(models.CharField):
 
     def __init__(self, blank=False):
         # SHA-256 checksum in hexadecimal representation takes up 64 chars,
-        # e.g. 4bit * 64 = 256bit
+        # e.g. 4bit * 64 = 256bit (1 char represents only 4 bit here)
         super().__init__(blank=blank, max_length=64)
 
     def deconstruct(self):
