@@ -1,16 +1,23 @@
 from django import forms
 from django.conf import settings
-from django.core.validators import RegexValidator
+from django.core.validators import (
+    RegexValidator, MinLengthValidator, MaxLengthValidator
+)
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
 
 class SHA256ChecksumField(models.CharField):
     default_validators = [
+        MinLengthValidator(64),
+        MaxLengthValidator(64),
         RegexValidator(
-            regex=r'^[A-Fa-f0-9]{64}$',
-            message=_('Invalid SHA256 checksum format'),
-            code='invalid_sha256sum',
+            regex=r'^[A-Fa-f0-9]+$',
+            message=_(
+                'Invalid SHA256 checksum format, expected only '
+                'hexadecimal digits'
+            ),
+            code='sha256sum_non_hexadecimal',
         ),
     ]
     description = _("SHA256 checksum")
