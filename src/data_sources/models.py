@@ -1,3 +1,4 @@
+import hashlib
 from django import forms
 from django.conf import settings
 from django.core.validators import (
@@ -26,6 +27,14 @@ class SHA256ChecksumField(models.CharField):
         # SHA-256 checksum in hexadecimal representation takes up 64 chars,
         # e.g. 4bit * 64 = 256bit (1 char represents only 4 bit here)
         super().__init__(blank=blank, max_length=64)
+
+    @classmethod
+    def get_hash_fun(cls):
+        """Return the hash function in use.
+
+        For this field sha256 is used.
+        """
+        return hashlib.sha256
 
     def deconstruct(self):
         name, path, args, kwargs = super().deconstruct()
