@@ -65,6 +65,11 @@ class DataSource(models.Model):
 
     checksum = SHA256ChecksumField(blank=True)
 
+    class Meta:
+        verbose_name = _('data source')
+        verbose_name_plural = _('data sources')
+        unique_together = ('owner', 'file_path')
+
     def __str__(self):
         return (
             '%s/%s (owner: %s)' %
