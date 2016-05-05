@@ -26,3 +26,8 @@ ipython >= 4.2, < 4.3
 # World Timezone Definitions for Python.
 # http://pythonhosted.org/pytz/
 pytz >= 2016.3
+
+# Psycopg is the most popular PostgreSQL database adapter for the Python
+# programming language.
+# http://pythonhosted.org/psycopg2/
+psycopg2 >= 2.6, < 2.7

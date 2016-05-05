@@ -68,10 +68,6 @@ LOCAL_APPS = (
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 
-# Enable Postgres-specific things if we are using it.
-if 'postgres' in DATABASES['default']['ENGINE']:
-    INSTALLED_APPS += ('postgres',)
-
 
 MIDDLEWARE_CLASSES = [
     'django.middleware.security.SecurityMiddleware',
