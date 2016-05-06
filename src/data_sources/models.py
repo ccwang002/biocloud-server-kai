@@ -1,5 +1,6 @@
 import hashlib
 import logging
+from pathlib import Path
 from django import forms
 from django.conf import settings
 from django.core.validators import (
@@ -98,9 +99,12 @@ class DataSource(models.Model):
 
     def __str__(self):
         return (
-            '%s/%s (owner: %s)' %
-            (self.owner.pk, self.file_path, self.owner.name)
+            '%s (owner: %s)' %
+            (self.get_rel_file_path(), self.owner.name)
         )
+
+    def get_rel_file_path(self):
+        return Path(str(self.owner.pk), self.file_path)
 
     def get_full_file_path(self):
         full_file_path = settings.BIOCLOUD_DATA_SOURCES_DIR.joinpath(
