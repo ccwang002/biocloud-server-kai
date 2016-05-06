@@ -2,7 +2,6 @@ import hashlib
 import logging
 from django import forms
 from django.conf import settings
-from django.core.exceptions import ValidationError
 from django.core.validators import (
     RegexValidator, MinLengthValidator, MaxLengthValidator
 )
@@ -32,14 +31,6 @@ class SHA256ChecksumField(models.CharField):
         # e.g. 4bit * 64 = 256bit (1 char represents only 4 bit here)
         super().__init__(blank=blank, max_length=64)
 
-    @classmethod
-    def get_hash_fun(cls):
-        """Return the hash function in use.
-
-        For this field sha256 is used.
-        """
-        return hashlib.sha256
-
     def deconstruct(self):
         name, path, args, kwargs = super().deconstruct()
         del kwargs['max_length']
@@ -50,6 +41,38 @@ class SHA256ChecksumField(models.CharField):
             **kwargs,
             'form_class': forms.CharField
         })
+
+    @classmethod
+    def get_hash_fun(cls):
+        """Return the hash function in use.
+
+        For this field sha256 is used.
+        """
+        return hashlib.sha256
+
+    @classmethod
+    def checksum_for_file(cls, path, chunk_bytes=4 * 2**20):
+        """Compute checksum for file
+
+        Args:
+            path (pathlib.Path): Compute the checksum at this file path
+            chunk_bytes (int): Bytes per chunk for computing the checksum.
+                By default is 4MB (= 4 * 2**20).
+        """
+        hash_fun = cls.get_hash_fun()
+        checksum = hash_fun()
+        logger.info(
+            'Verifying %s checksum of filename %s' %
+            (checksum.name, path.name)
+        )
+        with path.open('rb') as f:
+            while True:
+                buf = f.read(chunk_bytes)
+                if not buf:
+                    break  # file ends
+                checksum.update(buf)
+        logger.info('Checksum verification of filename %s done.' % path.name)
+        return checksum.hexdigest()
 
 
 class DataSource(models.Model):
@@ -84,61 +107,4 @@ class DataSource(models.Model):
             str(self.owner.pk), self.file_path
         )
         return full_file_path
-
-    def clean(self):
-        """Validate the data source existed and has correct checksum.
-
-        The file path has the pattern
-
-        DATA_SOURCES_DIR / owner.pk / file_path
-        """
-        self.clean_fields()
-
-        # First assert the file path exists
-        full_file_path = self.get_full_file_path()
-        if not full_file_path.exists():
-            raise ValidationError(
-                _('Path %(full_file_path)s dose not exists'),
-                params={'full_file_path': full_file_path},
-                code='file_path_not_exist',
-            )
-
-        if self.checksum:
-            # A checksum is provided. Check if it matches with the checksum
-            # computed from the file content.
-            checksum_from_file = self.checksum_for_file(full_file_path)
-            if self.checksum != checksum_from_file:
-                raise ValidationError(
-                    _(
-                        'Checksum from input (%(model_checksum)s) mismatches '
-                        'with the checksum computed from the file content '
-                        '(%(file_checksum)s).'
-                    ),
-                    params={
-                        'model_checksum': self.checksum,
-                        'file_checksum': checksum_from_file,
-                    },
-                    code='checksum_mismatch',
-                )
-
-    @classmethod
-    def checksum_for_file(cls, path, chunk_bytes=4 * 2**20):
-        """Compute checksum for file
-
-        Args:
-            path (pathlib.Path): Compute the checksum at this file path
-            chunk_bytes (int): Bytes per chunck for computing the checksum.
-                By default is 4MB (= 4 * 2**20).
-        """
-        hash_fun = cls._meta.get_field('checksum').get_hash_fun()
-        checksum = hash_fun()
-        logger.info('Verifying %s checksum of filename %s' % (checksum.name, path.name))
-        with path.open('rb') as f:
-            while True:
-                buf = f.read(chunk_bytes)
-                if not buf:
-                    break  # file ends
-                checksum.update(buf)
-        logger.info('Checksum verification of filename %s done.' % path.name)
-        return checksum.hexdigest()
 
