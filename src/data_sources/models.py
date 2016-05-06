@@ -1,4 +1,5 @@
 import hashlib
+import logging
 from django import forms
 from django.conf import settings
 from django.core.exceptions import ValidationError
@@ -7,6 +8,8 @@ from django.core.validators import (
 )
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
+
+logger = logging.getLogger(__name__)
 
 
 class SHA256ChecksumField(models.CharField):
@@ -128,11 +131,13 @@ class DataSource(models.Model):
         """
         hash_fun = cls._meta.get_field('checksum').get_hash_fun()
         checksum = hash_fun()
+        logger.info('Verifying %s checksum of filename %s' % (checksum.name, path.name))
         with path.open('rb') as f:
             while True:
                 buf = f.read(chunk_bytes)
                 if not buf:
                     break  # file ends
                 checksum.update(buf)
+        logger.info('Checksum verification of filename %s done.' % path.name)
         return checksum.hexdigest()
 
