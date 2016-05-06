@@ -92,11 +92,12 @@ class DataSource(models.Model):
 
         DATA_SOURCES_DIR / owner.pk / file_path
         """
+        self.clean_fields()
 
         # First assert the file path exists
         full_file_path = self.get_full_file_path()
         if not full_file_path.exists():
-            raise forms.ValidationError(
+            raise ValidationError(
                 _('Path %(full_file_path)s dose not exists'),
                 params={'full_file_path': full_file_path},
                 code='file_path_not_exist',
