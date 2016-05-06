@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -48,4 +49,11 @@ class UserDataSourceListView(LoginRequiredMixin, ListView):
     def get_queryset(self):
         return super().get_queryset().filter(owner=self.request.user)
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['user_data_source_dir'] = \
+            settings.BIOCLOUD_DATA_SOURCES_DIR.joinpath(
+                str(self.request.user.pk)
+            )
+        return context
 

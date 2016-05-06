@@ -5,11 +5,12 @@
 {% block tab_title %}Data Sources Validation{% endblock tab_title %}
 
 {% block dashboard_tab %}
-	{% include 'dashboard/_includes/tabs.html' with active='data_source' %}
+	{% include 'dashboard/_includes/tabs.html' with active='data_sources' %}
 {% endblock dashboard_tab %}
 
 {% block dashboard_content %}
 	<h2>Data Sources</h2>
+	<p>To add more data sources, put more files under <pre>{{ user_data_source_dir.as_posix }}/</pre></p>
 	<div class="table-responsive">
 		<table class="table table-striped table-responsive">
 			<thead>
