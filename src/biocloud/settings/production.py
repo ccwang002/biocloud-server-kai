@@ -7,7 +7,7 @@ import logging.config
 DEBUG = False
 
 # Must mention ALLOWED_HOSTS in production!
-# ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['172.16.0.66']
 
 
 # Cache the templates in memory for speed-up
