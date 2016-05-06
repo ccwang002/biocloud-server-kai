@@ -16,11 +16,11 @@ Including another URLconf
 from django.conf.urls import include, url
 from django.contrib import admin
 from core.views import IndexView
-from users.views import user_dashboard
+
 
 urlpatterns = [
     url(r'^$', IndexView.as_view(), name='index'),
-    url(r'^dashboard/$', user_dashboard, name='user_dashboard'),
+    url(r'^dashboard/', include('dashboard.urls')),
     url(r'^accounts/', include('users.urls')),
     url(r'^admin/', admin.site.urls),
 ]

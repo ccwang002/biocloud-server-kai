@@ -1,6 +1,7 @@
-<a href="{% url 'user_dashboard' %}"
+<a href="{% url 'dashboard_home' %}"
 	class="dashboard__tab__item {% if active == 'home' %}active{% endif %}">Home</a>
-<a href="{% url 'user_profile_update' %}"
+<a href="{% url 'dashboard_profile' %}"
 	class="dashboard__tab__item {% if active == 'profile' %}active{% endif %}">Profile Update</a>
-<a href="#" class="dashboard__tab__item">C</a>
+<a href="{% url 'dashboard_data_sources' %}"
+	 class="dashboard__tab__item {% if active == 'data_sources' %}active{% endif %}">Data Sources</a>
 <a href="#" class="dashboard__tab__item">D</a>

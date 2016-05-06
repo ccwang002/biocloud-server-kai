@@ -65,6 +65,7 @@ LOCAL_APPS = (
     'core',
     'users',
     'data_sources',
+    'dashboard',
 )
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
@@ -165,7 +166,7 @@ LOGIN_URL = reverse_lazy('login')
 
 LOGOUT_URL = reverse_lazy('logout')
 
-LOGIN_REDIRECT_URL = reverse_lazy('user_dashboard')
+LOGIN_REDIRECT_URL = reverse_lazy('dashboard_home')
 
 
 # Custom user model

@@ -5,7 +5,6 @@ from django.contrib.auth.views import (
     login as base_login, password_reset as base_password_reset,
     password_reset_confirm as base_password_reset_confirm,
 )
-from django.core.urlresolvers import reverse
 from django.http import Http404
 from django.shortcuts import redirect, render
 from django.utils.translation import ugettext
@@ -15,7 +14,7 @@ from django.views.decorators.http import require_POST
 
 from .decorators import login_forbidden
 from .forms import (
-    AuthenticationForm, PublicUserCreationForm, UserProfileUpdateForm,
+    AuthenticationForm, PublicUserCreationForm,
     PasswordResetForm, SetPasswordForm,
 )
 
@@ -37,7 +36,7 @@ def user_signup(request):
             messages.success(request, ugettext(
                 'Sign up successful. You are now logged in.'
             ))
-            return redirect('user_dashboard')
+            return redirect('dashboard_home')
     else:
         form = PublicUserCreationForm()
     return render(request, 'registration/signup.html', {'form': form})
@@ -53,7 +52,7 @@ def user_verify(request, verification_key):
     user.verified = True
     user.save()
     messages.success(request, ugettext('Email verification successful.'))
-    return redirect('user_dashboard')
+    return redirect('dashboard_home')
 
 
 @never_cache
@@ -68,36 +67,7 @@ def request_verification(request):
             email=user.email,
         ),
     )
-    return redirect('user_dashboard')
-
-
-@login_required
-def user_dashboard(request):
-    logout_next = reverse('login')
-    return render(request, 'dashboard/welcome_page.html', {
-        'logout_next': logout_next,
-    })
-
-
-@login_required
-def user_profile_update(request):
-    logout_next = reverse('index')
-    if request.method == 'POST':
-        form = UserProfileUpdateForm(
-            data=request.POST, files=request.FILES,
-            instance=request.user,
-        )
-        if form.is_valid():
-            form.save()
-            messages.success(request, ugettext(
-                'Your profile has been updated successfully.',
-            ))
-            return redirect('user_dashboard')
-    else:
-        form = UserProfileUpdateForm(instance=request.user)
-    return render(request, 'dashboard/profile.html', {
-        'form': form, 'logout_next': logout_next,
-    })
+    return redirect('dashboard_home')
 
 
 def login_view(request):
@@ -108,7 +78,7 @@ def password_change_done(request):
     messages.success(request, ugettext(
         'Your new password has been applied successfully.'
     ))
-    return redirect('user_dashboard')
+    return redirect('dashboard_home')
 
 
 def password_reset(request):

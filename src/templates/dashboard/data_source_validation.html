@@ -1,0 +1,29 @@
+{% extends 'dashboard/base.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block tab_title %}Data Sources Validation{% endblock tab_title %}
+
+{% block dashboard_tab %}
+	{% include 'dashboard/_includes/tabs.html' with active='data_source' %}
+{% endblock dashboard_tab %}
+
+{% block dashboard_content %}
+	<h2>Data Sources</h2>
+	<table class="table table-striped">
+		<thead>
+		<tr>
+			<th>File Path</th>
+			<th>SHA256 Checksum</th>
+		</tr>
+		</thead>
+		<tbody>
+		{% for data_source in object_list %}
+			<tr>
+				<td>{{ data_source.file_path }}</td>
+				<td><code>{{ data_source.checksum }}</code></td>
+			</tr>
+		{% endfor %}
+		</tbody>
+	</table>
+{% endblock dashboard_content %}
