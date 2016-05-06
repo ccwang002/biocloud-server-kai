@@ -23,7 +23,7 @@ loaders = [
 
 TEMPLATES[0]['OPTIONS'].update({"loaders": loaders})
 TEMPLATES[0]['OPTIONS'].update({"debug": False})
-del TEMPLATES[0]['APP_DIRS']
+TEMPLATES[0]['APP_DIRS'] = False
 
 
 # Email settings
