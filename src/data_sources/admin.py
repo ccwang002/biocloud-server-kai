@@ -28,7 +28,7 @@ class DataSourceAdmin(admin.ModelAdmin):
     fields = [
         'owner', 'file_path', 'checksum',
     ]
-    search_fields = ['owner', 'file_path']
+    search_fields = ['file_path', ]
     list_display = [
         'owner', 'file_path', 'checksum',
     ]
