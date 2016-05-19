@@ -1,0 +1,13 @@
+{% extends 'analyses/base.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+	<h1>Create a new Analysis</h1>
+	<p>
+		Start a new analysis by firstly choosing a desired analysis type.
+		You can find more information what each analysis type does
+		<a href="#">here</a>.
+	</p>
+	{% crispy form %}
+{% endblock %}
