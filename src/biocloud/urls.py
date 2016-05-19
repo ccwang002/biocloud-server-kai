@@ -22,5 +22,6 @@ urlpatterns = [
     url(r'^$', IndexView.as_view(), name='index'),
     url(r'^dashboard/', include('dashboard.urls')),
     url(r'^accounts/', include('users.urls')),
+    url(r'^analysis/', include('analyses.urls')),
     url(r'^admin/', admin.site.urls),
 ]
