@@ -16,9 +16,12 @@
 		<!-- Collect the nav links, forms, and other content for toggling -->
 		<div class="collapse navbar-collapse" id="navbar-dropdown">
 			<ul class="nav navbar-nav">
+				{# Put links that require login in the following if-block #}
+				{% if user.is_authenticated %}
 				<li class="{% if active == 'new_analysis' %}active{% endif %}">
 					<a href="{% url 'new_analysis' %}">New Analysis</a>
 				</li>
+				{% endif %}
 				<li><a href="#">Link</a></li>
 				<li class="dropdown">
 					<a role="button" href="#" class="dropdown-toggle"
