@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.db import models
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
@@ -14,6 +15,10 @@ class ExecutionStatus(ChoiceEnum):
 
 
 class AbstractPipelineModel(models.Model):
+    owner = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        related_name='analyses'
+    )
     analysis_name = models.CharField(max_length=255)
     date_created = models.DateTimeField(
         verbose_name=_('date created'),
