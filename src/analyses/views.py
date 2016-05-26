@@ -1,34 +1,30 @@
-from django.contrib import messages
+from collections import namedtuple
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.urlresolvers import reverse_lazy
-from django.utils.translation import ugettext_lazy as _
-from django.views.generic import FormView
-
-from .forms import NewAnalysisTypeSelectionForm, AnalysisType
+from django.views.generic import FormView, TemplateView
+from django.utils.html import mark_safe
 
 
-class SelectNewAnalysisTypeView(LoginRequiredMixin, FormView):
+Pipeline = namedtuple('Pipeline', ['name', 'description', 'url'])
 
-    form_class = NewAnalysisTypeSelectionForm
-    success_url = reverse_lazy("index")
+AVAILABLE_PIPELINES = [
+    Pipeline(
+        'RNA-Seq',
+        mark_safe('''This is the description of <strong>RNASeq</strong>'''),
+        reverse_lazy('new_rna_seq'),
+    ),
+]
+
+
+class SelectNewAnalysisTypeView(LoginRequiredMixin, TemplateView):
+
     template_name = "analyses/new_analysis_by_type.html"
 
-    def post(self, request, *args, **kwargs):
-        """
-        Handles POST requests, instantiating a form instance with the passed
-        POST variables and then checked for validity.
-        """
-        form = self.get_form()
-        if form.is_valid():
-            analysis_type = AnalysisType.from_choice(
-                form.cleaned_data['analysis_type']
-            )
-            messages.add_message(
-                request, messages.INFO,
-                _('You just created a %(analysis_type)s analysis!') % {
-                    'analysis_type': analysis_type.name,
-                }
-            )
-            return self.form_valid(form)
-        else:
-            return self.form_invalid(form)
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['available_pipelines'] = AVAILABLE_PIPELINES
+        # context['available_pipelines'] = [
+        #     str_to_class(*cls.rsplit('.', 1))
+        #     for cls in AVAILABLE_PIPELINES
+        # ]
+        return context

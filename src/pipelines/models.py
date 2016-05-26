@@ -1,23 +1,20 @@
-from django import forms
 from django.db import models
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 
-from core.choices import ChoiceEnum
+from core.utils import ChoiceEnum
 
 
 class ExecutionStatus(ChoiceEnum):
-    INIT = _("Initiating")
-    QUEUEING = _("Waiting in the queue")
-    RUNNING = _("Running")
-    SUCCESSFUL = _("Successful")
-    FAILED = _("Failed")
+    INIT = "Initiating"
+    QUEUEING = "Waiting in the queue"
+    RUNNING = "Running"
+    SUCCESSFUL = "Successful"
+    FAILED = "Failed"
 
 
 class AbstractPipelineModel(models.Model):
-
-    analysis_name = models.CharField(max_length=256)
-    analysis_type = models.CharField()
+    analysis_name = models.CharField(max_length=255)
     date_created = models.DateTimeField(
         verbose_name=_('date created'),
         default=timezone.now,
@@ -26,10 +23,15 @@ class AbstractPipelineModel(models.Model):
     date_finished = models.DateTimeField(
         verbose_name=_('date finished'),
         blank=True,
+        default=None,
         editable=False,
     )
     execution_status = models.CharField(
         choices=ExecutionStatus.choices(),
-        required=True,
-        default=ExecutionStatus.INIT.name
+        max_length=63,
+        default=ExecutionStatus.INIT.name,
+        editable=False,
     )
+
+    class Meta:
+        abstract = True

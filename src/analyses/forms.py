@@ -6,7 +6,7 @@ from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Field, Fieldset, Layout, Submit, HTML
 from crispy_forms.bootstrap import FormActions
 
-from core.choices import ChoiceEnum
+from core.utils import ChoiceEnum
 
 
 class AnalysisType(ChoiceEnum):
