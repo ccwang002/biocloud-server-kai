@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block title %}New RNA-Seq Analysis{% endblock %}
+
+{% block content %}
+	<h2>New RNA-Seq Analysis</h2>
+
+	{% crispy form %}
+{% endblock %}

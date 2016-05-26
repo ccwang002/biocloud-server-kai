@@ -68,6 +68,7 @@ LOCAL_APPS = (
     'dashboard',
     'analyses',
     'pipelines',
+    'rna_seq',
 )
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
