@@ -4,11 +4,11 @@ from crispy_forms.bootstrap import FormActions
 from django.utils.functional import cached_property
 from django.utils.translation import ugettext_lazy as _
 
-from pipelines.forms import AbstractPipelineForm
+from pipelines.forms import AbstractPipelineCreateForm
 from .models import RNASeqModel
 
 
-class RNASeqForm(AbstractPipelineForm):
+class RNASeqCreateForm(AbstractPipelineCreateForm):
 
     @cached_property
     def helper(self):
