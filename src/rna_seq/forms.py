@@ -8,6 +8,7 @@ from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext_lazy as _
 from django.utils.timezone import now
 
+from data_sources.models import FileType
 from pipelines.forms import AbstractPipelineCreateForm
 from pipelines.fields import DataSourceModelChoiceField
 from .models import RNASeqModel
@@ -30,7 +31,12 @@ class RNASeqCreateForm(AbstractPipelineCreateForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['fastq_sources'].queryset = self._data_sources
+        # Select only FASTQ files
+        self.fields['fastq_sources'].queryset = (
+            self._data_sources.filter(
+                file_type=FileType.FASTQ.name
+            )
+        )
 
     def check_choice_exists(self):
         super().check_choice_exists()
