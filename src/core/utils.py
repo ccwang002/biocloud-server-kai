@@ -49,3 +49,18 @@ class ChoiceEnum(enum.Enum):
                     'choice': choice,
                 }
             ) from e
+
+
+class ValueDescriptionChoiceEnum(ChoiceEnum):
+
+    def __init__(self, verbose_name, description):
+        self.verbose_name = verbose_name
+        self.description = description
+
+    @classmethod
+    def choices(cls):
+        return [
+            (member_name, member.verbose_name)
+            for member_name, member in cls.__members__.items()
+        ]
+
