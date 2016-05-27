@@ -25,6 +25,7 @@ class DataSourceCreateForm(forms.ModelForm):
 
         DATA_SOURCES_DIR / owner.pk / file_path
         """
+        super().clean()
         if self.errors:
             return  # no owner given, skip rest of the check
         owner = self.cleaned_data['owner']
