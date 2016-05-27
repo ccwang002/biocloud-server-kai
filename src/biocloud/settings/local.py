@@ -4,6 +4,7 @@ import logging.config
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+CRISPY_FAIL_SILENTLY = not DEBUG
 
 # Turn off debug while imported by Celery with a workaround
 # See http://stackoverflow.com/a/4806384
