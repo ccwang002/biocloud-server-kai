@@ -1,0 +1,14 @@
+{% extends 'dashboard/base.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block tab_title %}Data Sources Validation{% endblock tab_title %}
+
+{% block dashboard_tab %}
+	{% include 'dashboard/_includes/tabs.html' with active='data_sources' %}
+{% endblock dashboard_tab %}
+
+{% block dashboard_content %}
+	<h2>Discover new data sources</h2>
+	{% crispy formset %}
+{% endblock dashboard_content %}

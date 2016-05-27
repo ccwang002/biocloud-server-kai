@@ -1,6 +1,10 @@
+from crispy_forms.helper import FormHelper
+from crispy_forms.layout import Submit
+from crispy_forms.bootstrap import FormActions
 from django import forms
 from django.conf import settings
 from django.core.exceptions import ValidationError
+from django.forms import modelformset_factory
 from django.utils.translation import ugettext_lazy as _
 
 from .models import DataSource
@@ -65,3 +69,16 @@ class DataSourceCreateForm(forms.ModelForm):
                     code='checksum_mismatch',
                 )
 
+
+DataSourceDiscoveryFormSet = modelformset_factory(
+    DataSource,
+    fields=('file_path', 'sample_name', 'file_type'),
+    extra=0
+)
+DataSourceDiscoveryFormSet.helper = FormHelper()
+DataSourceDiscoveryFormSet.helper.template = 'bootstrap/table_inline_formset.html'
+DataSourceDiscoveryFormSet.helper.add_input(
+    Submit(
+        'save', _('Add these data sources'), css_class='btn-lg',
+    )
+)
