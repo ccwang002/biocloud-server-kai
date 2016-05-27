@@ -7,11 +7,11 @@ from core.utils import ChoiceEnum
 
 
 class ExecutionStatus(ChoiceEnum):
-    INIT = "Initiating"
-    QUEUEING = "Waiting in the queue"
-    RUNNING = "Running"
-    SUCCESSFUL = "Successful"
-    FAILED = "Failed"
+    INIT = _("Initiating")
+    QUEUEING = _("Waiting in the queue")
+    RUNNING = _("Running")
+    SUCCESSFUL = _("Successful")
+    FAILED = _("Failed")
 
 
 class AbstractPipelineModel(models.Model):
