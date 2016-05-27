@@ -1,7 +1,10 @@
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Field, Fieldset, HTML, Layout, Submit
 from crispy_forms.bootstrap import FormActions
+from django import forms
+from django.core.urlresolvers import reverse
 from django.utils.functional import cached_property
+from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext_lazy as _
 from django.utils.timezone import now
 
@@ -28,6 +31,31 @@ class RNASeqCreateForm(AbstractPipelineCreateForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['fastq_sources'].queryset = self._data_sources
+
+    def check_choice_exists(self):
+        super().check_choice_exists()
+        # Check if any fastq source exist for this owner
+        fastq_sources = self.fields['fastq_sources'].queryset
+        if not fastq_sources.exists():
+            self.add_error(
+                'fastq_sources',
+                forms.ValidationError(
+                    mark_safe(_(
+                        'No available FASTQ sources. Try '
+                        '<a href="{dashboard_datasrc_url}">add some</a> first?'
+                    ).format(
+                        dashboard_datasrc_url=reverse('dashboard_data_sources')
+                    )),
+                )
+            )
+            # If in future self.add_error('fastq_source', '...') fails,
+            # it can be replaced equivalently by the following code snippets
+            # errors = self._errors.setdefault(
+            #     'fastq_sources', self.error_class()
+            # )
+            # errors.append(
+            #     forms.ValidationError( ... )
+            # )
 
     @cached_property
     def helper(self):
