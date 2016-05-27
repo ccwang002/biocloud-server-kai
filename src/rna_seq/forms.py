@@ -35,9 +35,17 @@ class RNASeqCreateForm(AbstractPipelineCreateForm):
             Fieldset(
                 'Data Sources',
                 HTML("<p>Specifiy your input FASTQ sources here.</p>"),
-                Field(
-                    'fastq_sources',
+                Field('fastq_sources'),
+            ),
+            Fieldset(
+                'Quality Check',
+                HTML(
+                    "<p>Examine and process the quality of the sequencing "
+                    "reads.</p>"
                 ),
+                Field('quality_check'),
+                Field('trim_adapter'),
+                Field('rm_duplicate'),
             ),
             FormActions(
                 Submit(
@@ -51,5 +59,6 @@ class RNASeqCreateForm(AbstractPipelineCreateForm):
         model = RNASeqModel
         fields = (
             *AbstractPipelineCreateForm._meta.fields,
-            'fastq_sources'
+            'fastq_sources',
+            'quality_check', 'trim_adapter', 'rm_duplicate',
         )
