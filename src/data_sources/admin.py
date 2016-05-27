@@ -26,12 +26,16 @@ class ChecksumBlankListFilter(admin.SimpleListFilter):
 class DataSourceAdmin(admin.ModelAdmin):
 
     fields = [
-        'owner', 'file_path', 'checksum',
+        'owner', 'file_path', 'sample_name',
+        'checksum', 'file_type',
+        'metadata',
     ]
-    search_fields = ['file_path', ]
+    search_fields = ['file_path', 'sample_name', ]
     list_display = [
-        'owner', 'file_path', 'checksum',
+        'owner', 'file_path',
+        'sample_name', 'file_type',
+        'metadata',
     ]
-    list_filter = (ChecksumBlankListFilter,)
+    list_filter = (ChecksumBlankListFilter, 'file_type')
 
     form = DataSourceCreateForm

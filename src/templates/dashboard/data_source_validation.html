@@ -15,6 +15,8 @@
 		<table class="table table-striped table-responsive">
 			<thead>
 			<tr>
+				<th>Sample</th>
+				<th>File Type</th>
 				<th>File Path</th>
 				<th>SHA256 Checksum</th>
 			</tr>
@@ -22,8 +24,10 @@
 			<tbody>
 			{% for data_source in object_list %}
 				<tr>
+					<td>{{ data_source.sample }}</td>
+					<td>{{ data_source.get_file_type_display }}</td>
 					<td>{{ data_source.file_path }}</td>
-					<td><code>{{ data_source.checksum }}</code></td>
+					<td>{% if data_source.checksum %}<code>{{ data_source.checksum }}</code>{% endif %}</td>
 				</tr>
 			{% endfor %}
 			</tbody>

@@ -10,7 +10,9 @@ class DataSourceCreateForm(forms.ModelForm):
     class Meta:
         model = DataSource
         fields = [
-            'owner', 'file_path', 'checksum',
+            'owner', 'file_path',
+            'sample_name', 'file_type',
+            'metadata', 'checksum',
         ]
         checksum_field = DataSource._meta.get_field('checksum')
 
