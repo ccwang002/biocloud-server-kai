@@ -1,12 +1,11 @@
-from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Submit
-from crispy_forms.bootstrap import FormActions
 from django import forms
 from django.conf import settings
 from django.core.exceptions import ValidationError
-from django.forms import modelformset_factory
+from django.forms import formset_factory
+from django.utils.functional import cached_property
 from django.utils.translation import ugettext_lazy as _
-
+from crispy_forms.helper import FormHelper
+from crispy_forms.layout import Layout, Field, Fieldset, ButtonHolder, Submit
 from .models import DataSource
 
 
@@ -16,7 +15,7 @@ class DataSourceCreateForm(forms.ModelForm):
         fields = [
             'owner', 'file_path',
             'sample_name', 'file_type',
-            'metadata', 'checksum',
+            'checksum', 'metadata',
         ]
         checksum_field = DataSource._meta.get_field('checksum')
 
@@ -70,15 +69,32 @@ class DataSourceCreateForm(forms.ModelForm):
                 )
 
 
-DataSourceDiscoveryFormSet = modelformset_factory(
-    DataSource,
-    fields=('file_path', 'sample_name', 'file_type'),
-    extra=0
+BaseDataSourceFormSet = formset_factory(
+    DataSourceCreateForm, extra=0
 )
-DataSourceDiscoveryFormSet.helper = FormHelper()
-DataSourceDiscoveryFormSet.helper.template = 'bootstrap/table_inline_formset.html'
-DataSourceDiscoveryFormSet.helper.add_input(
-    Submit(
-        'save', _('Add these data sources'), css_class='btn-lg',
-    )
-)
+
+
+class DataSourceFormSet(BaseDataSourceFormSet):
+
+    @cached_property
+    def helper(self):
+        helper = FormHelper()
+        helper.template = 'bootstrap/table_inline_formset.html'
+        helper.layout = Layout(
+            Fieldset(
+                '',
+                Field('owner', type="hidden"),
+                Field('file_path'),
+                Field('sample_name'),
+                Field('file_type'),
+                Field('checksum'),
+                Field('metadata', type="hidden"),
+            )
+        )
+        helper.add_input(
+            Submit(
+                'save', _('Add these data sources'), css_class='btn-lg',
+            )
+        )
+        return helper
+
