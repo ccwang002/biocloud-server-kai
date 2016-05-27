@@ -17,11 +17,6 @@ class AbstractPipelineCreateForm(
             owner__exact=self._request.user
         )
 
-    class Meta:
-        model = AbstractPipelineModel
-        fields = (
-            'analysis_name',
-        )
 
     def save(self, commit=True):
         """Fill user field on save.
@@ -32,3 +27,8 @@ class AbstractPipelineCreateForm(
             pipeline.save()
         return pipeline
 
+    class Meta:
+        model = AbstractPipelineModel
+        fields = (
+            'analysis_name',
+        )

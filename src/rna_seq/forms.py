@@ -12,14 +12,22 @@ from .models import RNASeqModel
 
 class RNASeqCreateForm(AbstractPipelineCreateForm):
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields['fastq_sources'].queryset = self._data_sources
-
     fastq_sources = DataSourceModelChoiceField(
         label='FASTQ Sources',
         queryset=None,
     )
+
+    class Meta:
+        model = RNASeqModel
+        fields = (
+            *AbstractPipelineCreateForm._meta.fields,
+            'fastq_sources',
+            'quality_check', 'trim_adapter', 'rm_duplicate',
+        )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['fastq_sources'].queryset = self._data_sources
 
     @cached_property
     def helper(self):
@@ -55,10 +63,3 @@ class RNASeqCreateForm(AbstractPipelineCreateForm):
         )
         return helper
 
-    class Meta:
-        model = RNASeqModel
-        fields = (
-            *AbstractPipelineCreateForm._meta.fields,
-            'fastq_sources',
-            'quality_check', 'trim_adapter', 'rm_duplicate',
-        )
