@@ -1,0 +1,24 @@
+{% extends 'dashboard/base.html' %}
+
+{% load i18n crispy_forms_tags %}
+
+{% block tab_title %}Data Sources Validation{% endblock tab_title %}
+
+{% block dashboard_tab %}
+	{% include 'dashboard/_includes/tabs.html' with active='data_sources' %}
+{% endblock dashboard_tab %}
+
+{% block dashboard_content %}
+	<form method="post" class="proposal-form">
+		<div class="nesting-form-group">
+			<div id="div_id_file_path" class="form-group">
+				<label for="div_id_file_path" class="control-label">File Path</label>
+				<div class="controls">
+					<input class="textinput textInput form-control disabled" id="id_file_path" name="file_path" type="text" value="{{ object.file_path }}" readonly>
+				</div>
+			</div>
+			{% crispy form %}
+			<button type="submit" class="btn btn-primary">{% trans 'Save' %}</button>
+		</div>
+	</form>
+{% endblock dashboard_content %}

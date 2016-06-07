@@ -31,7 +31,7 @@
 	{% if not user.data_sources.exists %}
 		<div class="alert alert-warning clearfix" role="alert">
 			<p>
-				{% url 'dashboard_data_sources' as dashboard_datasrc_url %}
+				{% url 'data_sources' as dashboard_datasrc_url %}
 				{% blocktrans trimmed %}
 					You have not attached any data source yet. Please go to
 					Dashboard tab

@@ -2,6 +2,7 @@ import logging
 from pathlib import Path
 from django.conf import settings
 from django.contrib.postgres.fields import JSONField
+from django.core.urlresolvers import reverse
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
@@ -67,6 +68,9 @@ class DataSource(models.Model):
             '%s (owner: %s)' %
             (self.get_rel_file_path(), self.owner.name)
         )
+
+    def get_absolute_url(self):
+        return reverse('update_data_source', kwargs={'pk': self.pk})
 
     def get_rel_file_path(self):
         return Path(str(self.owner.pk), self.file_path)

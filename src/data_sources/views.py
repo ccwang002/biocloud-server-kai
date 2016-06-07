@@ -2,13 +2,14 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.urlresolvers import reverse_lazy
 from django.shortcuts import render, redirect
 from django.utils.translation import ugettext_lazy as _
-from django.views.generic import ListView
+from django.views.generic import ListView, UpdateView
 from django.views.decorators.http import require_http_methods
 
 from .models import DataSource
-from .forms import DataSourceFormSet
+from .forms import DataSourceFormSet, DataSourceUpdateForm
 
 
 class UserDataSourceListView(LoginRequiredMixin, ListView):
@@ -26,6 +27,14 @@ class UserDataSourceListView(LoginRequiredMixin, ListView):
                 str(self.request.user.pk)
             )
         return context
+
+
+class UserDataSourceUpdateView(LoginRequiredMixin, UpdateView):
+
+    model = DataSource
+    form_class = DataSourceUpdateForm
+    template_name = 'dashboard/data_source_update.html'
+    success_url = reverse_lazy('data_sources')
 
 
 @require_http_methods(["GET", "POST"])

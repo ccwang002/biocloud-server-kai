@@ -75,6 +75,23 @@ class DataSourceCreateForm(forms.ModelForm):
                 )
 
 
+class DataSourceUpdateForm(forms.ModelForm):
+
+    class Meta:
+        model = DataSource
+        fields = [
+            'sample_name', 'file_type',
+            'checksum', 'metadata',
+        ]
+
+    @cached_property
+    def helper(self):
+        helper = FormHelper()
+        helper.form_tag = False
+        helper.include_media = False
+        return helper
+
+
 class DataSourceDiscoveryForm(DataSourceCreateForm):
 
     class Meta:

@@ -10,7 +10,10 @@
 
 {% block dashboard_content %}
 	<h2>Data Sources</h2>
-	<p>To add more data sources, put more files under <pre>{{ user_data_source_dir.as_posix }}/</pre></p>
+	<p>To add more data sources, put more files under the folder</p>
+	<pre>{{ user_data_source_dir.as_posix }}/</pre>
+	<p>and <a href="{% url 'discover_data_sources' %}">click here</a>
+		to discover new data sources.</p>
 	<div class="table-responsive">
 		<table class="table table-striped table-responsive">
 			<thead>
@@ -24,9 +27,9 @@
 			<tbody>
 			{% for data_source in object_list %}
 				<tr>
-					<td>{{ data_source.sample }}</td>
+					<td>{{ data_source.sample_name }}</td>
 					<td>{{ data_source.get_file_type_display }}</td>
-					<td>{{ data_source.file_path }}</td>
+					<td><a href="{{ data_source.get_absolute_url }}">{{ data_source.file_path }}</a></td>
 					<td>{% if data_source.checksum %}<code>{{ data_source.checksum }}</code>{% endif %}</td>
 				</tr>
 			{% endfor %}
