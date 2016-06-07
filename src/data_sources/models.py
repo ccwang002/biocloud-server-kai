@@ -53,7 +53,7 @@ class DataSource(models.Model):
     )
     metadata = JSONField(
         blank=True,
-        default=dict(),
+        default=dict,
         verbose_name=_("metadata")
     )
 
