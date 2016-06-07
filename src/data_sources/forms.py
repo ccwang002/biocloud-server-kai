@@ -23,6 +23,12 @@ class DataSourceCreateForm(forms.ModelForm):
         checksum = self.cleaned_data['checksum']
         return checksum.lower()
 
+    def get_owner(self):
+        return self.cleaned_data['owner']
+
+    def get_file_path(self):
+        return self.cleaned_data['file_path']
+
     def clean(self):
         """Validate the data source existed and has correct checksum.
 
@@ -33,8 +39,8 @@ class DataSourceCreateForm(forms.ModelForm):
         super().clean()
         if self.errors:
             return  # no owner given, skip rest of the check
-        owner = self.cleaned_data['owner']
-        file_path = self.cleaned_data['file_path']
+        owner = self.get_owner()
+        file_path = self.get_file_path()
         checksum = self.cleaned_data['checksum']
 
         full_file_path = settings.BIOCLOUD_DATA_SOURCES_DIR.joinpath(
@@ -69,8 +75,30 @@ class DataSourceCreateForm(forms.ModelForm):
                 )
 
 
+class DataSourceDiscoveryForm(DataSourceCreateForm):
+
+    class Meta:
+        model = DataSource
+        fields = [
+            'file_path',
+            'sample_name', 'file_type',
+            'checksum', 'metadata',
+        ]
+
+    def __init__(self, *args, **kwargs):
+        self.owner = kwargs.pop('owner')
+        super().__init__(*args, **kwargs)
+
+    def save(self, *args, **kwargs):
+        self.instance.owner = self.owner
+        return super().save(*args, **kwargs)
+
+    def get_owner(self):
+        return self.owner
+
+
 BaseDataSourceFormSet = formset_factory(
-    DataSourceCreateForm, extra=0
+    DataSourceDiscoveryForm, extra=0
 )
 
 
@@ -83,7 +111,6 @@ class DataSourceFormSet(BaseDataSourceFormSet):
         helper.layout = Layout(
             Fieldset(
                 '',
-                Field('owner', type="hidden"),
                 Field('file_path'),
                 Field('sample_name'),
                 Field('file_type'),

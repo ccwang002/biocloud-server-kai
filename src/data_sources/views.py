@@ -32,7 +32,10 @@ class UserDataSourceListView(LoginRequiredMixin, ListView):
 @login_required
 def discover_data_source(request):
     if request.method == 'POST':
-        formset = DataSourceFormSet(request.POST, request.FILES)
+        formset = DataSourceFormSet(
+            request.POST, request.FILES,
+            form_kwargs={'owner': request.user},
+        )
         if formset.is_valid():
             # save the new data sources
             new_data_sources = []
@@ -63,12 +66,16 @@ def discover_data_source(request):
         )
         initial_data = [
             {
-                'owner': owner, 'file_path': pth, 'sample_name': '',
-                'file_type': ''
+                'file_path': pth,
+                'sample_name': '',
+                'file_type': '',
             }
             for pth in sorted(all_file_paths - existed_file_paths)
         ]
-        formset = DataSourceFormSet(initial=initial_data)
+        formset = DataSourceFormSet(
+            initial=initial_data,
+            form_kwargs={'owner': owner},
+        )
     return render(request, 'dashboard/data_source_discovery.html', {
         'formset': formset
     })
