@@ -1,19 +1,31 @@
 import hashlib
 import logging
 from django import forms
-from django.core.validators import (
-    RegexValidator, MinLengthValidator, MaxLengthValidator
-)
+from django.core.validators import RegexValidator, BaseValidator
 from django.db import models
-from django.utils.translation import ugettext_lazy as _
+from django.utils.deconstruct import deconstructible
+from django.utils.translation import ugettext_lazy as _, ungettext_lazy
 
 logger = logging.getLogger(__name__)
 
 
+@deconstructible
+class ExactLengthValidator(BaseValidator):
+    compare = lambda self, a, b: a != b
+    clean = lambda self, x: len(x)
+    message = ungettext_lazy(
+        'Ensure this value has exact %(limit_value)d character '
+        '(it has %(show_value)d).',
+        'Ensure this value has exact %(limit_value)d characters '
+        '(it has %(show_value)d).',
+        'limit_value'
+    )
+    code = 'limit_value'
+
+
 class SHA256ChecksumField(models.CharField):
     default_validators = [
-        MinLengthValidator(64),
-        MaxLengthValidator(64),
+        ExactLengthValidator(64),
         RegexValidator(
             regex=r'^[A-Fa-f0-9]+$',
             message=_(
