@@ -18,7 +18,7 @@ from .utils import complete_fastaq_info, guess_data_source
 class UserDataSourceListView(LoginRequiredMixin, ListView):
 
     model = DataSource
-    template_name = 'dashboard/data_source_validation.html'
+    template_name = 'data_sources/list.html'
 
     def get_queryset(self):
         return super().get_queryset().filter(owner=self.request.user)
@@ -36,8 +36,8 @@ class UserDataSourceUpdateView(LoginRequiredMixin, UpdateView):
 
     model = DataSource
     form_class = DataSourceUpdateForm
-    template_name = 'dashboard/data_source_update.html'
-    success_url = reverse_lazy('data_sources')
+    template_name = 'data_sources/update.html'
+    success_url = reverse_lazy('list_data_sources')
 
     def get_initial(self):
         initial = super().get_initial()
@@ -69,7 +69,7 @@ def discover_data_source(request):
                     'data_sources': ', '.join(new_data_sources)
                 },
             )
-            return redirect('data_sources')
+            return redirect('list_data_sources')
     else:
         # Discover new data sources
         owner = request.user
@@ -92,7 +92,7 @@ def discover_data_source(request):
             initial=initial_data,
             form_kwargs={'owner': owner},
         )
-    return render(request, 'dashboard/data_source_discovery.html', {
+    return render(request, 'data_sources/discovery.html', {
         'formset': formset
     })
 

@@ -8,7 +8,7 @@ from .views import (
 
 urlpatterns = [
     url(r'^$', UserDataSourceListView.as_view(),
-        name='data_sources'),
+        name='list_data_sources'),
     url(r'^discovery/$', discover_data_source,
         name='discover_data_sources'),
     url(r'update/(?P<pk>\d+)', UserDataSourceUpdateView.as_view(),

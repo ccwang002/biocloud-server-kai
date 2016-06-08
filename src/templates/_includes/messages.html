@@ -31,12 +31,11 @@
 	{% if not user.data_sources.exists %}
 		<div class="alert alert-warning clearfix" role="alert">
 			<p>
-				{% url 'data_sources' as dashboard_datasrc_url %}
+				{% url 'discovery_data_sources' as datasrc_url %}
 				{% blocktrans trimmed %}
-					You have not attached any data source yet. Please go to
-					Dashboard tab
-					<a href="{{ dashboard_datasrc_url }}">Data Sources</a>
-					to scan your data source directory.
+					You have not attached any data source yet. Please go
+					<a href="{{ datasrc_url }}">discover your data sources</a>
+					by scaning your data source directory.
 				{% endblocktrans %}
 			</p>
 		</div>

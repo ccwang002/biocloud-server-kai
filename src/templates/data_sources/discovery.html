@@ -1,0 +1,10 @@
+{% extends 'data_sources/base.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block title %}Discover New Data Sources{% endblock title %}
+
+{% block content %}
+	<h2>Discover new data sources</h2>
+	{% crispy formset %}
+{% endblock content %}
