@@ -39,7 +39,8 @@ class SHA256ChecksumField(models.CharField):
     def formfield(self, **kwargs):
         return super().formfield(**{
             **kwargs,
-            'form_class': forms.CharField
+            'form_class': forms.CharField,
+            'validators': self.default_validators,
         })
 
     @classmethod

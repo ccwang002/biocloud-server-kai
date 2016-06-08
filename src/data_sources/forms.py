@@ -33,12 +33,12 @@ class BaseDataSourceModelForm(forms.ModelForm):
 
         DATA_SOURCES_DIR / owner.pk / file_path
         """
-        super().clean()
+        cleaned_data = super().clean()
         if self.errors:
             return  # no owner given, skip rest of the check
         owner = self.get_owner()
         file_path = self.get_file_path()
-        checksum = self.cleaned_data['checksum']
+        checksum = cleaned_data['checksum']
 
         full_file_path = settings.BIOCLOUD_DATA_SOURCES_DIR.joinpath(
             str(owner.pk), file_path
@@ -104,7 +104,6 @@ class DataSourceUpdateForm(BaseDataSourceModelForm):
     def helper(self):
         helper = FormHelper()
         helper.form_tag = False
-        helper.include_media = False
         return helper
 
 
