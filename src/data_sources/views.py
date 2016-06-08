@@ -58,7 +58,7 @@ def discover_data_source(request):
                     'data_sources': ', '.join(new_data_sources)
                 },
             )
-            return redirect('dashboard_data_sources')
+            return redirect('data_sources')
     else:
         # Discover new data sources
         owner = request.user
