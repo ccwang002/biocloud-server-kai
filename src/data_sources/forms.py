@@ -9,14 +9,11 @@ from crispy_forms.layout import Layout, Field, Fieldset, ButtonHolder, Submit
 from .models import DataSource
 
 
-class DataSourceCreateForm(forms.ModelForm):
+class BaseDataSourceModelForm(forms.ModelForm):
+
     class Meta:
         model = DataSource
-        fields = [
-            'owner', 'file_path',
-            'sample_name', 'file_type',
-            'checksum', 'metadata',
-        ]
+        fields = '__all__'
         checksum_field = DataSource._meta.get_field('checksum')
 
     def clean_checksum(self):
@@ -75,7 +72,19 @@ class DataSourceCreateForm(forms.ModelForm):
                 )
 
 
-class DataSourceUpdateForm(forms.ModelForm):
+class DataSourceCreateForm(BaseDataSourceModelForm):
+
+    class Meta:
+        model = DataSource
+        fields = [
+            'owner', 'file_path',
+            'sample_name', 'file_type',
+            'checksum', 'metadata',
+        ]
+        checksum_field = DataSource._meta.get_field('checksum')
+
+
+class DataSourceUpdateForm(BaseDataSourceModelForm):
 
     class Meta:
         model = DataSource
@@ -83,6 +92,13 @@ class DataSourceUpdateForm(forms.ModelForm):
             'sample_name', 'file_type',
             'checksum', 'metadata',
         ]
+        checksum_field = DataSource._meta.get_field('checksum')
+
+    def get_owner(self):
+        return self.instance.owner
+
+    def get_file_path(self):
+        return self.instance.file_path
 
     @cached_property
     def helper(self):
