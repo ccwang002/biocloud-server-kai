@@ -1,3 +1,5 @@
+from pathlib import Path
+
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -10,6 +12,7 @@ from django.views.decorators.http import require_http_methods
 
 from .models import DataSource
 from .forms import DataSourceFormSet, DataSourceUpdateForm
+from .utils import complete_fastaq_info, guess_data_source
 
 
 class UserDataSourceListView(LoginRequiredMixin, ListView):
@@ -35,6 +38,14 @@ class UserDataSourceUpdateView(LoginRequiredMixin, UpdateView):
     form_class = DataSourceUpdateForm
     template_name = 'dashboard/data_source_update.html'
     success_url = reverse_lazy('data_sources')
+
+    def get_initial(self):
+        initial = super().get_initial()
+        data_source = self.object
+        if not data_source.sample_name and not data_source.metadata and \
+                data_source.file_type in ['FASTA', 'FASTQ']:
+            return complete_fastaq_info(data_source.file_path, initial)
+        return initial
 
 
 @require_http_methods(["GET", "POST"])
@@ -73,14 +84,10 @@ def discover_data_source(request):
         existed_file_paths = set(
             owner.data_sources.values_list('file_path', flat=True)
         )
-        initial_data = [
-            {
-                'file_path': pth,
-                'sample_name': '',
-                'file_type': '',
-            }
-            for pth in sorted(all_file_paths - existed_file_paths)
-        ]
+        initial_data = []
+        for file_path in sorted(all_file_paths - existed_file_paths):
+            initial = guess_data_source(file_path)
+            initial_data.append(initial)
         formset = DataSourceFormSet(
             initial=initial_data,
             form_kwargs={'owner': owner},
