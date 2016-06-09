@@ -51,7 +51,7 @@ def complete_fastaq_info(file_path, initial):
         initial['sample_name'] = match.group('sample')
         initial['metadata'] = {}
         initial['metadata']['paired'] = True
-        initial['metadata']['strand'] = int(match.group('strand'))
+        initial['metadata']['strand'] = match.group('strand')
     return initial
 
 
