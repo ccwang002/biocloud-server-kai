@@ -1,3 +1,8 @@
 .CodeMirror-scroll {
     font-family: monospace;
 }
+
+.editor-toolbar.fullscreen {
+    /* navbar-static has z-index 1000 */
+    z-index: 1001;
+}
