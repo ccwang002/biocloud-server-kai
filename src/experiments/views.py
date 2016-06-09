@@ -1,6 +1,9 @@
+import json
+
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
+from django.utils.html import mark_safe
 from django.utils.translation import ugettext
 
 from .forms import ExperimentCreateForm
@@ -26,7 +29,20 @@ def create_new_experiment(request):
     else:
         form = ExperimentCreateForm()
 
+    # get user's sample with metadata
+    data_sources = request.user.data_sources.all()
+    data_source_json = mark_safe(json.dumps([
+        {
+            'data_source_pk': ds.pk,
+            'file_path': ds.file_path,
+            'file_type': ds.file_type,
+            'sample': ds.sample_name,
+            'metadata': ds.metadata,
+        }
+        for ds in data_sources
+    ]))
     return render(request, 'experiments/new.html', {
         'form': form,
+        'data_source_json': data_source_json
     })
 
