@@ -1,6 +1,6 @@
 from crispy_forms.bootstrap import FormActions
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Fieldset, Layout, Submit
+from crispy_forms.layout import Fieldset, Layout, Submit, Div
 from django import forms
 from django.utils.functional import cached_property
 from django.utils.translation import ugettext_lazy as _
@@ -27,10 +27,5 @@ class ExperimentCreateForm(forms.ModelForm):
                 'name',
                 'description',
             ),
-            FormActions(
-                Submit(
-                    'save', _('Create New Experiment'), css_class='btn-lg',
-                )
-            )
         )
         return helper
