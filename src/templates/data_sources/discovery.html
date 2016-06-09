@@ -6,5 +6,13 @@
 
 {% block content %}
 	<h2>Discover new data sources</h2>
+	{% if formset.errors %}
+		<div class="alert alert-danger" role="alert">
+			<p>
+				Please fix the following {{ formset.total_error_count }}
+				error{{ formset.total_error_count|pluralize }} below.
+			</p>
+		</div>
+	{% endif %}
 	{% crispy formset %}
 {% endblock content %}

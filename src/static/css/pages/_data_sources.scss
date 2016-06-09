@@ -1,0 +1,13 @@
+// Discovering data source form validation
+.error {
+    @include form-control-validation(
+            $state-danger-text,
+            $state-danger-text,
+            $state-danger-bg
+    );
+
+    // highlight the error messages in table-inline form
+    span[id^="error"] {
+        color: $state-danger-text;
+    }
+}
