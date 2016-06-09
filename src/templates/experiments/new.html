@@ -12,21 +12,69 @@
 {% block content %}
 	<h2>New experiement</h2>
 	{% crispy form %}
-	<h3>Conditions</h3>
-	<div id="conditions">
-		{% verbatim %}
-		<p>
-			Adding new conditions by typing into the following input:
-			<input v-model="newCondition" v-on:keyup.enter="addCondition">
-		</p>
+	<div id="app">
+		<h3>Conditions</h3>
+		<div v-show="editable">
+			<button v-on:click="leaveEditMode()" class="btn btn-danger">Leave Edit Mode</button>
+			<ul class="list-unstyled">
+				<li v-for="(index, condition) in conditions" track-by="_uid">
+					<input type="text" v-model="condition.label">
+					<button v-on:click="removeCondition(index, $event)" class="btn btn-xs btn-danger">Remove</button>
+				</li>
+				<li>
+					<button v-on:click="addCondition()" class="btn btn-default">Add Condition</button>
+				</li>
+			</ul>
+		</div>
+		<div v-show="!editable">
+			<button v-on:click="enterEditMode()" class="btn btn-success">Enter Edit Mode</button>
+			<ul class="list-unstyled">
+				<li v-for="(index, condition) in conditions" track-by="_uid">
+					{% verbatim %}{{ condition.label }}{% endverbatim %}
+				</li>
+			</ul>
+		</div>
+
+		<h3>Choose Sources</h3>
+		<input type="text" v-model="sourceFilter">
+		<button v-on:click="alterFilteredSourcesSelectedStatus(true)" class="btn btn-default">Select all</button>
+		<button v-on:click="alterFilteredSourcesSelectedStatus(false)" class="btn btn-default">Unselect all</button>
 		<ul>
-			<li v-for="condition in conditions">
-				<span>{{ condition.text }}</span>
-				<button v-on:click="removeCondition($index)">X</button>
+			<li v-for="source in filteredDataSources ">
+				<input type="checkbox" v-model="source.selected">
+				{% verbatim %}{{ source.file_path }}{% endverbatim %}
 			</li>
 		</ul>
-		{% endverbatim %}
-	</div>
+		<h3>Selected Sources</h3>
+		<table class="table table-striped">
+			<thead>
+			<tr>
+				<th>Sample</th>
+				<th>File path</th>
+				<th>File type</th>
+				<th>Strand</th>
+				<th>Condition</th>
+			</tr>
+			</thead>
+			<tbody>
+			{% verbatim %}
+			<tr v-for="(index, source) in selectedDataSources" track-by="data_source_pk">
+				<td><input type="text" v-model="source.sample"></td>
+				<td>{{ source.file_path }}</td>
+				<td>{{ source.file_type }}</td>
+				<td><input type="text" v-model="source.metadata.strand"></td>
+				<td>
+					<select v-model="source.condition">
+						<option v-for="condition in conditions" v-bind:value="condition._uid">
+							{{ condition.label }}
+						</option>
+					</select>
+				</td>
+			</tr>
+			{% endverbatim %}
+			</tbody>
+		</table>
+	</div><!-- /#app -->
 {% endblock content %}
 
 {% block extra_js %}
@@ -36,6 +84,52 @@
 {% endblock extra_js %}
 
 {% block scripts %}
+	<script>
+		var data_sources = [
+			{
+				'data_source_pk': "1",
+				'file_path': "sample_R1.fastq",
+				'file_type': "FASTQ",
+				'sample': "sample",
+				'metadata': {
+					"paired": true,
+					"strand": "1"
+				},
+				"condition": undefined,
+				"selected": false,
+			},
+			{
+				'data_source_pk': "2",
+				'file_path': "sample_R2.fastq",
+				'file_type': "FASTQ",
+				'sample': "sample",
+				'metadata': {
+					"paired": true,
+					"strand": "2"
+				},
+				"condition": undefined,
+				"selected": false,
+			},
+			{
+				'data_source_pk': "3",
+				'file_path': "another_R1.fastq",
+				'file_type': "FASTQ",
+				'sample': "",
+				'metadata': {},
+				"condition": undefined,
+				"selected": false,
+			},
+			{
+				'data_source_pk': "4",
+				'file_path': "another_R2.fastq",
+				'file_type': "FASTQ",
+				'sample': "",
+				'metadata': {},
+				"condition": undefined,
+				"selected": false,
+			}
+		];
+	</script>
 	<script src="{% static 'js/experiements/manage_conditions.js' %}"></script>
 {% endblock scripts %}
 
