@@ -24,5 +24,6 @@ urlpatterns = [
     url(r'^accounts/', include('users.urls')),
     url(r'^analysis/', include('analyses.urls')),
     url(r'^data-sources/', include('data_sources.urls')),
+    url(r'^experiments/', include('experiments.urls')),
     url(r'^admin/', admin.site.urls),
 ]

@@ -67,6 +67,7 @@ LOCAL_APPS = (
     'data_sources',
     'dashboard',
     'analyses',
+    'experiments',
     'rna_seq',
 )
 
