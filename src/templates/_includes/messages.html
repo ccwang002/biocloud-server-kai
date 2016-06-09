@@ -31,7 +31,7 @@
 	{% if not user.data_sources.exists %}
 		<div class="alert alert-warning clearfix" role="alert">
 			<p>
-				{% url 'discovery_data_sources' as datasrc_url %}
+				{% url 'discover_data_sources' as datasrc_url %}
 				{% blocktrans trimmed %}
 					You have not attached any data source yet. Please go
 					<a href="{{ datasrc_url }}">discover your data sources</a>

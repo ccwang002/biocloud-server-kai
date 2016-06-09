@@ -48,9 +48,9 @@ class RNASeqCreateForm(AbstractPipelineCreateForm):
                 forms.ValidationError(
                     mark_safe(_(
                         'No available FASTQ sources. Try '
-                        '<a href="{dashboard_datasrc_url}">add some</a> first?'
+                        '<a href="{discover_datasrc_url}">add some</a> first?'
                     ).format(
-                        dashboard_datasrc_url=reverse('dashboard_data_sources')
+                        discover_datasrc_url=reverse('discover_data_sources')
                     )),
                 )
             )
