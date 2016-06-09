@@ -18,21 +18,22 @@
 			<ul class="nav navbar-nav">
 				{# Put links that require login in the following if-block #}
 				{% if user.is_authenticated %}
-				<li class="{% if active == 'new_analysis' %}active{% endif %}">
-					<a href="{% url 'new_analysis' %}">New Analysis</a>
-				</li>
-				<li class="dropdown {% if active == 'data_sources' %}active{% endif %}"">
-					<a role="button" href="#" class="dropdown-toggle"
-					   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-						Data Sources<span class="caret"></span>
-					</a>
-					<ul class="dropdown-menu">
-						<li><a href="{% url 'list_data_sources' %}">List all</a></li>
-						<li><a href="{% url 'discover_data_sources' %}">Discover</a></li>
-						<li role="separator" class="divider"></li>
-						<li><a href="#">Separated link</a></li>
-					</ul>
-				</li><!-- /.dropdown -->
+					<li class="{% if active == 'new_analysis' %}active{% endif %}">
+						<a href="{% url 'new_analysis' %}">New Analysis</a>
+					</li>
+					<!-- Menu for data sources -->
+					<li class="dropdown {% if active == 'data_sources' %}active{% endif %}"">
+						<a role="button" href="#" class="dropdown-toggle"
+						   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+							Data Sources<span class="caret"></span>
+						</a>
+						<ul class="dropdown-menu">
+							<li><a href="{% url 'list_data_sources' %}">List all</a></li>
+							<li><a href="{% url 'discover_data_sources' %}">Discover</a></li>
+							<li role="separator" class="divider"></li>
+							<li><a href="#">Separated link</a></li>
+						</ul>
+					</li><!-- /.dropdown -->
 				{% endif %}
 			</ul>
 			<!-- Right Navbar -->
