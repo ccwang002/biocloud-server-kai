@@ -1,4 +1,4 @@
-from pipelines.views import AbstractPipelineFormView
+from analyses.views import AbstractPipelineFormView
 from .forms import RNASeqCreateForm
 
 

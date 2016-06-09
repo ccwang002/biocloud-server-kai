@@ -1,16 +1,16 @@
+from crispy_forms.bootstrap import FormActions
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Field, Fieldset, HTML, Layout, Submit
-from crispy_forms.bootstrap import FormActions
 from django import forms
 from django.core.urlresolvers import reverse
 from django.utils.functional import cached_property
 from django.utils.safestring import mark_safe
-from django.utils.translation import ugettext_lazy as _
 from django.utils.timezone import now
+from django.utils.translation import ugettext_lazy as _
 
+from analyses.fields import DataSourceModelChoiceField
+from analyses.forms import AbstractPipelineCreateForm
 from data_sources.models import FileType
-from pipelines.forms import AbstractPipelineCreateForm
-from pipelines.fields import DataSourceModelChoiceField
 from .models import RNASeqModel
 
 
