@@ -1,6 +1,6 @@
 {% extends 'experiments/base.html' %}
 
-{% load crispy_forms_tags %}
+{% load crispy_forms_tags static %}
 
 {% block title %}New experiment{% endblock title %}
 
@@ -12,9 +12,30 @@
 {% block content %}
 	<h2>New experiement</h2>
 	{% crispy form %}
+	<h3>Conditions</h3>
+	<div id="conditions">
+		{% verbatim %}
+		<p>
+			Adding new conditions by typing into the following input:
+			<input v-model="newCondition" v-on:keyup.enter="addCondition">
+		</p>
+		<ul>
+			<li v-for="condition in conditions">
+				<span>{{ condition.text }}</span>
+				<button v-on:click="removeCondition($index)">X</button>
+			</li>
+		</ul>
+		{% endverbatim %}
+	</div>
 {% endblock content %}
 
 {% block extra_js %}
 	{{ block.super }}
+	<script src="{% static 'js/vendors/vue.min.js' %}"></script>
 	{{ form.media.js }}
 {% endblock extra_js %}
+
+{% block scripts %}
+	<script src="{% static 'js/experiements/manage_conditions.js' %}"></script>
+{% endblock scripts %}
+
