@@ -13,28 +13,6 @@
 	<h2>New experiement</h2>
 	{% crispy form %}
 	<div id="app">
-		<h2>Conditions</h2>
-		<div v-show="editable">
-			<button v-on:click="leaveEditMode()" class="btn btn-danger">Leave Edit Mode</button>
-			<ol>
-				<li v-for="(index, condition) in conditions" track-by="_uid">
-					<input type="text" v-model="condition.label">
-					<button v-on:click="removeCondition(index, $event)" class="btn btn-xs btn-danger">Remove</button>
-				</li>
-				<li class="list-unstyled">
-					<button v-on:click="addCondition()" class="btn btn-default">Add Condition</button>
-				</li>
-			</ol>
-		</div>
-		<div v-show="!editable">
-			<button v-on:click="enterEditMode()" class="btn btn-success">Edit Condition</button>
-			{% verbatim %}
-			<ol class="list-inline">
-				<li v-for="(index, condition) in conditions" track-by="_uid">{{ index + 1 }}. {{ condition.label }}</li>
-			</ol>
-			{% endverbatim %}
-		</div>
-
 		<h2>Group Sources as Samples</h2>
 		<button v-on:click="updateFilteredSourcesSelectedStatus(true)" class="btn btn-default">Select all</button>
 		<button v-on:click="updateFilteredSourcesSelectedStatus(false)" class="btn btn-default">Unselect all</button>
@@ -81,6 +59,29 @@
 		</p>
 
 
+		<h2>Conditions</h2>
+		<div v-show="editable">
+			<button v-on:click="leaveEditMode()" class="btn btn-danger">Leave Edit Mode</button>
+			<ol>
+				<li v-for="(index, condition) in conditions" track-by="_uid">
+					<input type="text" v-model="condition.label">
+					<button v-on:click="removeCondition(index, $event)" class="btn btn-xs btn-danger">Remove</button>
+				</li>
+				<li class="list-unstyled">
+					<button v-on:click="addCondition()" class="btn btn-default">Add Condition</button>
+				</li>
+			</ol>
+		</div>
+		<div v-show="!editable">
+			<button v-on:click="enterEditMode()" class="btn btn-success">Edit Condition</button>
+			{% verbatim %}
+			<ol class="list-inline">
+				<li v-for="(index, condition) in conditions" track-by="_uid">{{ index + 1 }}. {{ condition.label }}</li>
+			</ol>
+			{% endverbatim %}
+		</div>
+
+
 		<h2>Group Samples as Conditions</h2>
 		<table class="table table-striped">
 			<thead>
@@ -98,6 +99,7 @@
 					<select
 							v-model="sourcesBySample.condition"
 							v-on:change="updateSourceCondition(sourcesBySample.sample, sourcesBySample.condition)"
+							class="form-control"
 					>
 						<option v-for="condition in conditions" v-bind:value="condition._uid">
 							{{ condition.label }}
