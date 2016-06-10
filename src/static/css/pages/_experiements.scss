@@ -1,0 +1,3 @@
+.source-label:not(:first-of-type)::before {
+    content: ", ";
+}
