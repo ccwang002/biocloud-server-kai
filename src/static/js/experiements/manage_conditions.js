@@ -34,19 +34,8 @@ var groupBy = function (array, grouperFn) {
 
 var vm = new Vue({
     el: '#app',
-    data: {
-        editable: true,
-        conditions: [
-        ],
-        numConditionCreated: 0,
-        sourceFilter: {
-            filePath: '',
-            fileType: '',
-            sample: ''
-        },
-        newSampleName: '',
-        dataSources: data_sources
-    },
+    // data are from the template HTML
+    data: vueAppData,
     computed: {
         filteredDataSources: function() {
             var filterStr = this.sourceFilter;
@@ -165,3 +154,17 @@ var vm = new Vue({
 // Add two default conditions
 vm.addCondition('Control');
 vm.addCondition('Test');
+
+
+// set posting
+$form = $('#new-experiment-form');
+$form.submit(function (event) {
+    var $input = $('<input type="hidden" name="extraData">');
+    $input.val(JSON.stringify({
+        conditions: vm.conditions,
+        numConditionCreated: vm.numConditionCreated,
+        selectedDataSources: vm.selectedDataSources
+    }));
+    $(this).append($input);
+    return true;
+});

@@ -123,68 +123,83 @@
 
 {% block scripts %}
 	<script>
-		var data_sources = [
-			{
-				'data_source_pk': "1",
-				'file_path': "sample_R1.fastq",
-				'file_type': "FASTQ",
-				'sample': "sample",
-				'metadata': {
-					"paired": true,
-					"strand": "1"
-				},
-				"condition": undefined,
-				"selected": false,
+		var vueAppData = {
+			// states we need to keep across POST/GET forms
+			conditions: [
+			],
+			numConditionCreated: 0,
+			dataSources: {{ data_source_json }},
+			// states only needed for editing
+			editable: true,
+			sourceFilter: {
+				filePath: '',
+				fileType: '',
+				sample: ''
 			},
-			{
-				'data_source_pk': "2",
-				'file_path': "sample_R2.fastq",
-				'file_type': "FASTQ",
-				'sample': "sample",
-				'metadata': {
-					"paired": true,
-					"strand": "2"
-				},
-				"condition": undefined,
-				"selected": false,
-			},
-			{
-				'data_source_pk': "3",
-				'file_path': "another_R1.fastq",
-				'file_type': "FASTQ",
-				'sample': "another",
-				'metadata': {},
-				"condition": undefined,
-				"selected": false,
-			},
-			{
-				'data_source_pk': "4",
-				'file_path': "another_R2.fastq",
-				'file_type': "FASTQ",
-				'sample': "another",
-				'metadata': {},
-				"condition": undefined,
-				"selected": false,
-			},
-            			{
-				'data_source_pk': "5",
-				'file_path': "yet_another_R1.fastq",
-				'file_type': "FASTQ",
-				'sample': "yet_another",
-				'metadata': {},
-				"condition": undefined,
-				"selected": false,
-			},
-			{
-				'data_source_pk': "6",
-				'file_path': "yet_another_R2.fastq",
-				'file_type': "FASTQ",
-				'sample': "yet_another",
-				'metadata': {},
-				"condition": undefined,
-				"selected": false,
-			}
-		];
+			newSampleName: ''
+		};
+// 		var data_sources = [
+// 			{
+// 				'data_source_pk': "1",
+// 				'file_path': "sample_R1.fastq",
+// 				'file_type': "FASTQ",
+// 				'sample': "sample",
+// 				'metadata': {
+// 					"paired": true,
+// 					"strand": "1"
+// 				},
+// 				"condition": undefined,
+// 				"selected": false,
+// 			},
+// 			{
+// 				'data_source_pk': "2",
+// 				'file_path': "sample_R2.fastq",
+// 				'file_type': "FASTQ",
+// 				'sample': "sample",
+// 				'metadata': {
+// 					"paired": true,
+// 					"strand": "2"
+// 				},
+// 				"condition": undefined,
+// 				"selected": false,
+// 			},
+// 			{
+// 				'data_source_pk': "3",
+// 				'file_path': "another_R1.fastq",
+// 				'file_type': "FASTQ",
+// 				'sample': "another",
+// 				'metadata': {},
+// 				"condition": undefined,
+// 				"selected": false,
+// 			},
+// 			{
+// 				'data_source_pk': "4",
+// 				'file_path': "another_R2.fastq",
+// 				'file_type': "FASTQ",
+// 				'sample': "another",
+// 				'metadata': {},
+// 				"condition": undefined,
+// 				"selected": false,
+// 			},
+//             			{
+// 				'data_source_pk': "5",
+// 				'file_path': "yet_another_R1.fastq",
+// 				'file_type': "FASTQ",
+// 				'sample': "yet_another",
+// 				'metadata': {},
+// 				"condition": undefined,
+// 				"selected": false,
+// 			},
+// 			{
+// 				'data_source_pk': "6",
+// 				'file_path': "yet_another_R2.fastq",
+// 				'file_type': "FASTQ",
+// 				'sample': "yet_another",
+// 				'metadata': {},
+// 				"condition": undefined,
+// 				"selected": false,
+// 			}
+// 		];
 	</script>
 	<script src="{% static 'js/experiements/manage_conditions.js' %}"></script>
 {% endblock scripts %}

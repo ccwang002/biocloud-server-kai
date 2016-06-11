@@ -38,6 +38,8 @@ def create_new_experiment(request):
             'file_type': ds.file_type,
             'sample': ds.sample_name,
             'metadata': ds.metadata,
+            'condition': -1,
+            'selected': False,
         }
         for ds in data_sources
     ]))

@@ -21,6 +21,7 @@ class ExperimentCreateForm(forms.ModelForm):
     @cached_property
     def helper(self):
         helper = FormHelper()
+        helper.form_id = 'new-experiment-form'
         helper.layout = Layout(
             Fieldset(
                 '',
