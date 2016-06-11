@@ -151,9 +151,11 @@ var vm = new Vue({
     }
 });
 
-// Add two default conditions
-vm.addCondition('Control');
-vm.addCondition('Test');
+// Add two default conditions if no condition is already given
+if (vm.conditions.length == 0) {
+    vm.addCondition('Control');
+    vm.addCondition('Test');
+}
 
 
 // When posting the form, put the condition and data source selection and
