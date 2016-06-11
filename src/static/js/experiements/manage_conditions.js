@@ -1,4 +1,4 @@
-var groupBy = function (array, grouperFn) {
+var groupBy = function(array, grouperFn) {
     // Example of using groupBy
     // array = [
     //      {label: 'A', val: 1},
@@ -39,7 +39,7 @@ var vm = new Vue({
     computed: {
         filteredDataSources: function() {
             var filterStr = this.sourceFilter;
-            return this.dataSources.filter(function (source) {
+            return this.dataSources.filter(function(source) {
                 return source.file_path.indexOf(filterStr.filePath) > -1 &&
                     source.file_type.indexOf(filterStr.fileType) > -1 &&
                     source.sample.indexOf(filterStr.sample) > -1;
@@ -61,7 +61,7 @@ var vm = new Vue({
                 this.selectedDataSources,
                 function (source) { return source.sample; }
             );
-            return groupedSources.map(function (group) {
+            return groupedSources.map(function(group) {
                 // if all sources' condition are the same, keep it
                 var equalCondition = group.grouped.map(
                     function (source) { return source.condition; }
@@ -70,7 +70,7 @@ var vm = new Vue({
                 });
                 return {
                     sample: group.key,
-                    files: group.grouped.map(function (source) {
+                    files: group.grouped.map(function(source) {
                         return {
                             pk: source.data_source_pk,
                             label: (
@@ -99,11 +99,11 @@ var vm = new Vue({
         }
     },
     methods: {
-        removeCondition: function (index, event){
+        removeCondition: function(index, event) {
             // remove current condition
             this.conditions.splice(index, 1);
         },
-        addCondition: function (label) {
+        addCondition: function(label) {
             var defaultLabel = 'New condition ' + (this.numConditionCreated + 1);
             this.conditions.push({
                 '_uid': this.numConditionCreated,
@@ -111,7 +111,7 @@ var vm = new Vue({
             });
             this.numConditionCreated += 1;
         },
-        leaveEditMode: function (){
+        leaveEditMode: function() {
             // trim leading and trailing spaces of all conditions
             this.conditions.forEach(function (condition) {
                 condition.label = condition.label.trim();
@@ -121,30 +121,30 @@ var vm = new Vue({
         enterEditMode: function() {
             this.editable = true;
         },
-        updateFilteredSourcesSelectedStatus: function (status) {
+        updateFilteredSourcesSelectedStatus: function(status) {
             // Alter the filtered data sources select status
             // based on the selectedStatus
-            this.filteredDataSources.forEach(function (source) {
+            this.filteredDataSources.forEach(function(source) {
                 source.selected = status;
             });
         },
-        clearAllFilters: function () {
+        clearAllFilters: function() {
             var filters = this.sourceFilter;
-            Object.keys(this.sourceFilter).forEach(function (f) {
+            Object.keys(this.sourceFilter).forEach(function(f) {
                 Vue.set(filters, f, '');
             });
         },
-        renameFilteredSourcesName: function () {
+        renameFilteredSourcesName: function() {
             var newName = this.newSampleName;
-            this.filteredDataSources.forEach(function (source) {
+            this.filteredDataSources.forEach(function(source) {
                 source.sample = newName;
             });
         },
-        updateSourceCondition: function (sample, conditionId) {
+        updateSourceCondition: function(sample, conditionId) {
             // Binding to condition ID makes things easier
-            this.selectedDataSources.filter(function (source) {
+            this.selectedDataSources.filter(function(source) {
                 return source.sample === sample;
-            }).forEach(function (source) {
+            }).forEach(function(source) {
                 source.condition = conditionId;
             });
         }
