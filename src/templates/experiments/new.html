@@ -114,6 +114,8 @@
 			{% endverbatim %}
 			</tbody>
 		</table>
+
+		<button id="submit-form" class="btn btn-primary">Create Experiment</button>
 	</div><!-- /#app -->
 {% endblock content %}
 
@@ -127,9 +129,8 @@
 	<script>
 		var vueAppData = {
 			// states we need to keep across POST/GET forms
-			conditions: [
-			],
-			numConditionCreated: 0,
+			conditions: {{ conditions_json }},
+			numConditionCreated: {{ num_condition_created }},
 			dataSources: {{ data_source_json }},
 			// states only needed for editing
 			editable: true,

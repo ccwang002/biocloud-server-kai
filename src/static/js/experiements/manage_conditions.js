@@ -156,15 +156,20 @@ vm.addCondition('Control');
 vm.addCondition('Test');
 
 
-// set posting
+// When posting the form, put the condition and data source selection and
+// annotation info as the value of a newly created hidden input
 $form = $('#new-experiment-form');
-$form.submit(function (event) {
+$form.submit(function() {
     var $input = $('<input type="hidden" name="extraData">');
     $input.val(JSON.stringify({
         conditions: vm.conditions,
         numConditionCreated: vm.numConditionCreated,
-        selectedDataSources: vm.selectedDataSources
+        dataSources: vm.dataSources
     }));
     $(this).append($input);
     return true;
+});
+
+$("#submit-form").click(function() {
+    $form.submit();
 });
