@@ -17,6 +17,7 @@ venv/
 assets/
 local.db
 *.sqlite3
+db_dump/
 
 # Linux Editors
 *~
