@@ -7,14 +7,14 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 	<meta name="viewport" content="width=device-width, initial-scale=1" />
 	{% block head_tags %}{% endblock head_tags %}
-	{% compress css %}
-		{% block css %}
+	{% block css %}
+		{% compress css %}
 			<!-- Bootstrap v3 via SASS-->
 			<link rel="stylesheet" type="text/x-scss" href="{% static 'css/site.scss' %}">
-			<!-- FontAwesome v4 Icon set -->
-			<link rel="stylesheet" type="text/css" href="{% static 'css/vendors/font-awesome.min.css' %}" media="all">
-		{% endblock css %}
-	{% endcompress css %}
+		{% endcompress css %}
+		<!-- FontAwesome v4 Icon set -->
+		<link rel="stylesheet" type="text/css" href="{% static 'css/vendors/font-awesome.min.css' %}" media="all">
+	{% endblock css %}
 	{% block extra_css %}{% endblock extra_css %}
 	{% block titletag %}
 		<title>{% block title %}{% endblock %} | BioCloud</title>
