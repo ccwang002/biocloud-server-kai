@@ -33,14 +33,14 @@
 	</div>
 	{% include '_includes/footer.html' %}
 {% endblock %}
+{% block js %}
+	<!-- jQuery v2 -->
+	<script src="{% static 'js/vendors/jquery.js' %}"></script>
+	<!-- Bootstrap v3 -->
+	<script src="{% static 'js/vendors/bootstrap.js' %}"></script>
+{% endblock js %}
+{% block extra_js %}{% endblock %}
 {% compress js %}
-	{% block js %}
-		<!-- jQuery v2 -->
-		<script src="{% static 'js/vendors/jquery.js' %}"></script>
-		<!-- Bootstrap v3 -->
-		<script src="{% static 'js/vendors/bootstrap.js' %}"></script>
-	{% endblock js %}
-	{% block extra_js %}{% endblock %}
 	{% block scripts %}{% endblock %}
 {% endcompress js %}
 </body>
