@@ -104,12 +104,13 @@ var vm = new Vue({
             this.conditions.splice(index, 1);
         },
         addCondition: function(label) {
-            var defaultLabel = 'New condition ' + (this.numConditionCreated + 1);
+            // keep _uid = 0 blank, which defaults to (All)
+            this.numConditionCreated += 1;
+            var defaultLabel = 'New condition ' + this.numConditionCreated;
             this.conditions.push({
                 '_uid': this.numConditionCreated,
                 'label': label ? label.trim() : defaultLabel
             });
-            this.numConditionCreated += 1;
         },
         leaveEditMode: function() {
             // trim leading and trailing spaces of all conditions

@@ -22,6 +22,7 @@ def create_new_experiment(request):
             cond['_uid']: cond['label']
             for cond in conditions
         }
+        condition_labels['0'] = '(All)'
         num_condition_created = extra_data.get('numConditionCreated', 0)
         labelled_data_sources = extra_data.get('dataSources', [])
         if form.is_valid():
@@ -63,7 +64,7 @@ def create_new_experiment(request):
                 'file_type': ds.file_type,
                 'sample': ds.sample_name,
                 'metadata': ds.metadata,
-                'condition': -1,
+                'condition': '0',
                 'selected': False,
             }
             for ds in data_sources

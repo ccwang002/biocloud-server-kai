@@ -101,6 +101,7 @@
 							v-on:change="updateSourceCondition(sourcesBySample.sample, sourcesBySample.condition)"
 							class="form-control"
 					>
+						<option value="0">(All)</option>
 						<option v-for="condition in conditions" v-bind:value="condition._uid">
 							{{ condition.label }}
 						</option>
