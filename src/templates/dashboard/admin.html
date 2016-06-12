@@ -1,0 +1,14 @@
+{% extends 'dashboard/base.html' %}
+
+{% block tab_title %}Access to Admin{% endblock tab_title %}
+
+{% block dashboard_tab %}
+{% include 'dashboard/_includes/tabs.html' with active='admin' %}
+{% endblock dashboard_tab %}
+
+{% block dashboard_content %}
+	<h2>Access to Admin</h2>
+	<p>Powered by Django Admin, which gives administrator's more power to
+		manage all users' data sources and analyses.</p>
+	<p>Click <a href="{% url 'admin:index' %}">here</a> to access.</p>
+{% endblock dashboard_content %}
