@@ -25,13 +25,12 @@ def create_new_experiment(request):
         num_condition_created = extra_data.get('numConditionCreated', 0)
         labelled_data_sources = extra_data.get('dataSources', [])
         if form.is_valid():
-            experiment = form.save()
-            messages.success(request, ugettext(
-                'You have created a new experiment {name}'.format(
-                    name=experiment.name
-                ),
-            ))
-            condition_objs = [
+            # Create the experiment first
+            experiment = form.save(commit=False)
+            experiment.owner = request.user
+            experiment.save()
+            # Create all conditions of the experiment
+            condition_objects = [
                 Condition(
                     experiment=experiment,
                     condition=condition_labels[ds['condition']],
@@ -43,7 +42,12 @@ def create_new_experiment(request):
                 )
                 for ds in labelled_data_sources if ds['selected']
             ]
-            Condition.objects.bulk_create(condition_objs)
+            Condition.objects.bulk_create(condition_objects)
+            messages.success(request, ugettext(
+                'You have created a new experiment {name}'.format(
+                    name=experiment.name
+                ),
+            ))
             return redirect('index')
         # if the form is invalid, remain this form instance and pass to the
         # render() at the end (all errors has been generated during the

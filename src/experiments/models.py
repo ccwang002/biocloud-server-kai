@@ -1,4 +1,6 @@
+from django.conf import settings
 from django.db import models
+from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 
 from data_sources.models import DataSource
@@ -8,6 +10,12 @@ class Experiment(models.Model):
     """A model to store relations between data sources.
 
     """
+    owner = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name='experiments',
+    )
+
     name = models.CharField(
         max_length=512,
         verbose_name=_("name"),
@@ -26,6 +34,47 @@ class Experiment(models.Model):
         DataSource, through="Condition",
     )
 
+    date_created = models.DateTimeField(
+        verbose_name=_('date created'),
+        default=timezone.now,
+        editable=False,
+    )
+
+    @property
+    def sample_names(self):
+        """Return all distinct sample names"""
+        return (
+            self.conditions
+                .values_list('sample_name', flat=True)
+                .distinct()
+        )
+
+    def condition_names(self):
+        """Return all distinct condition names"""
+        return (
+            self.conditions
+                .values_list('condition', flat=True)
+                .distinct()
+        )
+
+    def __str__(self):
+        return (
+            '{owner:s}\'s {name:s} '
+            '(involving {num_sources:d} data sources '
+            'grouped as {num_sample:d} samples: {samples:s})'
+            .format(
+                owner=self.owner.name,
+                name=self.name,
+                num_sample=len(self.sample_names),
+                samples=', '.join(self.sample_names),
+                num_sources=self.conditions.count(),
+            )
+        )
+
+    class Meta:
+        get_latest_by = "date_created"
+        ordering = ['-date_created']
+
 
 class Condition(models.Model):
     """Intermediary model to connect experiments and data sources.
@@ -38,7 +87,7 @@ class Condition(models.Model):
 
     experiment = models.ForeignKey(
         Experiment,
-        related_name="data_source_conditions",
+        related_name="conditions",
         on_delete=models.CASCADE,
     )
 
@@ -74,3 +123,13 @@ class Condition(models.Model):
 
     class Meta:
         unique_together = ("experiment", "condition", "data_source")
+
+    def __str__(self):
+        return (
+            '{condition:s} ({source_file_path:} of {sample_name:s})'
+            .format(
+                condition=self.condition,
+                sample_name=self.sample_name,
+                source_file_path=self.data_source.get_rel_file_path(),
+            )
+        )
