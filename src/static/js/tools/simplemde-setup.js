@@ -1,28 +1,24 @@
-(function (SimpleMDE) {
-
-    var elementList = document.getElementsByTagName('textarea');
-    for (var i = 0; i < elementList.length; i++) {
-        var element = elementList[i];
-        if (!element.hasAttribute('data-simplemde')) {
-            continue;
-        }
-        new SimpleMDE({
-            'element': element,
-            'indentWithTabs': false,
-            'spellChecker': false,
-            'status': false,
-            'tabSize': 4
+// use jQuery or the jQuery bundled by django admin
+(function($) {
+    $(document).ready(function(){
+        $('textarea[data-simplemde]').each(function() {
+            new SimpleMDE({
+                'element': this,
+                'indentWithTabs': false,
+                'spellChecker': false,
+                'status': false,
+                'tabSize': 4
+            });
         });
-    }
-
-})(SimpleMDE);
+    });
+})(jQuery || (typeof django !== 'undefined' && django.jQuery));
 
 
 (function (SimpleMDE) {
 
     if (!document.querySelectorAll || !window.DOMParser)
         return;
-    
+
     var parser = new DOMParser();
     var elementList = document.querySelectorAll(
         '.editor-readonly > .editor-preview'
