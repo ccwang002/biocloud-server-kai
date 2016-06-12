@@ -29,4 +29,5 @@ class ExperimentCreateForm(forms.ModelForm):
                 'description',
             ),
         )
+        helper.include_media = False
         return helper
