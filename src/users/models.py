@@ -148,7 +148,17 @@ class EmailUser(AbstractBaseUser, PermissionsMixin):
         swappable = 'AUTH_USER_MODEL'
 
     def __str__(self):
-        return self.email
+        if self.name:
+            return '{name:s} <{email:s}> ({pk!s})'.format(
+                name=self.name,
+                email=self.email,
+                pk=self.pk
+            )
+        else:
+            return '{email:s} ({pk!s})'.format(
+                email=self.email,
+                pk=self.pk
+            )
 
     def get_full_name(self):
         return self.name

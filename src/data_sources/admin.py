@@ -36,6 +36,8 @@ class DataSourceAdmin(admin.ModelAdmin):
         'sample_name', 'file_type',
         'metadata',
     ]
+    ordering = ['sample_name', 'file_path']
+    list_display_links = ['file_path']
     list_filter = (ChecksumBlankListFilter, 'file_type')
 
     form = DataSourceCreateForm

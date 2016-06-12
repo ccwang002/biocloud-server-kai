@@ -35,6 +35,7 @@ class ExperimentAdmin(admin.ModelAdmin):
         'name',
         'owner',
         'date_created',
+        'summarize_experiment',
     ]
     list_display_links = [
         'name',
@@ -45,4 +46,8 @@ class ExperimentAdmin(admin.ModelAdmin):
     exclude = [
         'data_sources',
     ]
+
+    def summarize_experiment(self, experiment):
+        return str(experiment)
+    summarize_experiment.short_description = 'Summary'
 

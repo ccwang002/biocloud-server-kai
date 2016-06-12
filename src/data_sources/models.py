@@ -62,6 +62,7 @@ class DataSource(models.Model):
         verbose_name = _('data source')
         verbose_name_plural = _('data sources')
         unique_together = ('owner', 'file_path')
+        ordering = ('sample_name', 'file_path')
 
     def __str__(self):
         return (
