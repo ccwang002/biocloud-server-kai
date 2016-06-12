@@ -39,7 +39,7 @@ def create_new_experiment(request):
                         pk=ds['data_source_pk']
                     ),
                     sample_name=ds['sample'],
-                    strand=ds['metadata'].get('strand', None),
+                    strand=ds['metadata'].get('strand', ''),
                 )
                 for ds in labelled_data_sources if ds['selected']
             ]
