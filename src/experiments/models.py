@@ -47,26 +47,28 @@ class Experiment(models.Model):
             self.conditions
                 .values_list('sample_name', flat=True)
                 .distinct()
+                .order_by('sample_name')
         )
 
+    @property
     def condition_names(self):
         """Return all distinct condition names"""
         return (
             self.conditions
                 .values_list('condition', flat=True)
                 .distinct()
+                .order_by('condition')
         )
 
     def __str__(self):
         return (
             '{owner:s}\'s {name:s} '
             '(involving {num_sources:d} data sources '
-            'grouped as {num_sample:d} samples: {samples:s})'
+            'grouped as {num_sample:d}'
             .format(
                 owner=self.owner.name,
                 name=self.name,
                 num_sample=len(self.sample_names),
-                samples=', '.join(self.sample_names),
                 num_sources=self.conditions.count(),
             )
         )
