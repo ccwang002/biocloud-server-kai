@@ -41,7 +41,16 @@
 				<td>{{ source.file_path }}</td>
 				<td>{{ source.file_type }}</td>
 				<td><input type="text" v-model="source.sample"></td>
-				<td><input type="text" v-model="source.metadata.strand"></td>
+				<td>
+					<select
+							v-model="source.metadata.strand"
+							class="form-control"
+					>
+						<option value="">--------</option>
+						<option value="1">R1 (forward)</option>
+						<option value="2">R2 (reversed)</option>
+					</select>
+				</td>
 			</tr>
 			{% endverbatim %}
 			</tbody>
@@ -108,8 +117,9 @@
 					</select>
 				</td>
 				<td>
-					<span v-for="file in sourcesBySample.files" class="source-label">{{
-						file.label }}</span>
+					<span v-for="file in sourcesBySample.files" class="source-label">
+						{{ file.label }}
+					</span>
 				</td>
 			</tr>
 			{% endverbatim %}
