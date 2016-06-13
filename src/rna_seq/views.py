@@ -1,7 +1,7 @@
-from analyses.views import AbstractPipelineFormView
+from analyses.views import AbstractAnalysisFormView
 from .forms import RNASeqCreateForm
 
 
-class RNASeqFormView(AbstractPipelineFormView):
+class RNASeqFormView(AbstractAnalysisFormView):
     form_class = RNASeqCreateForm
     template_name = 'pipelines/rna_seq.html'

@@ -10,6 +10,7 @@ from data_sources.models import DataSource
 from .forms import ExperimentCreateForm
 from .models import Condition
 
+
 @login_required
 def create_new_experiment(request):
     if request.method == 'POST':

@@ -7,7 +7,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.utils.translation import ugettext_lazy as _
 from django.views.generic import CreateView
 
-from .forms import AbstractPipelineCreateForm
+from .forms import AbstractAnalysisCreateForm
 
 Pipeline = namedtuple('Pipeline', ['name', 'description', 'url'])
 
@@ -34,9 +34,9 @@ class SelectNewAnalysisTypeView(LoginRequiredMixin, TemplateView):
         return context
 
 
-class AbstractPipelineFormView(LoginRequiredMixin, CreateView):
+class AbstractAnalysisFormView(LoginRequiredMixin, CreateView):
 
-    form_class = AbstractPipelineCreateForm
+    form_class = AbstractAnalysisCreateForm
     template_name = None
 
     def get_form_kwargs(self):
