@@ -64,12 +64,14 @@ class Experiment(models.Model):
         return (
             '{owner:s}\'s {name:s} '
             '(involving {num_sources:d} data sources '
-            'grouped as {num_sample:d}'
+            'grouped as {num_sample:d} samples '
+            'and {num_condition:d} conditions)'
             .format(
                 owner=self.owner.name,
                 name=self.name,
                 num_sample=len(self.sample_names),
                 num_sources=self.conditions.count(),
+                num_condition=len(self.condition_names),
             )
         )
 

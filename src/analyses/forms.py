@@ -9,17 +9,19 @@ from core.forms import RequestValidationMixin
 from core.widgets import SimpleMDEWidget
 from experiments.models import Experiment
 from .models import AbstractAnalysisModel
+from .fields import ExperimentChoiceField
 
 
 class AbstractAnalysisCreateForm(
     RequestValidationMixin, LoginRequiredMixin, forms.ModelForm
 ):
 
+    experiment = ExperimentChoiceField(queryset=None)
+
     class Meta:
         model = AbstractAnalysisModel
         fields = (
             'name', 'description',
-            'experiment',
         )
         widgets = {
             'description': SimpleMDEWidget(),

@@ -1,10 +1,21 @@
 from django import forms
 
 
-class DataSourceModelChoiceField(forms.ModelMultipleChoiceField):
+class ExperimentChoiceField(forms.ModelChoiceField):
 
-    widget = forms.CheckboxSelectMultiple
+    widget = forms.Select
 
-    def label_from_instance(self, obj):
-        """Modify how the option display of a DataSource object is rendered."""
-        return obj.file_path
+    def label_from_instance(self, experiment):
+        """Option display label of a Experiment object.
+
+        """
+        return (
+            '{name:s} '
+            '(Conditions: {conditions:s}) '
+            'created at {date_created:%Y-%m-%d} UTC'
+            .format(
+                name=experiment.name,
+                conditions=', '.join(experiment.condition_names),
+                date_created=experiment.date_created,
+            )
+        )
