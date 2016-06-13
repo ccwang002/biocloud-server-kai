@@ -1,6 +1,6 @@
 {% extends 'experiments/base.html' %}
 
-{% load crispy_forms_tags static %}
+{% load crispy_forms_tags static compress %}
 
 {% block title %}New experiment{% endblock title %}
 
@@ -14,9 +14,12 @@
 	{% crispy form %}
 	<div id="app">
 		<h2>Group Sources as Samples</h2>
-		<button v-on:click="updateFilteredSourcesSelectedStatus(true)" class="btn btn-default">Select all</button>
-		<button v-on:click="updateFilteredSourcesSelectedStatus(false)" class="btn btn-default">Unselect all</button>
-		<button v-on:click="clearAllFilters" class="btn btn-default">Clear all filters</button>
+		<button v-on:click="updateFilteredSourcesSelectedStatus(true)"
+				class="btn btn-default">Select all</button>
+		<button v-on:click="updateFilteredSourcesSelectedStatus(false)"
+				class="btn btn-default">Unselect all</button>
+		<button v-on:click="clearAllFilters"
+				class="btn btn-default">Clear all filters</button>
 		<table class="table table-striped">
 			<thead>
 			<tr>
@@ -36,16 +39,15 @@
 			</thead>
 			<tbody>
 			{% verbatim %}
-			<tr v-for="(index, source) in filteredDataSources" track-by="data_source_pk">
+			<tr v-for="(index, source) in filteredDataSources"
+				track-by="data_source_pk">
 				<td><input type="checkbox" v-model="source.selected"></td>
 				<td>{{ source.file_path }}</td>
 				<td>{{ source.file_type }}</td>
 				<td><input type="text" v-model="source.sample"></td>
 				<td>
-					<select
-							v-model="source.metadata.strand"
-							class="form-control"
-					>
+					<select v-model="source.metadata.strand"
+							class="form-control">
 						<option value="">--------</option>
 						<option value="1">R1 (forward)</option>
 						<option value="2">R2 (reversed)</option>
@@ -58,34 +60,39 @@
 		<p>
 			Rename filtered sources' sample name to
 			<input type="text"
-						 v-model="newSampleName"
-						 v-on:keyup.Enter="renameFilteredSourcesName"
-						 v-bind="{disabled: !canRenameSample}">
+				   v-model="newSampleName"
+				   v-on:keyup.Enter="renameFilteredSourcesName"
+				   v-bind="{disabled: !canRenameSample}">
 			<button v-on:click="renameFilteredSourcesName"
-							class="btn btn-default btn-sm"
-							v-bind="{disabled: !canRenameSample}"
-			>Rename</button>
+					v-bind="{disabled: !canRenameSample}"
+					class="btn btn-default btn-sm">Rename</button>
 		</p>
 
 
 		<h2>Conditions</h2>
 		<div v-show="editable">
-			<button v-on:click="leaveEditMode()" class="btn btn-danger">Leave Edit Mode</button>
+			<button v-on:click="leaveEditMode()"
+					class="btn btn-danger">Leave Edit Mode</button>
 			<ol>
 				<li v-for="(index, condition) in conditions" track-by="_uid">
 					<input type="text" v-model="condition.label">
-					<button v-on:click="removeCondition(index, $event)" class="btn btn-xs btn-danger">Remove</button>
+					<button v-on:click="removeCondition(index, $event)"
+							class="btn btn-xs btn-danger">Remove</button>
 				</li>
 				<li class="list-unstyled">
-					<button v-on:click="addCondition()" class="btn btn-default">Add Condition</button>
+					<button v-on:click="addCondition()"
+							class="btn btn-default">Add Condition</button>
 				</li>
 			</ol>
 		</div>
 		<div v-show="!editable">
-			<button v-on:click="enterEditMode()" class="btn btn-success">Edit Condition</button>
+			<button v-on:click="enterEditMode()"
+					class="btn btn-success">Edit Condition</button>
 			{% verbatim %}
 			<ol class="list-inline">
-				<li v-for="(index, condition) in conditions" track-by="_uid">{{ index + 1 }}. {{ condition.label }}</li>
+				<li v-for="(index, condition) in conditions" track-by="_uid">
+					{{ index + 1 }}. {{ condition.label }}
+				</li>
 			</ol>
 			{% endverbatim %}
 		</div>
@@ -105,11 +112,9 @@
 			<tr v-for="(index, sourcesBySample) in dataSourcesBySample" track-by="sample">
 				<td>{{ sourcesBySample.sample }}</td>
 				<td>
-					<select
-							v-model="sourcesBySample.condition"
+					<select v-model="sourcesBySample.condition"
 							v-on:change="updateSourceCondition(sourcesBySample.sample, sourcesBySample.condition)"
-							class="form-control"
-					>
+							class="form-control">
 						<option value="0">(All)</option>
 						<option v-for="condition in conditions" v-bind:value="condition._uid">
 							{{ condition.label }}
@@ -137,12 +142,15 @@
 {% endblock extra_js %}
 
 {% block scripts %}
+{% compress js %}
 	<script>
 		var vueAppData = {
+
 			// states we need to keep across POST/GET forms
 			conditions: {{ conditions_json }},
 			numConditionCreated: {{ num_condition_created }},
 			dataSources: {{ data_source_json }},
+
 			// states only needed for editing
 			editable: true,
 			sourceFilter: {
@@ -151,70 +159,10 @@
 				sample: ''
 			},
 			newSampleName: ''
+
 		};
-// 		var data_sources = [
-// 			{
-// 				'data_source_pk': "1",
-// 				'file_path': "sample_R1.fastq",
-// 				'file_type': "FASTQ",
-// 				'sample': "sample",
-// 				'metadata': {
-// 					"paired": true,
-// 					"strand": "1"
-// 				},
-// 				"condition": undefined,
-// 				"selected": false,
-// 			},
-// 			{
-// 				'data_source_pk': "2",
-// 				'file_path': "sample_R2.fastq",
-// 				'file_type': "FASTQ",
-// 				'sample': "sample",
-// 				'metadata': {
-// 					"paired": true,
-// 					"strand": "2"
-// 				},
-// 				"condition": undefined,
-// 				"selected": false,
-// 			},
-// 			{
-// 				'data_source_pk': "3",
-// 				'file_path': "another_R1.fastq",
-// 				'file_type': "FASTQ",
-// 				'sample': "another",
-// 				'metadata': {},
-// 				"condition": undefined,
-// 				"selected": false,
-// 			},
-// 			{
-// 				'data_source_pk': "4",
-// 				'file_path': "another_R2.fastq",
-// 				'file_type': "FASTQ",
-// 				'sample': "another",
-// 				'metadata': {},
-// 				"condition": undefined,
-// 				"selected": false,
-// 			},
-//             			{
-// 				'data_source_pk': "5",
-// 				'file_path': "yet_another_R1.fastq",
-// 				'file_type': "FASTQ",
-// 				'sample': "yet_another",
-// 				'metadata': {},
-// 				"condition": undefined,
-// 				"selected": false,
-// 			},
-// 			{
-// 				'data_source_pk': "6",
-// 				'file_path': "yet_another_R2.fastq",
-// 				'file_type': "FASTQ",
-// 				'sample': "yet_another",
-// 				'metadata': {},
-// 				"condition": undefined,
-// 				"selected": false,
-// 			}
-// 		];
 	</script>
 	<script src="{% static 'js/experiements/manage_conditions.js' %}"></script>
+{% endcompress %}
 {% endblock scripts %}
 
