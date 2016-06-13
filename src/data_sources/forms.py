@@ -74,7 +74,7 @@ class BaseDataSourceModelForm(forms.ModelForm):
 
 class DataSourceCreateForm(BaseDataSourceModelForm):
 
-    class Meta:
+    class Meta(BaseDataSourceModelForm.Meta):
         model = DataSource
         fields = [
             'owner', 'file_path',
@@ -86,13 +86,11 @@ class DataSourceCreateForm(BaseDataSourceModelForm):
 
 class DataSourceUpdateForm(BaseDataSourceModelForm):
 
-    class Meta:
-        model = DataSource
+    class Meta(BaseDataSourceModelForm.Meta):
         fields = [
             'sample_name', 'file_type',
             'checksum', 'metadata',
         ]
-        checksum_field = DataSource._meta.get_field('checksum')
 
     def get_owner(self):
         return self.instance.owner
@@ -109,8 +107,7 @@ class DataSourceUpdateForm(BaseDataSourceModelForm):
 
 class DataSourceDiscoveryForm(DataSourceCreateForm):
 
-    class Meta:
-        model = DataSource
+    class Meta(DataSourceCreateForm.Meta):
         fields = [
             'file_path',
             'sample_name', 'file_type',
