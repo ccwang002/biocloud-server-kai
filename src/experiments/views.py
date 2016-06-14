@@ -3,13 +3,36 @@ import json
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.shortcuts import render, redirect
+from django.http import JsonResponse, HttpResponseBadRequest
+from django.shortcuts import render, redirect, get_object_or_404
 from django.utils.html import mark_safe
 from django.utils.translation import ugettext
+from django.views.decorators.http import require_POST
 from django.views.generic import ListView, DetailView
+
+from core.decorators import ajax_required
 from data_sources.models import DataSource
 from .forms import ExperimentCreateForm
 from .models import Experiment, Condition
+
+
+@require_POST
+@ajax_required
+@login_required
+def get_experiment_info_json(request):
+    try:
+        pk = request.POST['experiment_pk']
+    except KeyError:
+        return HttpResponseBadRequest
+    experiment = get_object_or_404(
+        Experiment,
+        owner=request.user,
+        pk=pk
+    )
+    return JsonResponse({
+        'name': experiment.name,
+        'conditions': list(experiment.condition_names),
+    })
 
 
 @login_required

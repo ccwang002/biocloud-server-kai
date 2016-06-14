@@ -2,6 +2,7 @@ from django.conf.urls import url
 
 from .views import (
     create_new_experiment,
+    get_experiment_info_json,
     ExperimentListView,
     ExperimentDetailView,
 )
@@ -14,4 +15,9 @@ urlpatterns = [
         ExperimentDetailView.as_view(),
         name='detail_experiment',
     ),
+    url(
+        r'^fetch/info/$',
+        get_experiment_info_json,
+        name='ajax_experiment_info',
+    )
 ]
