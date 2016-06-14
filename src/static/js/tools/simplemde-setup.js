@@ -24,12 +24,12 @@
 
     var parser = new DOMParser();
     var elementList = document.querySelectorAll(
-        '.editor-readonly > .editor-preview'
+        '.markdown-readonly > textarea'
     );
     for (var i = 0; i < elementList.length; i++) {
         var element = elementList[i];
         var source = element.textContent || element.innerText;
-        element.innerHTML = SimpleMDE.prototype.markdown(
+        element.parentNode.innerHTML = SimpleMDE.prototype.markdown(
             parser.parseFromString(source, 'text/html').documentElement.textContent
         );
     }

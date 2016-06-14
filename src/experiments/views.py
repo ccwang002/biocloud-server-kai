@@ -93,3 +93,16 @@ class ExperimentListView(LoginRequiredMixin, ListView):
         # return super().get_queryset().filter(
         #     owner__exact=self.request.user,
         # )
+
+
+class ExperimentDetailView(LoginRequiredMixin, DetailView):
+    model = Experiment
+    template_name = "experiments/detail.html"
+
+    def get_queryset(self):
+        return self.request.user.experiments.all()
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['experiment'] = context['object']
+        return context

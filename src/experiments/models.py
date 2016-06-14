@@ -93,6 +93,9 @@ class Experiment(models.Model):
             samples.default_factory = None
         return grouped_data_sources
 
+    def get_absolute_url(self):
+        return reverse('detail_experiment', kwargs={'pk': self.pk})
+
     @cached_property
     def summary(self):
         return (

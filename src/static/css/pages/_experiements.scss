@@ -7,3 +7,13 @@
         margin-left: 0.75em;
     }
 }
+
+.markdown-readonly {
+    > textarea {
+        display: none;
+    }
+    blockquote {
+        font-size: 1em;
+        color: $gray;
+    }
+}
