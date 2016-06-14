@@ -57,7 +57,7 @@ class Experiment(models.Model):
             self.conditions
                 .values_list('condition', flat=True)
                 .distinct()
-                .order_by('condition')
+                .order_by('condition_order')
         )
 
     def __str__(self):
