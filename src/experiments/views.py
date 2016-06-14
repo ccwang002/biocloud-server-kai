@@ -23,7 +23,10 @@ def create_new_experiment(request):
             cond['_uid']: cond['label']
             for cond in conditions
         }
-        num_condition_created = extra_data.get('numConditionCreated', 0)
+        num_condition_created = max(
+            extra_data.get('numConditionCreated', 0),
+            len(conditions)
+        )
         labelled_data_sources = extra_data.get('dataSources', [])
         if form.is_valid():
             # Create the experiment first
@@ -35,6 +38,7 @@ def create_new_experiment(request):
                 Condition(
                     experiment=experiment,
                     condition=condition_labels[ds['condition']],
+                    condition_order=ds['condition'],
                     data_source=DataSource.objects.get(
                         pk=ds['data_source_pk']
                     ),

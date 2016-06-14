@@ -97,7 +97,14 @@ class Condition(models.Model):
 
     condition = models.CharField(
         max_length=512,
-        help_text=_("Name of the condition")
+        help_text=_("Name of the condition. (All) is a special condition "
+                    "which implies this data source appears in every "
+                    "condition.")
+    )
+
+    condition_order = models.IntegerField(
+        help_text=_("Order of the condition. 0 should always represent the "
+                    "special condition (All).")
     )
 
     data_source = models.ForeignKey(
