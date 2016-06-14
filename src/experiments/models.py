@@ -52,9 +52,13 @@ class Experiment(models.Model):
 
     @property
     def condition_names(self):
-        """Return all distinct condition names"""
+        """Return all distinct condition names
+
+        Note that condition (ALL) is ignored.
+        """
         return (
             self.conditions
+                .filter(condition_order__gt=0)
                 .values_list('condition', flat=True)
                 .distinct()
                 .order_by('condition_order')
