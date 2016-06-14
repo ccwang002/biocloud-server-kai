@@ -34,6 +34,10 @@
 {% block js %}
 	<!-- jQuery v2 -->
 	<script src="{% static 'js/vendors/jquery.js' %}"></script>
+	<!-- AJAX CSRF token -->
+	{% compress js %}
+	<script src="{% static 'js/ajax_csrf_token.js' %}"></script>
+	{% endcompress js %}
 	<!-- Bootstrap v3 -->
 	<script src="{% static 'js/vendors/bootstrap.js' %}"></script>
 {% endblock js %}
