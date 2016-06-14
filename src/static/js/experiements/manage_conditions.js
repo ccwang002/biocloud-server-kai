@@ -37,6 +37,11 @@ var vm = new Vue({
     // data are from the template HTML
     data: vueAppData,
     computed: {
+        userDefinedConditions: function() {
+            return this.conditions.filter(
+                function(cond){ return cond._uid > 0; }
+            );
+        },
         filteredDataSources: function() {
             var filterStr = this.sourceFilter;
             return this.dataSources.filter(function(source) {
@@ -81,7 +86,7 @@ var vm = new Vue({
                             )
                         };
                     }),
-                    condition: equalCondition ? group.grouped[0].condition : undefined
+                    condition: equalCondition ? group.grouped[0].condition : 0
                 };
             });
         },
@@ -92,7 +97,7 @@ var vm = new Vue({
                 function (grp) { return grp.condition; }
             ).map(function (condGroup) {
                 return {
-                    condition: conditions[condGroup.key] ,
+                    condition: conditions[condGroup.key],
                     samples: condGroup.grouped.map(function(g) { return g.sample; })
                 };
             });
@@ -104,13 +109,12 @@ var vm = new Vue({
             this.conditions.splice(index, 1);
         },
         addCondition: function(label) {
-            // keep _uid = 0 blank, which defaults to (All)
-            this.numConditionCreated += 1;
             var defaultLabel = 'New condition ' + this.numConditionCreated;
             this.conditions.push({
                 '_uid': this.numConditionCreated,
                 'label': label ? label.trim() : defaultLabel
             });
+            this.numConditionCreated += 1;
         },
         leaveEditMode: function() {
             // trim leading and trailing spaces of all conditions
@@ -154,6 +158,7 @@ var vm = new Vue({
 
 // Add two default conditions if no condition is already given
 if (vm.conditions.length == 0) {
+    vm.addCondition('(All)');
     vm.addCondition('Control');
     vm.addCondition('Test');
 }

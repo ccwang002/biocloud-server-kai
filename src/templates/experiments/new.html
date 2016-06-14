@@ -74,9 +74,9 @@
 			<button v-on:click="leaveEditMode()"
 					class="btn btn-danger">Leave Edit Mode</button>
 			<ol>
-				<li v-for="(index, condition) in conditions" track-by="_uid">
+				<li v-for="(index, condition) in userDefinedConditions" track-by="_uid">
 					<input type="text" v-model="condition.label">
-					<button v-on:click="removeCondition(index, $event)"
+					<button v-on:click="removeCondition(index + 1, $event)"
 							class="btn btn-xs btn-danger">Remove</button>
 				</li>
 				<li class="list-unstyled">
@@ -90,7 +90,7 @@
 					class="btn btn-success">Edit Condition</button>
 			{% verbatim %}
 			<ol class="list-inline">
-				<li v-for="(index, condition) in conditions" track-by="_uid">
+				<li v-for="(index, condition) in userDefinedConditions" track-by="_uid">
 					{{ index + 1 }}. {{ condition.label }}
 				</li>
 			</ol>
@@ -115,7 +115,6 @@
 					<select v-model="sourcesBySample.condition"
 							v-on:change="updateSourceCondition(sourcesBySample.sample, sourcesBySample.condition)"
 							class="form-control">
-						<option value="0">(All)</option>
 						<option v-for="condition in conditions" v-bind:value="condition._uid">
 							{{ condition.label }}
 						</option>
@@ -133,7 +132,7 @@
 
 		<h2>Condition and sample relation</h2>
 		{% verbatim %}
-		<div v-for="samplesByCondition in dataSourcesByCondition" track-by="condition" class="condition-group">
+		<div v-for="samplesByCondition in dataSourcesByCondition" track-by="condition._uid" class="condition-group">
 			<p>
 				<i class="fa fa-chevron-right" aria-hidden="true"></i>
 				Condition <strong>{{ samplesByCondition.condition.label }}</strong>
