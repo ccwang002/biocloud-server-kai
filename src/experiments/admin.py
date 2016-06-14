@@ -8,6 +8,7 @@ from .models import Experiment, Condition
 class ConditionInline(admin.TabularInline):
     model = Experiment.data_sources.through
     ordering = ("experiment", "condition", "sample_name", "data_source")
+    raw_id_fields = ("data_source", )
     extra = 0
 
 
