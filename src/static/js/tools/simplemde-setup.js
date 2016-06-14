@@ -7,7 +7,10 @@
                 'indentWithTabs': false,
                 'spellChecker': false,
                 'status': false,
-                'tabSize': 4
+                'tabSize': 4,
+                'renderingConfig': {
+                    'singleLineBreaks': false
+                }
             });
         });
     });
