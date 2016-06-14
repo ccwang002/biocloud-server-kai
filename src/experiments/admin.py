@@ -51,20 +51,7 @@ class ExperimentAdmin(admin.ModelAdmin):
     ]
 
     def summarize_experiment(self, experiment):
-        return (
-            '{name:s} was created by {owner:s} involving '
-            '{num_sources:d} data sources. '
-            'It defined {num_sample:d} samples: {samples:s}, '
-            'and defined {num_condition:d} conditions: {conditions:s}.'
-            .format(
-                owner=experiment.owner.name,
-                name=experiment.name,
-                num_sample=len(experiment.sample_names),
-                samples=', '.join(experiment.sample_names),
-                num_sources=experiment.conditions.count(),
-                conditions=', '.join(experiment.condition_names),
-                num_condition=len(experiment.condition_names),
-            )
-        )
+        return experiment.summary
+
     summarize_experiment.short_description = 'Summary'
 

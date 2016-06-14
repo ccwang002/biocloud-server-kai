@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.db import models
 from django.utils import timezone
+from django.utils.functional import cached_property
 from django.utils.translation import ugettext_lazy as _
 
 from data_sources.models import DataSource
@@ -62,6 +63,24 @@ class Experiment(models.Model):
                 .values_list('condition', flat=True)
                 .distinct()
                 .order_by('condition_order')
+        )
+
+    @cached_property
+    def summary(self):
+        return (
+            '{name:s} was created by {owner:s} involving '
+            '{num_sources:d} data sources. '
+            'It defined {num_sample:d} samples: {samples:s}, '
+            'and defined {num_condition:d} conditions: {conditions:s}.'
+            .format(
+                owner=self.owner.name,
+                name=self.name,
+                num_sample=len(self.sample_names),
+                samples=', '.join(self.sample_names),
+                num_sources=self.conditions.count(),
+                conditions=', '.join(self.condition_names),
+                num_condition=len(self.condition_names),
+            )
         )
 
     def __str__(self):
