@@ -1,13 +1,8 @@
-{% extends 'base.html' %}
+{% extends 'analyses/new_analysis_base.html' %}
 
 {% load crispy_forms_tags static %}
 
 {% block title %}New RNA-Seq Analysis{% endblock %}
-
-{% block extra_css %}
-	{{ block.super }}
-	{{ form.media.css }}
-{% endblock extra_css %}
 
 {% block content %}
 	<h2>New RNA-Seq Analysis</h2>
@@ -17,5 +12,4 @@
 {% block extra_js %}
 	{{ block.super }}
 	<script src="{% static 'js/vendors/vue.min.js' %}"></script>
-	{{ form.media.js }}
 {% endblock extra_js %}

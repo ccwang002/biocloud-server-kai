@@ -54,5 +54,6 @@ class RNASeqCreateForm(AbstractAnalysisCreateForm):
                 )
             )
         )
+        helper.include_media = False
         return helper
 
