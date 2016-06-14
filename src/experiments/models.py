@@ -44,7 +44,7 @@ class Experiment(models.Model):
         editable=False,
     )
 
-    @property
+    @cached_property
     def sample_names(self):
         """Return all distinct sample names"""
         return (
@@ -54,7 +54,7 @@ class Experiment(models.Model):
                 .order_by('sample_name')
         )
 
-    @property
+    @cached_property
     def condition_names(self):
         """Return all distinct condition names
 
