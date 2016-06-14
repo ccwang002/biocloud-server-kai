@@ -131,6 +131,22 @@
 			</tbody>
 		</table>
 
+		<h2>Condition and sample relation</h2>
+		{% verbatim %}
+		<div v-for="samplesByCondition in dataSourcesByCondition" track-by="condition" class="condition-group">
+			<p>
+				<i class="fa fa-chevron-right" aria-hidden="true"></i>
+				Condition <strong>{{ samplesByCondition.condition.label }}</strong>
+			</p>
+			<ul class="list-inline samples">
+				<li v-for="sample in samplesByCondition.samples">
+					<i class="fa fa-files-o" aria-hidden="true"></i>
+					{{ sample }}
+				</li>
+			</ul>
+		</div>
+		{% endverbatim %}
+
 		<button id="submit-form" class="btn btn-primary">Create Experiment</button>
 	</div><!-- /#app -->
 {% endblock content %}

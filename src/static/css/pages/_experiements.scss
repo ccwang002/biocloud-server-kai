@@ -1,3 +1,9 @@
 .source-label:not(:first-of-type)::before {
     content: ", ";
 }
+
+.condition-group {
+    .samples {
+        margin-left: 0.75em;
+    }
+}
