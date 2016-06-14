@@ -1,0 +1,31 @@
+{% extends 'experiments/base.html' %}
+
+{% load i18n %}
+
+{% block title %}Experiment List{% endblock title %}
+
+{% block content %}
+	<h2>Experiment List</h2>
+	<table class="table table-striped">
+		<thead>
+		<tr>
+			<th>Name</th>
+			<th>Conditions</th>
+			<th>Created at</th>
+			<th></th>
+		</tr>
+		</thead>
+		<tbody>
+		{% for experiment in object_list %}
+			<tr>
+				<td>
+					<a href="{{ experiment.get_absolute_url }}">{{ experiment.name }}</a>
+				</td>
+				<td>{{ experiment.condition_names|join:", " }}</td>
+				<td>{{ experiment.date_created|date:"M d, Y H:i:s T" }}</td>
+				<td><a href="">Duplicate</a></td>
+			</tr>
+		{% endfor %}
+		</tbody>
+	</table>
+{% endblock content %}

@@ -1,4 +1,7 @@
+from collections import namedtuple, OrderedDict, defaultdict
+
 from django.conf import settings
+from django.core.urlresolvers import reverse
 from django.db import models
 from django.utils import timezone
 from django.utils.functional import cached_property
@@ -66,6 +69,31 @@ class Experiment(models.Model):
         )
 
     @cached_property
+    def group_data_sources(self):
+        """
+        Return dict of condition to samples to data sources.
+        """
+        grouped_data_sources = OrderedDict()
+
+        conditions = (
+            self.conditions
+                .select_related('data_source')
+                .order_by("condition_order", "sample_name")
+        )
+        for condition in conditions:
+            cond_lab = condition.condition_label
+            sample = condition.sample_name
+            if cond_lab not in grouped_data_sources:
+                grouped_data_sources[cond_lab] = defaultdict(list)
+            grouped_data_sources[cond_lab][sample].append(condition)
+        # If we do not disable the default_factory, it cannot be rendered
+        # correctly in templates.
+        # Ref: http://stackoverflow.com/a/12842716
+        for samples in grouped_data_sources.values():
+            samples.default_factory = None
+        return grouped_data_sources
+
+    @cached_property
     def summary(self):
         return (
             '{name:s} was created by {owner:s} involving '
@@ -101,6 +129,9 @@ class Experiment(models.Model):
     class Meta:
         get_latest_by = "date_created"
         ordering = ['-date_created']
+
+
+ConditionLabel = namedtuple('ConditionLabel', ['order', 'label'])
 
 
 class Condition(models.Model):
@@ -167,3 +198,8 @@ class Condition(models.Model):
                 source_file_path=self.data_source.get_rel_file_path(),
             )
         )
+
+    @property
+    def condition_label(self):
+        """Return a ConditionLabel tuple"""
+        return ConditionLabel(self.condition_order, self.condition)

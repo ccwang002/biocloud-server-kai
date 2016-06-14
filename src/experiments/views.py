@@ -2,13 +2,14 @@ import json
 
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, redirect
 from django.utils.html import mark_safe
 from django.utils.translation import ugettext
-
+from django.views.generic import ListView, DetailView
 from data_sources.models import DataSource
 from .forms import ExperimentCreateForm
-from .models import Condition
+from .models import Experiment, Condition
 
 
 @login_required
@@ -82,3 +83,13 @@ def create_new_experiment(request):
         'num_condition_created': num_condition_created,
     })
 
+
+class ExperimentListView(LoginRequiredMixin, ListView):
+    model = Experiment
+    template_name = "experiments/list.html"
+
+    def get_queryset(self):
+        return self.request.user.experiments.all()
+        # return super().get_queryset().filter(
+        #     owner__exact=self.request.user,
+        # )
