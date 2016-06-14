@@ -1,3 +1,6 @@
-src/static/css/vendors/*    linguist-vendored
-src/static/css/_bootstrap.scss  linguist-vendored
-src/static/js/vendors/*     linguist-vendored
+src/static/css/vendors/*                 linguist-vendored
+src/static/css/_bootstrap.scss           linguist-vendored
+src/static/css/_bootstrap-variables.scss linguist-vendored
+src/static/css/_font-awesome.scss        linguist-vendored
+src/static/fonts/*                       linguist-vendored
+src/static/js/vendors/*                  linguist-vendored
