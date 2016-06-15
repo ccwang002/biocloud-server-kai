@@ -106,11 +106,11 @@ class Experiment(models.Model):
             .format(
                 owner=self.owner.name,
                 name=self.name,
-                num_sample=len(self.sample_names),
                 samples=', '.join(self.sample_names),
-                num_sources=self.conditions.count(),
+                num_sample=self.sample_names.count(),
                 conditions=', '.join(self.condition_names),
-                num_condition=len(self.condition_names),
+                num_condition=self.condition_names.count(),
+                num_sources=self.conditions.count(),
             )
         )
 
@@ -123,9 +123,9 @@ class Experiment(models.Model):
             .format(
                 owner=self.owner.name,
                 name=self.name,
-                num_sample=len(self.sample_names),
+                num_sample=self.sample_names.count(),
                 num_sources=self.conditions.count(),
-                num_condition=len(self.condition_names),
+                num_condition=self.condition_names.count(),
             )
         )
 
