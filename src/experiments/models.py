@@ -78,7 +78,7 @@ class Experiment(models.Model):
         conditions = (
             self.conditions
                 .select_related('data_source')
-                .order_by("condition_order", "sample_name")
+                .order_by("condition_order", "sample_name", "strand")
         )
         for condition in conditions:
             cond_lab = condition.condition_label
