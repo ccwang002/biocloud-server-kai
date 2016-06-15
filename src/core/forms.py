@@ -14,10 +14,10 @@ class RequestValidationMixin:
     def __init__(self, request=None, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self._request = request
-
-    def clean(self):
         if self._request is None:
             raise forms.ValidationError(self.get_error_message('no_request'))
+
+    def clean(self):
         return self.cleaned_data
 
     def get_error_message(self, key):
