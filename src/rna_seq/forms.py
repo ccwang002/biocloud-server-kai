@@ -2,10 +2,9 @@ from crispy_forms.bootstrap import FormActions
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Div, Field, Fieldset, HTML, Layout, Submit
 from django.utils.functional import cached_property
-from django.utils.timezone import now
 from django.utils.translation import ugettext_lazy as _
 
-from analyses.forms import AbstractAnalysisCreateForm
+from analyses.forms import AbstractAnalysisCreateForm, AnalysisCommonLayout
 from .models import RNASeqModel
 
 
@@ -25,27 +24,7 @@ class RNASeqCreateForm(AbstractAnalysisCreateForm):
     def helper(self):
         helper = FormHelper()
         helper.layout = Layout(
-            Fieldset(
-                'Analysis description',
-                Field(
-                    'name',
-                    value='RNA-Seq {:%Y-%m-%d %H:%M}'.format(now())
-                ),
-                Field('description'),
-            ),
-            Fieldset(
-                'Samples and Conditions',
-                HTML("<p>Specify your experiment here.</p>"),
-                Field('experiment'),
-                HTML('''
-                <div id="experiment-vue">
-                <my-experiment
-                 v-bind:experiment-data="ajaxExperimentData"
-                 v-bind:empty="empty">
-                </my-experiment>
-                </div>
-                '''),
-            ),
+            AnalysisCommonLayout(analysis_type="RNA-Seq"),
             Fieldset(
                 'Quality Check',
                 HTML(

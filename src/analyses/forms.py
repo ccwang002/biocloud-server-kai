@@ -1,7 +1,11 @@
+from crispy_forms.bootstrap import FormActions
+from crispy_forms.helper import FormHelper
+from crispy_forms.layout import Layout, Submit
 from django import forms
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.urlresolvers import reverse
 from django.forms.utils import ErrorDict
+from django.utils.functional import cached_property
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext_lazy as _
 
@@ -10,6 +14,7 @@ from core.widgets import SimpleMDEWidget
 from experiments.models import Experiment
 from .models import AbstractAnalysisModel
 from .fields import ExperimentChoiceField
+from .form_layouts import AnalysisCommonLayout
 
 
 class AbstractAnalysisCreateForm(
@@ -80,4 +85,18 @@ class AbstractAnalysisCreateForm(
         if commit:
             pipeline.save()
         return pipeline
+
+    @cached_property
+    def helper(self):
+        helper = FormHelper()
+        helper.layout = Layout(
+            AnalysisCommonLayout(analysis_type="Analysis Base"),
+            FormActions(
+                Submit(
+                    'save', _('Create New Analysis'), css_class='btn-lg',
+                )
+            )
+        )
+        helper.include_media = False
+        return helper
 
