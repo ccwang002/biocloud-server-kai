@@ -18,8 +18,8 @@
 
 
 	<h3>Conditions</h3>
-	<div class="condition-group">
-		{% for condition, samples in experiment.group_data_sources.items %}
+	{% for condition, samples in experiment.group_data_sources.items %}
+		<div class="condition-group">
 			<p>
 				<i class="fa fa-chevron-right" aria-hidden="true"></i>
 				<strong>{{ condition.label }}</strong>
@@ -30,8 +30,8 @@
 					{{ sample }}
 				{% endfor %}
 			</ul>
-		{% endfor %}
-	</div>
+		</div>
+	{% endfor %}
 
 	<h3>Samples</h3>
 	<table class="table table-striped">
