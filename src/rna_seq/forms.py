@@ -1,6 +1,6 @@
 from crispy_forms.bootstrap import FormActions
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Field, Fieldset, HTML, Layout, Submit
+from crispy_forms.layout import Div, Field, Fieldset, HTML, Layout, Submit
 from django.utils.functional import cached_property
 from django.utils.timezone import now
 from django.utils.translation import ugettext_lazy as _
@@ -37,6 +37,14 @@ class RNASeqCreateForm(AbstractAnalysisCreateForm):
                 'Samples and Conditions',
                 HTML("<p>Specify your experiment here.</p>"),
                 Field('experiment'),
+                HTML('''
+                <div id="experiment-vue">
+                <my-experiment
+                 v-bind:experiment-data="ajaxExperimentData"
+                 v-bind:empty="empty">
+                </my-experiment>
+                </div>
+                '''),
             ),
             Fieldset(
                 'Quality Check',

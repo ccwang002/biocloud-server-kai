@@ -20,6 +20,14 @@ from .models import Experiment, Condition
 @ajax_required
 @login_required
 def get_experiment_info_json(request):
+    def condition_as_dict(condition):
+        """Condition JSON formatter"""
+        return {
+            'file_path': condition.data_source.file_path,
+            # 'strand': condition.strand,
+            # 'file_type': condition.data_source.file_type,
+        }
+
     try:
         pk = request.POST['experiment_pk']
     except KeyError:
@@ -31,7 +39,23 @@ def get_experiment_info_json(request):
     )
     return JsonResponse({
         'name': experiment.name,
+        'url': experiment.get_absolute_url(),
         'conditions': list(experiment.condition_names),
+        'conditionSampleGroups': [
+            {
+                "condition": cond_label._asdict(),
+                "samples": [
+                    {
+                        "name": name,
+                        "conditions": [
+                            condition_as_dict(cond) for cond in conditions
+                        ]
+                    }
+                    for name, conditions in samples.items()
+                ]
+            }
+            for cond_label, samples in experiment.group_data_sources.items()
+        ],
     })
 
 

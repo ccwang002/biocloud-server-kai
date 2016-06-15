@@ -9,26 +9,3 @@
 	{% crispy form %}
 {% endblock %}
 
-{% block extra_js %}
-	{{ block.super }}
-	<script src="{% static 'js/vendors/vue.min.js' %}"></script>
-{% endblock extra_js %}
-
-{% block scripts %}
-	{% url 'ajax_experiment_info' as ajax_experiment_info_url %}
-	{% compress js %}
-	<script>
-		$("#id_experiment").change(function(event) {
-			if (this.selectedIndex === 0) return false;
-			var experimentPk = this.options[this.selectedIndex].value;
-			$.post(
-					"{{ ajax_experiment_info_url }}",
-					{"experiment_pk": experimentPk},
-					function (data) {
-						console.log(data);
-					}
-			);
-		})
-	</script>
-	{% endcompress %}
-{% endblock scripts %}

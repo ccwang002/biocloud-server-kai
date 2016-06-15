@@ -1,0 +1,6 @@
+.experiment-info {
+    @include make-md-column(12);
+
+    background: $gray-lighter;
+    margin-bottom: 2em;
+}

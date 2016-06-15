@@ -1,6 +1,6 @@
 {% extends 'analyses/base.html' %}
 
-{% load crispy_forms_tags static %}
+{% load crispy_forms_tags static compress %}
 
 {% block title %}Base Template for New Analysis{% endblock %}
 
@@ -9,7 +9,83 @@
 	{{ form.media.css }}
 {% endblock extra_css %}
 
+{% block footer %}
+	{% block vue_component_template %}
+	{% verbatim %}
+	<template class="row" id="experiment-template">
+		<div class="experiment-info" v-show="!empty">
+			<h4>Conditions for {{ experimentData.name }}</h4>
+			<div v-for="group in experimentData.conditionSampleGroups"
+				 class="condition-group">
+				<p>
+					<i class="fa fa-chevron-right" aria-hidden="true"></i>
+					<strong>{{ group.condition.label }}</strong>
+				</p>
+				<ul class="list-inline samples">
+					<li v-for="sample in group.samples">
+						<i class="fa fa-files-o" aria-hidden="true"></i>
+						{{ sample.name }}
+						(<span v-for="condition in sample.conditions"
+							   class="source-label"><code>{{ condition.file_path }}</code></span>)
+					</li>
+				</ul>
+			</div>
+			<p>(More info about this experiment can be found on <a :href="experimentData.url" target="_blank">its detail page</a>)</p>
+		</div>
+	</template>
+	{% endverbatim %}
+	{% endblock vue_component_template %}
+	{{ super }}
+{% endblock footer %}
+
 {% block extra_js %}
 	{{ block.super }}
 	{{ form.media.js }}
+	<script src="{% static 'js/vendors/vue.min.js' %}"></script>
 {% endblock extra_js %}
+
+{% block scripts %}
+	{% url 'ajax_experiment_info' as ajax_experiment_info_url %}
+	{% compress js %}
+		<script>
+			var myExperiment = Vue.component(
+					'my-experiment',
+					{
+						props: ['experimentData', 'empty'],
+						template: "#experiment-template"
+					}
+			);
+			var vm = new Vue ({
+				el: "#experiment-vue",
+				data: {
+					ajaxExperimentData: {},
+					empty: true
+				}
+			});
+			var getExperimentInfo = function(experimentPk) {
+				$.post(
+						"{{ ajax_experiment_info_url }}",
+						{
+							"experiment_pk": experimentPk
+						},
+						function (data) {
+							vm.ajaxExperimentData = data;
+							vm.empty = false;
+						}
+				);
+			};
+			$expSelctor = $("#id_experiment");
+			if ($expSelctor.prop('selectedIndex') !== 0) {
+				$(document).ready(function() {getExperimentInfo($expSelctor.val())});
+			}
+			$expSelctor.change(function() {
+				if (this.selectedIndex === 0) {
+					vm.empty = true;
+					return false;
+				}
+				var experimentPk = this.options[this.selectedIndex].value;
+				getExperimentInfo(experimentPk)
+			});
+		</script>
+	{% endcompress %}
+{% endblock scripts %}
