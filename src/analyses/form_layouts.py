@@ -2,6 +2,12 @@ from crispy_forms.layout import Field, Fieldset, HTML, Layout, Submit
 from django.utils.timezone import now
 
 
+class Include(HTML):
+    def __init__(self, template_name):
+        html = '{%% include "%s" %%}' % template_name
+        super().__init__(html)
+
+
 class AnalysisCommonLayout(Layout):
 
     def __init__(self, *fields, analysis_type="Abstract Analysis"):
@@ -66,8 +72,8 @@ class AnalysisCommonLayout(Layout):
             ),
             Field('description'),
         )
-        self.experiment_info_vue_html = HTML(
-            "{% include 'analyses/_includes/experiment_info_vue.html' %}"
+        self.experiment_info_vue_html = Include(
+            'analyses/_includes/experiment_info_vue.html'
         )
         self.sample_condition_fieldset = Fieldset(
             'Samples and Conditions',
