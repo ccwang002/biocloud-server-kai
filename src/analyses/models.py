@@ -109,7 +109,7 @@ class AbstractAnalysisModel(models.Model):
 
     date_finished = models.DateTimeField(
         verbose_name=_('date finished'),
-        blank=True,
+        blank=True, null=True,
         default=None,
         editable=False,
     )
