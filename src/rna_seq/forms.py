@@ -1,8 +1,5 @@
-from crispy_forms.helper import FormHelper
-from crispy_forms.bootstrap import InlineField
 from crispy_forms.layout import Div, Field, Fieldset, HTML, Layout
 from django.utils.functional import cached_property
-from django.utils.translation import ugettext_lazy as _
 
 from analyses.forms import (
     AbstractAnalysisCreateForm,
@@ -44,6 +41,14 @@ class RNASeqCreateForm(AbstractAnalysisCreateForm):
                     Include("rna_seq/_includes/aligner_options.html"),
                     css_id="genome-align-vue",
                     css_class="genome-align-vue",
+                ),
+            ),
+            Fieldset(
+                'Expression Quantification and '
+                'Differential Expression Analysis',
+                HTML(
+                    "<p>Use {{ TOOLS_IN_USE.Cufflinks.as_link }} for "
+                    "quantifying transcript expression value in RPKM.</p>"
                 ),
             ),
             AnalysisFormActions(),

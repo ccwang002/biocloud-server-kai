@@ -30,6 +30,14 @@ ALL_TOOLS_IN_USE = ToolSet([
         "STAR", "2.5.0",
         _("A genome aligner"),
         "https://github.com/alexdobin/STAR",
+    ),
+    ToolSpec(
+        "Cufflinks", "2.2.1",
+        _(
+            "Transcriptome assembly and differential expression analysis "
+            "for RNA-Seq."
+        ),
+        "http://cole-trapnell-lab.github.io/cufflinks/"
     )
 ])
 
