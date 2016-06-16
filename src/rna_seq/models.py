@@ -103,3 +103,13 @@ class RNASeqModel(AbstractAnalysisModel):
             "correct RNA-seq protocol. The default is unstranded."
         ),
     )
+
+    # STAR
+    star_separate_unmapped_reads = models.BooleanField(
+        default=False,
+        verbose_name=_("separate unmapped reads"),
+        help_text=_(
+            "Put unmapped or partially mapped (one of the paired reads is "
+            "mapped) in a separate FASTA/Q file."
+        ),
+    )

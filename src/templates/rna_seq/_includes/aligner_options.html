@@ -1,9 +1,10 @@
 {% load crispy_forms_filters %}
 <div v-show="alignerNoVersion === 'Tophat'">
 	<h4>Options for Tophat aligner</h4>
-	{{ form.tophat_max_multihits | as_crispy_field }}
-	{{ form.tophat_library_type | as_crispy_field }}
+	{{ form.tophat_max_multihits|as_crispy_field }}
+	{{ form.tophat_library_type|as_crispy_field }}
 </div>
 <div v-show="alignerNoVersion === 'STAR'">
 	<h4>Options for STAR aligner</h4>
+	{{ form.star_separate_unmapped_reads|as_crispy_field }}
 </div>
