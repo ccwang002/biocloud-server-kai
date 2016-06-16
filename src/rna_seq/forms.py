@@ -14,7 +14,6 @@ class RNASeqCreateForm(AbstractAnalysisCreateForm):
 
     class Meta(AbstractAnalysisCreateForm.Meta):
         model = RNASeqModel
-        fields = '__all__'
         widgets = {
             **AbstractAnalysisCreateForm.Meta.widgets,
         }
