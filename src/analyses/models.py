@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.db import models
+from django.db.models.query import QuerySet
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 
@@ -58,6 +59,18 @@ class GenomeReference(models.Model):
             "For example, UCSC mm9 can set its newer reference to UCSC mm10."
         ),
     )
+
+    release_date = models.DateField(
+        blank=True, null=True,
+        verbose_name=_('Release date'),
+        help_text=_(
+            "The date this genome reference is released."
+        )
+    )
+
+    class Meta:
+        ordering = ("organism", "source", "-release_date",)
+        get_latest_by = "release_date"
 
     def __str__(self):
         return "{0.identifier} ({0.source})".format(self)
