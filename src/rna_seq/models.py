@@ -71,3 +71,35 @@ class RNASeqModel(AbstractAnalysisModel):
         choices=ALL_TOOLS_IN_USE.subset(SUPPORTED_ALIGNERS).db_choices,
         max_length=128,
     )
+
+    # Alignment options for each aligner
+    # Tophat
+    tophat_max_multihits = models.PositiveIntegerField(
+        default=20,
+        blank=True,
+        verbose_name='Max multi-hits',
+        help_text=_(
+            "Instructs TopHat to allow up to this many alignments to the "
+            "reference for a given read, and choose the alignments based "
+            "on their alignment scores if there are more than this number. "
+            "The default is 20 for read mapping. If there are more alignments "
+            "with the same score than this number, TopHat will randomly "
+            "report only this many alignments."
+        )
+    )
+    TOPHAT_LIBRARY_TYPES = [
+        ("FR-UNSTRANDED", _("Unstranded (Ex. Standard illumnia)")),
+        ("FR-FIRSTSTRAND", _("First-stranded (Ex. Stranded specific sequcing, dUTP, NSR, NNSR)")),
+        ("FR-SECONDSTRAND", _("Second-stranded (Ex. Standard SOLiD)")),
+    ]
+    tophat_library_type = models.CharField(
+        choices=TOPHAT_LIBRARY_TYPES,
+        max_length=16,
+        default=TOPHAT_LIBRARY_TYPES[0][0],
+        blank=True,
+        verbose_name="Library type",
+        help_text=_(
+            "Consider supplying library type options below to select the "
+            "correct RNA-seq protocol. The default is unstranded."
+        ),
+    )
