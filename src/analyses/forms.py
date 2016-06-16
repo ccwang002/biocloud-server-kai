@@ -25,7 +25,7 @@ class AbstractAnalysisCreateForm(
     class Meta:
         model = AbstractAnalysisModel
         fields = (
-            'name', 'description',
+            'name', 'description', 'genome_reference',
         )
         widgets = {
             'description': SimpleMDEWidget(),

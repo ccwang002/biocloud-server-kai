@@ -82,6 +82,15 @@ class AbstractAnalysisModel(models.Model):
         ),
     )
 
+    genome_reference = models.ForeignKey(
+        GenomeReference,
+        on_delete=models.CASCADE,
+        related_name="experiments",
+        help_text=_(
+            "The genome reference in use."
+        ),
+    )
+
     experiment = models.ForeignKey(
         Experiment,
         on_delete=models.CASCADE,

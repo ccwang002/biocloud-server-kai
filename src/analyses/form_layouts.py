@@ -79,9 +79,11 @@ class AnalysisCommonLayout(Layout):
         )
         self.sample_condition_fieldset = Fieldset(
             'Samples and Conditions',
+            HTML("<p>The target genome reference.</p>"),
+            Field('genome_reference'),
             HTML("<p>Specify your experiment here.</p>"),
             Field('experiment'),
-            self.experiment_info_vue_html
+            self.experiment_info_vue_html,
         )
 
         super().__init__(
