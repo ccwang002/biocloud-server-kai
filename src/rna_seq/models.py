@@ -121,3 +121,7 @@ class RNASeqModel(AbstractAnalysisModel):
             "mapped) in a separate FASTA/Q file."
         ),
     )
+
+    class Meta:
+        verbose_name = "RNA-Seq analysis"
+        verbose_name_plural = "RNA-Seq analyses"
