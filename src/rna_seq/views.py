@@ -4,4 +4,4 @@ from .forms import RNASeqCreateForm
 
 class RNASeqFormView(AbstractAnalysisFormView):
     form_class = RNASeqCreateForm
-    template_name = 'pipelines/rna_seq.html'
+    template_name = 'rna_seq/rna_seq.html'

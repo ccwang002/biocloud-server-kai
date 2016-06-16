@@ -1,0 +1,30 @@
+{% extends 'analyses/new_analysis_base.html' %}
+
+{% load crispy_forms_tags crispy_forms_filters static compress %}
+
+{% block title %}New RNA-Seq Analysis{% endblock %}
+
+{% block content %}
+	<h2>New RNA-Seq Analysis</h2>
+	{% crispy form %}
+{% endblock %}
+
+{% block scripts %}
+{{ block.super }}
+{% compress js %}
+<script>
+	var aligner_vm = new Vue({
+		el: "#genome-align-vue",
+		data: {
+			aligner: ""
+		},
+		computed: {
+			alignerNoVersion: function () {
+				return this.aligner.split('_', 2)[0];
+			}
+		}
+	});
+</script>
+{% endcompress %}
+{% endblock scripts %}
+

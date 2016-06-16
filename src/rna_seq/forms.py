@@ -37,6 +37,15 @@ class RNASeqCreateForm(AbstractAnalysisCreateForm):
                 Field('trim_adapter'),
                 Field('rm_duplicate'),
             ),
+            Fieldset(
+                'Genome Alignment',
+                Div(
+                    Field('genome_aligner', **{"v-model": "aligner"}),
+                    Include("rna_seq/_includes/aligner_options.html"),
+                    css_id="genome-align-vue",
+                    css_class="genome-align-vue",
+                ),
+            ),
             AnalysisFormActions(),
         )
         return helper
