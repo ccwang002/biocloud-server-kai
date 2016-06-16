@@ -1,10 +1,15 @@
-from crispy_forms.bootstrap import FormActions
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Div, Field, Fieldset, HTML, Layout, Submit
+from crispy_forms.bootstrap import InlineField
+from crispy_forms.layout import Div, Field, Fieldset, HTML, Layout
 from django.utils.functional import cached_property
 from django.utils.translation import ugettext_lazy as _
 
-from analyses.forms import AbstractAnalysisCreateForm, AnalysisCommonLayout
+from analyses.forms import (
+    AbstractAnalysisCreateForm,
+    AnalysisCommonLayout,
+    AnalysisFormActions,
+    Include,
+)
 from .models import RNASeqModel
 
 
@@ -12,17 +17,14 @@ class RNASeqCreateForm(AbstractAnalysisCreateForm):
 
     class Meta(AbstractAnalysisCreateForm.Meta):
         model = RNASeqModel
-        fields = (
-            *AbstractAnalysisCreateForm.Meta.fields,
-            'quality_check', 'trim_adapter', 'rm_duplicate',
-        )
+        fields = '__all__'
         widgets = {
             **AbstractAnalysisCreateForm.Meta.widgets,
         }
 
     @cached_property
     def helper(self):
-        helper = FormHelper()
+        helper = super().helper
         helper.layout = Layout(
             AnalysisCommonLayout(analysis_type="RNA-Seq"),
             Fieldset(
@@ -35,12 +37,7 @@ class RNASeqCreateForm(AbstractAnalysisCreateForm):
                 Field('trim_adapter'),
                 Field('rm_duplicate'),
             ),
-            FormActions(
-                Submit(
-                    'save', _('Create New Analysis'), css_class='btn-lg',
-                )
-            )
+            AnalysisFormActions(),
         )
-        helper.include_media = False
         return helper
 
