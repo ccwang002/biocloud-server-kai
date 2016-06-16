@@ -1,5 +1,7 @@
+from crispy_forms.bootstrap import FormActions
 from crispy_forms.layout import Field, Fieldset, HTML, Layout, Submit
 from django.utils.timezone import now
+from django.utils.translation import ugettext_lazy as _
 
 
 class Include(HTML):
@@ -91,3 +93,13 @@ class AnalysisCommonLayout(Layout):
         )
 
 
+class AnalysisFormActions(Layout):
+    def __init__(self, *fields):
+        super().__init__(
+            FormActions(
+                Submit(
+                    'save', _('Create New Analysis'), css_class='btn-lg',
+                )
+            ),
+            *fields
+        )

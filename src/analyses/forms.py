@@ -1,4 +1,3 @@
-from crispy_forms.bootstrap import FormActions
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Submit
 from django import forms
@@ -14,7 +13,7 @@ from core.widgets import SimpleMDEWidget
 from experiments.models import Experiment
 from .models import AbstractAnalysisModel
 from .fields import ExperimentChoiceField
-from .form_layouts import AnalysisCommonLayout
+from .form_layouts import AnalysisCommonLayout, AnalysisFormActions, Include
 
 
 class AbstractAnalysisCreateForm(
@@ -89,14 +88,10 @@ class AbstractAnalysisCreateForm(
     @cached_property
     def helper(self):
         helper = FormHelper()
+        helper.include_media = False
         helper.layout = Layout(
             AnalysisCommonLayout(analysis_type="Analysis Base"),
-            FormActions(
-                Submit(
-                    'save', _('Create New Analysis'), css_class='btn-lg',
-                )
-            )
+            AnalysisFormActions(),
         )
-        helper.include_media = False
         return helper
 
