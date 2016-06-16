@@ -37,6 +37,7 @@ class SelectNewAnalysisTypeView(LoginRequiredMixin, TemplateView):
 class AbstractAnalysisFormView(LoginRequiredMixin, CreateView):
 
     form_class = AbstractAnalysisCreateForm
+    analysis_type = "AbstractAnalysis"
     template_name = None
 
     def get_form_kwargs(self):
@@ -50,7 +51,7 @@ class AbstractAnalysisFormView(LoginRequiredMixin, CreateView):
         messages.add_message(
             self.request, messages.INFO,
             _('You just created a %(analysis_type)s analysis!') % {
-                'analysis_type': self.object.analysis_type
+                'analysis_type': self.analysis_type
             }
         )
         return response
