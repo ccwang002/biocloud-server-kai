@@ -7,14 +7,18 @@
 {% block extra_css %}
 	{{ block.super }}
 	{{ form.media.css }}
+	<link rel="stylesheet" href="{% static "css/vendors/bootstrap-switch.min.css" %}" type="text/css">
 {% endblock extra_css %}
 
 {% block content %}
 	<h2>New experiement</h2>
 	{% crispy form %}
 	<div id="app">
+		<h2>Sample Selection</h2>
+		<p>
+			Advanced selection mode: <input type="checkbox" v-model="simpleSampleSelectionMode" data-inverse="true" id="simpleSampleMode">
+		</p>
 		<div v-show="simpleSampleSelectionMode">
-			<h2>Sample Selection</h2>
 			<table class="table table-striped">
 			<thead>
 				<tr>
@@ -43,7 +47,6 @@
 			</table>
 	    </div><!-- simpleSampleSelectionMode -->
 		<div v-show="!simpleSampleSelectionMode">
-		<h2>Group Sources as Samples</h2>
 		<button v-on:click="updateFilteredSourcesSelectedStatus(true)"
 				class="btn btn-default">Select all</button>
 		<button v-on:click="updateFilteredSourcesSelectedStatus(false)"
@@ -185,6 +188,7 @@
 	{{ block.super }}
 	<script src="{% static 'js/vendors/vue.min.js' %}"></script>
 	{{ form.media.js }}
+	<script src="{% static 'js/vendors/bootstrap-switch.min.js' %}"></script>
 {% endblock extra_js %}
 
 {% block scripts %}
@@ -210,6 +214,19 @@
 		};
 	</script>
 	<script src="{% static 'js/experiements/manage_conditions.js' %}"></script>
+	<script>
+		$("#simpleSampleMode")
+			.bootstrapSwitch("state", false)
+			.on(
+				'switchChange.bootstrapSwitch',
+				function(event, state) {
+					// console.log(this); // DOM element
+					// console.log(event); // jQuery event
+					// console.log(state); // true | false
+					vm.simpleSampleSelectionMode = !state;
+				}
+			);
+	</script>
 {% endcompress %}
 {% endblock scripts %}
 
