@@ -13,6 +13,36 @@
 	<h2>New experiement</h2>
 	{% crispy form %}
 	<div id="app">
+		<div v-show="simpleSampleSelectionMode">
+			<h2>Sample Selection</h2>
+			<table class="table table-striped">
+			<thead>
+				<tr>
+					<th></th>
+					<th>Sample</th>
+					<th>File path</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% verbatim %}
+				<tr v-for="(index, sourcesBySample) in fastqSourcesBySample" track-by="sample">
+					<td>
+						<input type="checkbox"
+							   v-bind="{checked: sourcesBySample.selected}"
+							   v-on:change="toggleSourceBySample(sourcesBySample.sample, $event)">
+					</td>
+					<td>{{ sourcesBySample.sample }}</td>
+					<td>
+						<span v-for="file in sourcesBySample.files" class="source-label">
+							<i class="fa fa-file-o" aria-hidden="true"></i> {{ file.label }}
+						</span>
+					</td>
+				</tr>
+				{% endverbatim %}
+			</tbody>
+			</table>
+	    </div><!-- simpleSampleSelectionMode -->
+		<div v-show="!simpleSampleSelectionMode">
 		<h2>Group Sources as Samples</h2>
 		<button v-on:click="updateFilteredSourcesSelectedStatus(true)"
 				class="btn btn-default">Select all</button>
@@ -67,6 +97,7 @@
 					v-bind="{disabled: !canRenameSample}"
 					class="btn btn-default btn-sm">Rename</button>
 		</p>
+		</div><!-- not simpleSampleSelectionMode -->
 
 
 		<h2>Conditions</h2>
@@ -167,6 +198,7 @@
 			dataSources: {{ data_source_json }},
 
 			// states only needed for editing
+			simpleSampleSelectionMode: true,
 			editable: true,
 			sourceFilter: {
 				filePath: '',

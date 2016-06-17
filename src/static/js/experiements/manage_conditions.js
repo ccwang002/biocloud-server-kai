@@ -61,6 +61,43 @@ var vm = new Vue({
                 ) === "";
             return !anyFilter;
         },
+        fastqDataSources: function() {
+            return this.dataSources.filter(
+                function (source) {
+                    return source.file_type === 'FASTQ';
+                }
+            );
+        },
+        fastqSourcesBySample: function() {
+            var groupedSources = groupBy(
+                this.fastqDataSources,
+                function (source) { return source.sample; }
+            ).filter(function (group) {
+                return !!group.key;
+            });
+            return groupedSources.map(function(group) {
+                // if all sources' condition are the same, keep it
+                var allSelected = group.grouped.every(function(source, index, array){
+                    return source.selected === true;
+                });
+                return {
+                    sample: group.key,
+                    files: group.grouped.map(function(source) {
+                        return {
+                            pk: source.data_source_pk,
+                            label: (
+                                source.file_path + ' (' +
+                                source.file_type +
+                                (source.metadata.strand ? (', ' + source.metadata.strand) : '') +
+                                ')'
+                            )
+                        };
+                    }),
+                    selected: allSelected
+                };
+            });
+
+        },
         dataSourcesBySample: function() {
             var groupedSources = groupBy(
                 this.selectedDataSources,
@@ -151,6 +188,15 @@ var vm = new Vue({
                 return source.sample === sample;
             }).forEach(function(source) {
                 source.condition = conditionId;
+            });
+        },
+        toggleSourceBySample: function(sample, event) {
+            console.log(sample, event.target.checked);
+            var newSelectedStatus = event.target.checked;
+            this.fastqDataSources.filter(function(source) {
+                return source.sample === sample;
+            }).forEach(function(source) {
+                source.selected = newSelectedStatus;
             });
         }
     }
