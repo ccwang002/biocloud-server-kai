@@ -1,23 +1,12 @@
-from collections import namedtuple
 from django.contrib import messages
-from django.core.urlresolvers import reverse_lazy
 from django.views.generic import TemplateView
-from django.utils.html import mark_safe
+
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.utils.translation import ugettext_lazy as _
 from django.views.generic import CreateView
 
 from .forms import AbstractAnalysisCreateForm
-
-Pipeline = namedtuple('Pipeline', ['name', 'description', 'url'])
-
-AVAILABLE_PIPELINES = [
-    Pipeline(
-        'RNA-Seq',
-        mark_safe('''This is the description of <strong>RNASeq</strong>'''),
-        reverse_lazy('new_rna_seq'),
-    ),
-]
+from .pipelines import AVAILABLE_PIPELINES
 
 
 class SelectNewAnalysisTypeView(LoginRequiredMixin, TemplateView):
@@ -27,18 +16,16 @@ class SelectNewAnalysisTypeView(LoginRequiredMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['available_pipelines'] = AVAILABLE_PIPELINES
-        # context['available_pipelines'] = [
-        #     str_to_class(*cls.rsplit('.', 1))
-        #     for cls in AVAILABLE_PIPELINES
-        # ]
         return context
 
 
 class AbstractAnalysisFormView(LoginRequiredMixin, CreateView):
 
     form_class = AbstractAnalysisCreateForm
-    analysis_type = "AbstractAnalysis"
     template_name = None
+    analysis_type = 'AbstractAnalysis'
+    analysis_description = ''
+    analysis_create_url = None
 
     def get_form_kwargs(self):
         """Pass request object for form creation"""
@@ -55,4 +42,3 @@ class AbstractAnalysisFormView(LoginRequiredMixin, CreateView):
             }
         )
         return response
-

@@ -1,15 +1,23 @@
 from django.core.urlresolvers import reverse_lazy
+from django.utils.html import mark_safe
+from django.utils.translation import ugettext_lazy as _
 
+from analyses import pipelines
 from analyses.views import AbstractAnalysisFormView
 from .forms import RNASeqCreateForm
 from .models import ALL_TOOLS_IN_USE
 
 
+@pipelines.register
 class RNASeqFormView(AbstractAnalysisFormView):
     form_class = RNASeqCreateForm
-    analysis_type = "RNA-Seq"
     template_name = 'rna_seq/rna_seq.html'
     success_url = reverse_lazy('index')
+    analysis_type = _('RNA-Seq')
+    analysis_description = mark_safe(
+        'This is the description of <strong>RNASeq</strong>'
+    )
+    analysis_create_url = reverse_lazy('new_rna_seq')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
