@@ -7,7 +7,10 @@ import logging.config
 DEBUG = False
 
 # Must mention ALLOWED_HOSTS in production!
-ALLOWED_HOSTS = ['biocloud.cgm.ntu.edu.tw']
+ALLOWED_HOSTS = [
+    'biocloud.cgm.ntu.edu.tw',      # public routing
+    '172.16.0.66',                  # internal routing
+]
 
 
 # Cache the templates in memory for speed-up
