@@ -1,10 +1,14 @@
 from django.conf import settings
+from django.core.exceptions import ObjectDoesNotExist, PermissionDenied
+from django.core.signing import BadSignature
 from django.db import models
 from django.db.models.query import QuerySet
 from django.utils import timezone
+from django.utils.functional import cached_property
 from django.utils.translation import ugettext_lazy as _
 
 from core.utils import ChoiceEnum
+from core.signing import fixed_loads, fixed_dumps
 from experiments.models import Experiment
 
 
@@ -76,6 +80,37 @@ class GenomeReference(models.Model):
         return "{0.identifier} ({0.source})".format(self)
 
 
+class ReportQuerySet(models.QuerySet):
+
+    def get_with_auth_key(self, auth_key):
+        """
+        Obtain the report object based on given auth_key
+
+        Args:
+              auth_key (str): authentication string
+        """
+        # decode the auth_key
+        try:
+            auth_email, auth_number, report_pk = fixed_loads(auth_key)
+        except (BadSignature, ValueError):
+            raise self.model.DoesNotExist
+
+        # get the report object
+        report = self.get(pk=report_pk)
+        if not report.is_analysis_attached():
+            raise self.model.DoesNotExist
+
+        # check if auth_number mismatches user's current auth_number
+        # auth_email is also checked so other user cannot forget the auth key
+        owner = report.analysis.owner
+        if not (
+            owner.email == auth_email and
+            owner.auth_number == auth_number
+        ):
+            raise self.model.DoesNotExist
+        return report
+
+
 class Report(models.Model):
 
     date_created = models.DateTimeField(
@@ -84,9 +119,26 @@ class Report(models.Model):
         editable=False,
     )
 
+    objects = ReportQuerySet.as_manager()
+
     class Meta:
         get_latest_by = "date_created"
         ordering = ("-date_created", )
+
+    def is_analysis_attached(self):
+        """Check if the report has been attached to an analysis"""
+        try:
+            self.analysis
+        except ObjectDoesNotExist:
+            return False
+        return True
+
+    @cached_property
+    def auth_key(self):
+        user = self.analysis.owner  # will throw ObjectDoesNotExist
+        return fixed_dumps(
+            [user.email, user.auth_number, self.pk]
+        )
 
     def __str__(self):
         return str(self.pk)
