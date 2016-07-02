@@ -4,7 +4,7 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.http import Http404, HttpResponse
+from django.http import Http404, HttpResponse, HttpResponseForbidden
 from django.shortcuts import redirect
 from django.utils.translation import ugettext_lazy as _
 from django.views.generic import CreateView, TemplateView
@@ -21,13 +21,19 @@ def serve_report(request, auth_key, file_path):
     if not file_path:
         return redirect(serve_report, auth_key=auth_key, file_path='index.html')
     report_not_found_404 = Http404(
-        'Cannot found the given report, or the authentication key is '
+        'Cannot find the given report, or the authentication key is '
         'invalid or expired'
     )
     try:
         report = Report.objects.get_with_auth_key(auth_key)
     except Report.DoesNotExist:
         raise report_not_found_404
+
+    # check if the report is public
+    if not report.is_public:
+        if report.analysis.owner != request.user:
+            return HttpResponseForbidden('The requested report is not public.')
+
     if settings.DEBUG:
         # use Django debug server
         from django.views.static import serve

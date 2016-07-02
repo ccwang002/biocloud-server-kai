@@ -119,6 +119,14 @@ class Report(models.Model):
         editable=False,
     )
 
+    is_public = models.BooleanField(
+        verbose_name=_('is public'),
+        help_text=_(
+            "Whether the access link is publicly visible."
+        ),
+        default=False,
+    )
+
     objects = ReportQuerySet.as_manager()
 
     class Meta:
