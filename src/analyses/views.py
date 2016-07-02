@@ -3,6 +3,7 @@ from pathlib import Path
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import get_user_model
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import Http404, HttpResponse, HttpResponseForbidden
 from django.shortcuts import redirect
@@ -15,6 +16,24 @@ from .pipelines import AVAILABLE_PIPELINES
 
 
 User = get_user_model()
+
+
+@login_required
+def canonical_access_report(request, report_pk):
+    report_not_found_404 = Http404(
+        "Cannot find the given report, or the report does not belong to the "
+        "current user."
+    )
+    try:
+        report = Report.objects.get(pk=report_pk)
+    except Report.DoesNotExist:
+        raise report_not_found_404
+    if not report.is_analysis_attached() or \
+            report.analysis.owner != request.user:
+        raise report_not_found_404
+    return redirect(
+        serve_report, auth_key=report.auth_key, file_path='index.html'
+    )
 
 
 def serve_report(request, auth_key, file_path):
