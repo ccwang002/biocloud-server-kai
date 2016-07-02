@@ -1,5 +1,5 @@
 from django.conf.urls import url
-from .views import canonical_access_report, serve_report
+from .access import canonical_access_report, access_report
 
 urlpatterns = [
     url(
@@ -9,7 +9,7 @@ urlpatterns = [
     ),
     url(
         r'^(?P<auth_key>[\w:-]+)/report/(?P<file_path>.*)$',
-        serve_report,
-        name='serve_report'
+        access_report,
+        name='access_report'
     ),
 ]
