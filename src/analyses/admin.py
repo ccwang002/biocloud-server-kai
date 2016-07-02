@@ -25,15 +25,22 @@ class GenomeReferenceAdmin(admin.ModelAdmin):
 class ReportAdmin(admin.ModelAdmin):
 
     readonly_fields = (
-        "pk",
+        "pk", "auth_key",
     )
 
     def analysis_name(self, report):
         return report.analysis.name
     analysis_name.short_description = 'Analysis'
 
+    def auth_key(self, report):
+        return report.auth_key
+    auth_key.short_description = 'Authentication key'
+
     list_display = (
-        'analysis_name', 'date_created',
+        'pk', 'analysis_name', 'date_created',
+    )
+    list_display_links = (
+        'pk', 'analysis_name',
     )
 
 
