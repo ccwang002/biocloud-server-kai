@@ -76,6 +76,22 @@ class GenomeReference(models.Model):
         return "{0.identifier} ({0.source})".format(self)
 
 
+class Report(models.Model):
+
+    date_created = models.DateTimeField(
+        verbose_name=_('date created'),
+        default=timezone.now,
+        editable=False,
+    )
+
+    class Meta:
+        get_latest_by = "date_created"
+        ordering = ("-date_created", )
+
+    def __str__(self):
+        return str(self.pk)
+
+
 class AbstractAnalysisModel(models.Model):
 
     owner = models.ForeignKey(

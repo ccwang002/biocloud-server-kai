@@ -3,7 +3,7 @@ from django.contrib import admin
 from django.utils.translation import ugettext_lazy as _
 
 from core.widgets import SimpleMDEWidget
-from .models import GenomeReference
+from .models import GenomeReference, Report
 
 
 @admin.register(GenomeReference)
@@ -18,6 +18,22 @@ class GenomeReferenceAdmin(admin.ModelAdmin):
     list_display_links = ['identifier']
     list_filter = (
         'organism', 'source',
+    )
+
+
+@admin.register(Report)
+class ReportAdmin(admin.ModelAdmin):
+
+    readonly_fields = (
+        "pk",
+    )
+
+    def analysis_name(self, report):
+        return report.analysis.name
+    analysis_name.short_description = 'Analysis'
+
+    list_display = (
+        'analysis_name', 'date_created',
     )
 
 
