@@ -39,6 +39,7 @@ def serve_report(request, auth_key, file_path):
     else:
         # use nginx
         response = HttpResponse()
+        response['Content-Type'] = ''  # let nginx guess mime type
         response['X-Accel-Redirect'] = (
             '/protected/report/%s/%s' % (str(report.pk), file_path)
         )
