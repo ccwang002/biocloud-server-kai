@@ -18,8 +18,8 @@ INSTALLED_APPS += ('debug_toolbar.apps.DebugToolbarConfig',)
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 # REPORT ROOT
-BIOCLOUD_REPORT_DIR = Path(env.path(
-    'BIOCLOUD_REPORT_DIR', required=True
+BIOCLOUD_REPORTS_DIR = Path(env.path(
+    'BIOCLOUD_REPORTS_DIR', required=True
 )())
 
 

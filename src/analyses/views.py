@@ -58,7 +58,7 @@ def serve_report(request, auth_key, file_path):
         from django.views.static import serve
         pth = Path(file_path)
         full_dirname = Path(
-            settings.BIOCLOUD_REPORT_DIR, str(report.pk), pth.parent
+            settings.BIOCLOUD_REPORTS_DIR, str(report.pk), pth.parent
         )
         return serve(request, pth.name, full_dirname.as_posix())
     else:
