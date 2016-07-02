@@ -17,7 +17,7 @@ def start_db():
 @task
 def backup():
     cmd_dumpdata = 'python manage.py dumpdata '
-    with lcd(src_p):
+    with lcd(src_p.as_posix()):
         local(
             cmd_dumpdata + 'users.EmailUser data_sources.DataSource | '
             'tee ../db_dump/user_sources.json'
