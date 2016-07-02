@@ -1,12 +1,48 @@
-from django.contrib import messages
-from django.views.generic import TemplateView
+from pathlib import Path
 
+from django.conf import settings
+from django.contrib import messages
+from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import Http404, HttpResponse
+from django.shortcuts import redirect
 from django.utils.translation import ugettext_lazy as _
-from django.views.generic import CreateView
+from django.views.generic import CreateView, TemplateView
 
 from .forms import AbstractAnalysisCreateForm
+from .models import Report
 from .pipelines import AVAILABLE_PIPELINES
+
+
+User = get_user_model()
+
+
+def serve_report(request, auth_key, file_path):
+    if not file_path:
+        return redirect(serve_report, auth_key=auth_key, file_path='index.html')
+    report_not_found_404 = Http404(
+        'Cannot found the given report, or the authentication key is '
+        'invalid or expired'
+    )
+    try:
+        report = Report.objects.get_with_auth_key(auth_key)
+    except Report.DoesNotExist:
+        raise report_not_found_404
+    if settings.DEBUG:
+        # use Django debug server
+        from django.views.static import serve
+        pth = Path(file_path)
+        full_dirname = Path(
+            settings.BIOCLOUD_REPORT_DIR, str(report.pk), pth.parent
+        )
+        return serve(request, pth.name, full_dirname.as_posix())
+    else:
+        # use nginx
+        response = HttpResponse()
+        response['X-Accel-Redirect'] = (
+            '/protected/report/%s/%s' % (str(report.pk), file_path)
+        )
+        return response
 
 
 class SelectNewAnalysisTypeView(LoginRequiredMixin, TemplateView):

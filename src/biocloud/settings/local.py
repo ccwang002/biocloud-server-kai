@@ -17,6 +17,12 @@ INSTALLED_APPS += ('debug_toolbar.apps.DebugToolbarConfig',)
 # Show emails to console in DEBUG mode
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
+# REPORT ROOT
+BIOCLOUD_REPORT_DIR = Path(env.path(
+    'BIOCLOUD_REPORT_DIR', required=True
+)())
+
+
 # Log everything to the logs directory at the top
 LOGFILE_ROOT = join(dirname(BASE_DIR), 'logs')
 
