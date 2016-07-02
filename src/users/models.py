@@ -1,4 +1,5 @@
 import datetime
+import random
 
 from django.conf import settings
 from django.contrib.auth.models import (
@@ -12,6 +13,10 @@ from django.db import models
 from django.template.loader import render_to_string
 from django.utils import timezone
 from django.utils.translation import ugettext, ugettext_lazy as _
+
+
+def random_auth_number():
+    return random.randint(0, 1e4)
 
 
 class EmailUserManager(BaseUserManager):
@@ -109,6 +114,15 @@ class EmailUser(AbstractBaseUser, PermissionsMixin):
         verbose_name=_('name'),
         max_length=100,
         blank=True,
+    )
+    auth_number = models.IntegerField(
+        default=random_auth_number,
+        verbose_name=_('auth number'),
+        help_text=_(
+            "Access key seed for your reports and results. <strong>Warning! "
+            "Changing this integer will invalidate all previously generated "
+            "report and result links.</strong>"
+        ),
     )
     verified = models.BooleanField(
         verbose_name=_('verified'),

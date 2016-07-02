@@ -167,7 +167,7 @@ class UserProfileUpdateForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ('name',)
+        fields = ('name', 'auth_number',)
 
     @cached_property
     def helper(self):
@@ -181,6 +181,7 @@ class UserProfileUpdateForm(forms.ModelForm):
             Fieldset(
                 '',
                 Field('name', placeholder=self.fields['name'].label),
+                Field('auth_number'),
             ),
             FormActions(
                 Submit('save', _('Update'), css_class=''),
