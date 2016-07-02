@@ -23,9 +23,29 @@ class GenomeReferenceAdmin(admin.ModelAdmin):
 
 @admin.register(Report)
 class ReportAdmin(admin.ModelAdmin):
+    fieldsets = (
+        (
+            None,
+            {
+                'fields': (
+                    'pk',
+                    'analysis_name',
+                )
+            },
+        ),
+        (
+            _('Access control'),
+            {
+                'fields': (
+                    'auth_key',
+                    'is_public',
+                )
+            }
+        ),
+    )
 
     readonly_fields = (
-        "pk", "auth_key",
+        "pk", "auth_key", 'analysis_name',
     )
 
     def analysis_name(self, report):
