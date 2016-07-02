@@ -150,6 +150,13 @@ class AbstractAnalysisModel(models.Model):
         editable=False,
     )
 
+    report = models.OneToOneField(
+        Report,
+        blank=True, null=True,
+        default=None,
+        related_name='analysis',
+    )
+
     class Meta:
         abstract = True
         get_latest_by = ("date_finished", "date_created")
