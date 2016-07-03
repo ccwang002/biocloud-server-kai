@@ -53,7 +53,11 @@ Change to the `src` directory:
 
     cd src
 
-Run database mirgration:
+The website uses [PostgreSQL] database, make sure it has been running. On OSX, PostgreSQL may not run in the background, which can be started manually by
+
+    fab start_db
+
+Then run the database migration.
 
     python manage.py migrate
 
@@ -61,43 +65,16 @@ Run the development server
 
     python manage.py runserver
 
+the Django-Q job cluster for executing pipeline jobs
 
-## Process the Dataset
+    python manage.py qcluster
 
-All data processing are done under `data/`.
+and a local SMTP server so all email sending will be captured
 
-First, install the requirements,
-
-    pip install -r requirements_data.txt
-
-Go to `data/scripts/`, run the Jupyter (IPython) notebook by
-
-    jupyter notebook
-
-The notebook will fill the data under `data/raw/` into the Django database.
+    fab start_smtp
 
 
-## Misc.
-
-#### Anaconda or Miniconda
-
-NOTE: Requires more setting.
-
-They are the same but anaconda comes with more packages at the downloading time
-and bigger size. [Anaconda] manages both the pacakges and Python version itself
-via [conda].
-
-To create a conda-based virtual environment, use
-
-    conda create -n venv python=3.5
-
-And activate it
-
-    . activate venv
-
-Or on Windows, use command-line console and run
-
-    activate venv
+[PostgreSQL]: https://www.postgresql.org/
 
 
 ## License
