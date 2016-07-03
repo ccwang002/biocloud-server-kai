@@ -15,6 +15,11 @@ def start_db():
 
 
 @task
+def start_smtp():
+    local('python3 -m smtpd -n -c DebuggingServer localhost:1025')
+
+
+@task
 def backup():
     cmd_dumpdata = 'python manage.py dumpdata '
     with lcd(src_p.as_posix()):

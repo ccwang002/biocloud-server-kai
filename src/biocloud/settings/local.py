@@ -15,7 +15,10 @@ CRISPY_FAIL_SILENTLY = not DEBUG
 INSTALLED_APPS += ('debug_toolbar.apps.DebugToolbarConfig',)
 
 # Show emails to console in DEBUG mode
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'localhost'
+EMAIL_PORT = 1025
 
 # Directory to reports and results
 BIOCLOUD_REPORTS_DIR = Path(env.path('BIOCLOUD_REPORTS_DIR', required=True)())
