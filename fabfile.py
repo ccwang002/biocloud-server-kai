@@ -50,3 +50,10 @@ def reborn():
         local('python manage.py loaddata ../db_dump/user_sources.json')
         local('python manage.py loaddata ../db_dump/genome_reference.json')
         local('python manage.py loaddata ../db_dump/experiments.json')
+
+@task
+def cloc():
+    with lcd(src_p.parent.as_posix()):
+        local(
+            'cloc --exclude-dir=vendors,migrations,assets ./src'
+        )
