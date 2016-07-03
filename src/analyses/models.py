@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist, PermissionDenied
+from django.core.urlresolvers import reverse
 from django.core.signing import BadSignature
 from django.db import models
 from django.db.models.query import QuerySet
@@ -154,6 +155,12 @@ class Report(models.Model):
         user = self.analysis.owner  # will throw ObjectDoesNotExist
         return fixed_dumps(
             [user.email, user.auth_number, self.pk]
+        )
+
+    def get_absolute_url(self):
+        return reverse(
+            'canonical_access_report',
+            kwargs={'report_pk': self.pk}
         )
 
     def __str__(self):
