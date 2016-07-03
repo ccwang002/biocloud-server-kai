@@ -1,0 +1,29 @@
+{% extends 'analyses/base.html' %}
+
+{% block title %}All submitted analyses{% endblock title %}
+
+{% block content %}
+	<h2>RNA-Seq Analyses</h2>
+	<table class="table">
+		<thead>
+		<tr>
+			<th>Name</th>
+			<th>Status</th>
+			<th>Created at</th>
+			<th>Finished at</th>
+		</tr>
+		</thead>
+		<tbody>
+		{% for job in all_user_jobs.rnaseqmodel %}
+			<tr>
+				<td><a href="{{ job.get_absolute_url }}">{{ job.name }}</a></td>
+				<td>{{ job.execution_status }}</td>
+				<td>{{ job.date_created|date:"M d, Y H:i:s T" }}</td>
+				<td>
+					{% if job.date_finished %}{{ job.date_finished|date:"M d, Y H:i:s T" }}{% else %}-{% endif %}
+				</td>
+			</tr>
+		{% endfor %}
+		</tbody>
+	</table>
+{% endblock content %}

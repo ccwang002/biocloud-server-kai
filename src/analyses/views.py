@@ -6,7 +6,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.views.generic import CreateView, TemplateView
 
 from .forms import AbstractAnalysisCreateForm
-from .pipelines import AVAILABLE_PIPELINES
+from .pipelines import AVAILABLE_PIPELINES, AVAILABLE_PIPELINE_MODELS
 
 
 User = get_user_model()
@@ -50,3 +50,19 @@ class AbstractAnalysisFormView(LoginRequiredMixin, CreateView):
             extra_tags='safe',
         )
         return response
+
+
+class SubmittedAnalysisListView(LoginRequiredMixin, TemplateView):
+
+    template_name = "analyses/list.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        user_analyses = {}
+        for pipe_model in AVAILABLE_PIPELINE_MODELS:
+            # pipe_model._meta.verbose_name.title()
+            user_jobs = pipe_model.objects.filter(owner=self.request.user)
+
+            user_analyses[pipe_model._meta.model_name] = user_jobs
+        context['all_user_jobs'] = user_analyses
+        return context

@@ -18,9 +18,19 @@
 			<ul class="nav navbar-nav">
 				{# Put links that require login in the following if-block #}
 				{% if user.is_authenticated %}
-					<li class="{% if active == 'new_analysis' %}active{% endif %}">
-						<a href="{% url 'new_analysis' %}">New Analysis</a>
+					<li class="{% if active == 'analysis' %}active{% endif %}">
 					</li>
+					<!-- Menu for analysis -->
+					<li class="dropdown {% if active == 'analysis' %}active{% endif %}"">
+					<a role="button" href="#" class="dropdown-toggle"
+					   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						Anlaysis<span class="caret"></span>
+					</a>
+					<ul class="dropdown-menu">
+						<li><a href="{% url 'list_analyses' %}">List all</a></li>
+						<li><a href="{% url 'new_analysis' %}">New</a></li>
+					</ul>
+					</li><!-- /.dropdown -->
 					<!-- Menu for experiments -->
 					<li class="dropdown {% if active == 'experiments' %}active{% endif %}"">
 						<a role="button" href="#" class="dropdown-toggle"
