@@ -1,4 +1,5 @@
 {% extends 'analyses/detail.html' %}
+{% load i18n crispy_forms_tags %}
 
 {% block title %}Analysis detail of {{ analysis.name }}{% endblock title %}
 
@@ -23,12 +24,18 @@
 	</ul>
 
 	<h3>Report</h3>
-	{% if analysis.execution_status == 'SUCCESSFUL' %}
+	{% if analysis.execution_status == 'SUCCESSFUL' and analysis.report %}
 		<p>Canonical report link:
 			<a href="{{ full_report_url }}">
 				{{ full_report_url }}
 			</a>
 		</p>
+		<form class="form-inline" action="{% url 'update_report' pk=analysis.report.pk %}" method="post">
+			{% csrf_token %}
+			<input type="hidden" name="next" value="{{ request.path }}">
+			{% crispy report_form %}
+			<button type="submit" class="btn">{% trans 'Update' %}</button>
+		</form>
 	{% else %}
 		<p>Only successful analysis has report.</p>
 	{% endif %}

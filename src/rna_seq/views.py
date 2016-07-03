@@ -5,6 +5,7 @@ from django.views.generic import DetailView
 
 from analyses import pipelines
 from analyses.views import AbstractAnalysisFormView
+from analyses.forms import ReportUpdateForm
 from .forms import RNASeqCreateForm
 from .models import ALL_TOOLS_IN_USE, RNASeqModel
 
@@ -37,9 +38,13 @@ class RNASeqDetailView(DetailView):
             full_report_url = self.request.build_absolute_uri(
                 analysis.report.get_absolute_url()
             )
+            report_form = ReportUpdateForm(instance=analysis.report)
+            context.update({
+                'report_form': report_form,
+                'full_report_url': full_report_url,
+            })
         context.update({
             'analysis': analysis,
             'analysis_detail': analysis.execution_detail,
-            'full_report_url': full_report_url
         })
         return context

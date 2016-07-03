@@ -2,10 +2,13 @@ from django.contrib import messages
 from django.contrib.auth import get_user_model
 
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.utils.translation import ugettext_lazy as _
+from django.shortcuts import get_object_or_404, redirect
+from django.views.decorators.http import require_POST
 from django.views.generic import CreateView, TemplateView
+from django.utils.translation import ugettext_lazy as _
 
-from .forms import AbstractAnalysisCreateForm
+from .forms import AbstractAnalysisCreateForm, ReportUpdateForm
+from .models import Report
 from .pipelines import AVAILABLE_PIPELINES, AVAILABLE_PIPELINE_MODELS
 
 
@@ -66,3 +69,13 @@ class SubmittedAnalysisListView(LoginRequiredMixin, TemplateView):
             user_analyses[pipe_model._meta.model_name] = user_jobs
         context['all_user_jobs'] = user_analyses
         return context
+
+
+@require_POST
+def update_report(request, pk):
+    report = get_object_or_404(Report, pk=pk)
+    form = ReportUpdateForm(request.POST, instance=report)
+    if form.is_valid():
+        form.save()
+    return redirect(request.POST.get('next', 'index'))
+

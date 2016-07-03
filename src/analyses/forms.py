@@ -11,7 +11,7 @@ from django.utils.translation import ugettext_lazy as _
 from core.forms import RequestValidationMixin
 from core.widgets import SimpleMDEWidget
 from experiments.models import Experiment
-from .models import AbstractAnalysisModel
+from .models import AbstractAnalysisModel, Report
 from .fields import ExperimentChoiceField
 from .form_layouts import AnalysisCommonLayout, AnalysisFormActions, Include
 
@@ -93,3 +93,19 @@ class AbstractAnalysisCreateForm(
         )
         return helper
 
+
+class ReportUpdateForm(forms.ModelForm):
+
+    class Meta:
+        model = Report
+        fields = ('is_public', )
+
+    @cached_property
+    def helper(self):
+        helper = FormHelper()
+        helper.form_tag = False
+        helper.form_action = reverse(
+            'update_report',
+            kwargs={'pk': self.instance.pk}
+        )
+        return helper
