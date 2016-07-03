@@ -2,7 +2,7 @@
 
 {% for message in messages %}
 	<div role="alert" class="alert {{ message|message_bootstrap_class_str }} clearfix">
-		{{ message }}
+		{% if 'safe' in message.tags %}{{ message|safe }}{% else %}{{ message }}{% endif %}
 	</div>
 {% endfor %}
 {% if user.is_authenticated %}
