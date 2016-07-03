@@ -9,7 +9,7 @@ from .forms import RNASeqCreateForm
 from .models import ALL_TOOLS_IN_USE, RNASeqModel
 
 
-@pipelines.register
+@pipelines.register_view
 class RNASeqFormView(AbstractAnalysisFormView):
     form_class = RNASeqCreateForm
     template_name = 'rna_seq/rna_seq.html'

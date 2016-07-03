@@ -3,6 +3,7 @@ from django.utils.translation import ugettext_lazy as _
 
 from analyses.models import AbstractAnalysisModel
 from analyses.fields import StageStatusField
+from analyses import pipelines
 from analyses.tool_specs import ToolSpec, ToolSet
 from data_sources.models import DataSource
 
@@ -48,6 +49,7 @@ SUPPORTED_ALIGNERS = [
 ]
 
 
+@pipelines.register
 class RNASeqModel(AbstractAnalysisModel):
 
     quality_check = models.BooleanField(
