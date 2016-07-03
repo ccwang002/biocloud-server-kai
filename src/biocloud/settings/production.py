@@ -93,7 +93,7 @@ LOGGING = {
     },
     'handlers': {
         'django_log_file': {
-            'level': 'DEBUG',
+            'level': 'INFO',
             'class': 'logging.FileHandler',
             'filename': join(LOGFILE_ROOT, 'django.log'),
             'formatter': 'verbose'
