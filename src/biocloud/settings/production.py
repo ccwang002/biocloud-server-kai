@@ -45,6 +45,20 @@ DEFAULT_FROM_EMAIL = SERVER_EMAIL = '{name} <{addr}>'.format(
 )
 
 
+# Caching
+# Ref: https://docs.djangoproject.com/en/1.9/topics/cache/
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        'LOCATION': 'biocloud-localmem',
+    }
+}
+
+
+# Django-Q
+
+
 # HTTPS  related settings
 
 SECURE_HSTS_SECONDS = 2592000

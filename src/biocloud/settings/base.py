@@ -59,6 +59,7 @@ DJANGO_APPS = (
 THIRD_PARTY_APPS = (
     'crispy_forms',
     'compressor',
+    'django_q',
 )
 
 LOCAL_APPS = (
@@ -190,6 +191,23 @@ if not BIOCLOUD_DATA_SOURCES_DIR.is_dir():
         "BIOCLOUD_DATA_SOURCES_DIR %s requires to be a directory."
         % BIOCLOUD_DATA_SOURCES_DIR
     )
+
+
+# Django-Q settings
+# Ref: https://django-q.readthedocs.org/en/latest/configure.html
+
+Q_CLUSTER = {
+    'name': 'BioCloud-queue',
+    'workers': 1,
+    'recycle': 5,
+    'timeout': None,  # what is timed out may never time out
+    'compress': True,
+    'save_limit': 10,
+    'queue_limit': 1,
+    'cpu_affinity': 1,
+    'catch_up': False,
+    'orm': 'default'
+}
 
 
 # Third-party app and custom settings
