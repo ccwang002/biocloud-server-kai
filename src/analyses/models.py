@@ -20,6 +20,14 @@ class ExecutionStatus(ChoiceEnum):
     FAILED = _("Failed")
 
 
+class StageStatus(ChoiceEnum):
+    WAITING = _("Waiting")
+    RUNNING = _("Running")
+    SUCCESSFUL = _("Successful")
+    FAILED = _("Failed")
+    SKIPED = _("Skiped")
+
+
 class GenomeReference(models.Model):
 
     identifier = models.CharField(
@@ -216,6 +224,9 @@ class AbstractAnalysisModel(models.Model):
         default=None,
         related_name='analysis',
     )
+
+    def __str__(self):
+        return self.name
 
     class Meta:
         abstract = True

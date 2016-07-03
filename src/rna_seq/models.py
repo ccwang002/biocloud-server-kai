@@ -2,6 +2,7 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
 from analyses.models import AbstractAnalysisModel
+from analyses.fields import StageStatusField
 from analyses.tool_specs import ToolSpec, ToolSet
 from data_sources.models import DataSource
 
@@ -125,3 +126,22 @@ class RNASeqModel(AbstractAnalysisModel):
     class Meta:
         verbose_name = "RNA-Seq analysis"
         verbose_name_plural = "RNA-Seq analyses"
+
+
+class RNASeqExeDetail(models.Model):
+    analysis = models.OneToOneField(
+        RNASeqModel, related_name='execution_detail',
+        primary_key=True, parent_link=True,
+    )
+
+    stage_qc = StageStatusField()
+    stage_alignment = StageStatusField()
+    stage_cufflinks = StageStatusField()
+    stage_cuffdiff = StageStatusField()
+
+    def __str__(self):
+        return 'Detail of %s' % self.analysis.name
+
+    class Meta:
+        verbose_name = "RNA-Seq detail"
+        verbose_name_plural = "RNA-Seq detail"

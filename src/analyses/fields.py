@@ -1,4 +1,6 @@
 from django import forms
+from django.db import models
+from analyses.models import StageStatus
 
 
 class ExperimentChoiceField(forms.ModelChoiceField):
@@ -19,3 +21,14 @@ class ExperimentChoiceField(forms.ModelChoiceField):
                 date_created=experiment.date_created,
             )
         )
+
+
+class StageStatusField(models.CharField):
+
+    def __init__(self, *args, **kwargs):
+        kwargs.update({
+            'choices': StageStatus.choices(),
+            'max_length': 32,
+            'default': StageStatus.WAITING.name,
+        })
+        super().__init__(*args, **kwargs)
