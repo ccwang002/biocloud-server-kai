@@ -99,7 +99,7 @@ LOGGING = {
             'formatter': 'verbose'
         },
         'console': {
-            'level': 'DEBUG',
+            'level': 'INFO',
             'class': 'logging.StreamHandler',
             'formatter': 'simple'
         },
@@ -108,7 +108,7 @@ LOGGING = {
         'django': {
             'handlers': ['django_log_file', ],
             'propagate': True,
-            'level': 'DEBUG',
+            'level': 'INFO',
         },
     }
 }
@@ -117,11 +117,11 @@ for app in LOCAL_APPS:
     app_handler = '%s_log_file' % app
     app_log_filepath = '%s.log' % app
     LOGGING['loggers'][app] = {
-        'handlers': [app_handler, 'console', ],
-        'level': 'DEBUG',
+        'handlers': [app_handler, ],
+        'level': 'INFO',
     }
     LOGGING['handlers'][app_handler] = {
-        'level': 'DEBUG',
+        'level': 'INFO',
         'class': 'logging.FileHandler',
         'filename': join(LOGFILE_ROOT, app_log_filepath),
         'formatter': 'verbose',
