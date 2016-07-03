@@ -40,8 +40,13 @@ class AbstractAnalysisFormView(LoginRequiredMixin, CreateView):
         response = super().form_valid(form)
         messages.add_message(
             self.request, messages.INFO,
-            _('You just created a %(analysis_type)s analysis!') % {
-                'analysis_type': self.analysis_type
-            }
+            _(
+                'You just created a %(analysis_type)s analysis! '
+                'View its detail <a href="%(analysis_detail_url)s">here</a>.'
+            ) % {
+                'analysis_type': self.analysis_type,
+                'analysis_detail_url': self.object.get_absolute_url(),
+            },
+            extra_tags='safe',
         )
         return response
