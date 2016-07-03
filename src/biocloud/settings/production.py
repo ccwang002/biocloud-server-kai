@@ -72,7 +72,7 @@ X_FRAME_OPTIONS = 'DENY'
 
 
 # Log everything to the logs directory at the top
-LOGFILE_ROOT = join(BASE_DIR, 'logs')
+LOGFILE_ROOT = join(dirname(BASE_DIR), 'logs')
 
 # Reset logging
 LOGGING_CONFIG = None
