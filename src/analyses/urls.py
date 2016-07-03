@@ -10,5 +10,5 @@ urlpatterns = [
     # To be honest, here we should use a regex to dynamically find the
     # desired analysis and raise 404 when the analysis is not found.
     # But who cares the source code. Huh?
-    url(r'^new/rna-seq/', include('rna_seq.urls')),
+    url(r'^rna-seq/', include('rna_seq.urls')),
 ]
