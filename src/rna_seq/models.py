@@ -123,6 +123,10 @@ class RNASeqModel(AbstractAnalysisModel):
         ),
     )
 
+    def get_absolute_url(self):
+        from django.core.urlresolvers import reverse
+        return reverse('rna_seq_detail', kwargs={'pk': str(self.id)})
+
     class Meta:
         verbose_name = "RNA-Seq analysis"
         verbose_name_plural = "RNA-Seq analyses"

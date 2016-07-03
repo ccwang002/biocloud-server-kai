@@ -1,0 +1,21 @@
+{% extends 'analyses/detail.html' %}
+
+{% block content %}
+	<h2>Detail of {{ analysis.name }} ({{ analysis.execution_status }})</h2>
+
+	<h3>Description</h3>
+	<pre>{{ analysis.description }}</pre>
+
+	<h3>Experiment design</h3>
+	<p><a href="{{ analysis.experiment.get_absolute_url }}">{{ analysis.experiment }}</a></p>
+
+	<h3>Parameters</h3>
+	<p>Genome: {{ analysis.genome_reference }}</p>
+	<h3>Execution detail</h3>
+	<ul>
+		<li>QC: {{ analysis_detail.stage_qc|default:"Waiting" }}</li>
+		<li>Alignment: {{ analysis_detail.stage_alignment|default:"Waiting" }}</li>
+		<li>Cufflinks: {{ analysis_detail.stage_cufflinks|default:"Waiting" }}</li>
+		<li>Cuffdiff: {{ analysis_detail.stage_cuffdiff|default:"Waiting" }}</li>
+	</ul>
+{% endblock content %}
