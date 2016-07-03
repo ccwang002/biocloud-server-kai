@@ -8,7 +8,7 @@ from analyses.forms import (
     AnalysisFormActions,
     Include,
 )
-from analyses.models import ExecutionStatus
+from analyses.models import ExecutionStatus, Report
 from .models import RNASeqModel, RNASeqExeDetail
 
 
@@ -21,27 +21,29 @@ class RNASeqCreateForm(AbstractAnalysisCreateForm):
         }
 
     def save(self, commit=True):
-        pipeline = super().save(commit)
+        job = super().save(commit)
         if commit:
             # Setup execution detail
-            pipeline_detail = RNASeqExeDetail.objects.create(
-                analysis=pipeline
-            )
+            RNASeqExeDetail.objects.create(analysis=job)
+            # Create new report (for report and result)
+            job_report = Report.objects.create()
+            job.report = job_report
+            job.save(update_fields=['report'])
             # Get the pipeline full url so we can notify the user
             # where to view the result
-            pipeline_url = self._request.build_absolute_uri(
-                pipeline.get_absolute_url()
+            job_url = self._request.build_absolute_uri(
+                job.get_absolute_url()
             )
             # Submit new task
             async(
                 'rna_seq.tasks.run_pipeline',
-                pipeline_pk=pipeline.pk,
-                pipeline_url=pipeline_url,
+                job_pk=job.pk,
+                job_url=job_url,
             )
             # Mark the analysis is now in queue
-            pipeline.execution_status = ExecutionStatus.QUEUEING.name
-            pipeline.save()
-        return pipeline
+            job.execution_status = ExecutionStatus.QUEUEING.name
+            job.save(update_fields=['execution_status'])
+        return job
 
     @cached_property
     def helper(self):

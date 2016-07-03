@@ -33,8 +33,13 @@ class RNASeqDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         analysis = context['object']
+        if analysis.report:
+            full_report_url = self.request.build_absolute_uri(
+                analysis.report.get_absolute_url()
+            )
         context.update({
             'analysis': analysis,
             'analysis_detail': analysis.execution_detail,
+            'full_report_url': full_report_url
         })
         return context

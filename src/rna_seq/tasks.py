@@ -14,8 +14,8 @@ def update_stage(job_detail, stage_name, new_status):
     job_detail.save(update_fields=[stage_name])
 
 
-def run_pipeline(pipeline_pk, pipeline_url):
-    job = RNASeqModel.objects.get(pk=pipeline_pk)
+def run_pipeline(job_pk, job_url):
+    job = RNASeqModel.objects.get(pk=job_pk)
     job_detail = job.execution_detail
     job.execution_status = ExecutionStatus.RUNNING.name
     job.save()
@@ -46,7 +46,7 @@ def run_pipeline(pipeline_pk, pipeline_url):
     user = job.owner
     context = {
         'user': user,
-        'job_url': pipeline_url,
+        'job_url': job_url,
         'job': job,
         'type': job._meta.verbose_name,
         'name': job.name,

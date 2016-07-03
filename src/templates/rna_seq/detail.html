@@ -1,5 +1,7 @@
 {% extends 'analyses/detail.html' %}
 
+{% block title %}Analysis detail of {{ analysis.name }}{% endblock title %}
+
 {% block content %}
 	<h2>Detail of {{ analysis.name }} ({{ analysis.execution_status }})</h2>
 
@@ -11,6 +13,7 @@
 
 	<h3>Parameters</h3>
 	<p>Genome: {{ analysis.genome_reference }}</p>
+
 	<h3>Execution detail</h3>
 	<ul>
 		<li>QC: {{ analysis_detail.stage_qc|default:"Waiting" }}</li>
@@ -18,4 +21,15 @@
 		<li>Cufflinks: {{ analysis_detail.stage_cufflinks|default:"Waiting" }}</li>
 		<li>Cuffdiff: {{ analysis_detail.stage_cuffdiff|default:"Waiting" }}</li>
 	</ul>
+
+	<h3>Report</h3>
+	{% if analysis.execution_status == 'SUCCESSFUL' %}
+		<p>Canonical report link:
+			<a href="{{ full_report_url }}">
+				{{ full_report_url }}
+			</a>
+		</p>
+	{% else %}
+		<p>Only successful analysis has report.</p>
+	{% endif %}
 {% endblock content %}
