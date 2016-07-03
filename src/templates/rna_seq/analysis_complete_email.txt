@@ -1,0 +1,13 @@
+{% spaceless %}
+{% autoescape off %}
+
+{% load i18n %}
+
+{% blocktrans %}
+The {{ type }}: {{ name }} has ended with status {{ status }}.
+
+More info can be found on the BioCloud website: {{ job_url }}.
+{% endblocktrans %}
+
+{% endautoescape %}
+{% endspaceless %}

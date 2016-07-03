@@ -206,7 +206,8 @@ Q_CLUSTER = {
     'queue_limit': 1,
     'cpu_affinity': 1,
     'catch_up': False,
-    'orm': 'default'
+    'orm': 'default',
+    'label': 'Analysis Queue (Django-Q)',
 }
 
 

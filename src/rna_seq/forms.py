@@ -1,5 +1,6 @@
 from crispy_forms.layout import Div, Field, Fieldset, HTML, Layout
 from django.utils.functional import cached_property
+from django_q.tasks import async
 
 from analyses.forms import (
     AbstractAnalysisCreateForm,
@@ -7,7 +8,8 @@ from analyses.forms import (
     AnalysisFormActions,
     Include,
 )
-from .models import RNASeqModel
+from analyses.models import ExecutionStatus
+from .models import RNASeqModel, RNASeqExeDetail
 
 
 class RNASeqCreateForm(AbstractAnalysisCreateForm):
@@ -17,6 +19,29 @@ class RNASeqCreateForm(AbstractAnalysisCreateForm):
         widgets = {
             **AbstractAnalysisCreateForm.Meta.widgets,
         }
+
+    def save(self, commit=True):
+        pipeline = super().save(commit)
+        if commit:
+            # Setup execution detail
+            pipeline_detail = RNASeqExeDetail.objects.create(
+                analysis=pipeline
+            )
+            # Get the pipeline full url so we can notify the user
+            # where to view the result
+            pipeline_url = self._request.build_absolute_uri(
+                pipeline.get_absolute_url()
+            )
+            # Submit new task
+            async(
+                'rna_seq.tasks.run_pipeline',
+                pipeline_pk=pipeline.pk,
+                pipeline_url=pipeline_url,
+            )
+            # Mark the analysis is now in queue
+            pipeline.execution_status = ExecutionStatus.QUEUEING.name
+            pipeline.save()
+        return pipeline
 
     @cached_property
     def helper(self):
