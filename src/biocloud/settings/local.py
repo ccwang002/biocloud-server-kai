@@ -21,10 +21,6 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'localhost'
 EMAIL_PORT = 1025
 
-# Directory to reports and results
-BIOCLOUD_REPORTS_DIR = Path(env.path('BIOCLOUD_REPORTS_DIR', required=True)())
-BIOCLOUD_RESULTS_DIR = Path(env.path('BIOCLOUD_RESULTS_DIR', required=True)())
-
 
 # Log everything to the logs directory at the top
 LOGFILE_ROOT = join(dirname(BASE_DIR), 'logs')

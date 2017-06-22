@@ -179,10 +179,11 @@ AUTH_USER_MODEL = 'users.EmailUser'
 
 
 # BioCloud specific path settings
-
 # env.path() returns an environ.Path object.
 # environ.Path() converts the path itself into str.
 # Path(env.path(...)()) finally converts the str into a pathlib.Path object.
+
+# Directory to BioCloud's data sources
 BIOCLOUD_DATA_SOURCES_DIR = Path(env.path(
     'BIOCLOUD_DATA_SOURCES_DIR', required=True
 )())
@@ -191,6 +192,27 @@ if not BIOCLOUD_DATA_SOURCES_DIR.is_dir():
         "BIOCLOUD_DATA_SOURCES_DIR %s requires to be a directory."
         % BIOCLOUD_DATA_SOURCES_DIR
     )
+
+# Directory to BioCloud's results
+BIOCLOUD_RESULTS_DIR = Path(env.path(
+    'BIOCLOUD_RESULTS_DIR', required=True
+)())
+if not BIOCLOUD_RESULTS_DIR.is_dir():
+    raise ImproperlyConfigured(
+        "BIOCLOUD_RESULTS_DIR %s requires to be a directory."
+        % BIOCLOUD_RESULTS_DIR
+    )
+
+# Directory to BioCloud's reports
+BIOCLOUD_REPORTS_DIR = Path(env.path(
+    'BIOCLOUD_REPORTS_DIR', required=True
+)())
+if not BIOCLOUD_REPORTS_DIR.is_dir():
+    raise ImproperlyConfigured(
+        "BIOCLOUD_REPORTS_DIR %s requires to be a directory."
+        % BIOCLOUD_REPORTS_DIR
+    )
+
 
 
 # Django-Q settings
