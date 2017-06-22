@@ -13,6 +13,7 @@ CRISPY_FAIL_SILENTLY = not DEBUG
 
 # Django Debug Toolbar
 INSTALLED_APPS += ('debug_toolbar.apps.DebugToolbarConfig',)
+MIDDLEWARE_CLASSES += ('debug_toolbar.middleware.DebugToolbarMiddleware',)
 
 # Show emails to console in DEBUG mode
 # EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
