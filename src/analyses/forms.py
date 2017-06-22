@@ -1,6 +1,9 @@
+from pathlib import Path
+
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Submit
 from django import forms
+from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.urlresolvers import reverse
 from django.forms.utils import ErrorDict
@@ -11,7 +14,7 @@ from django.utils.translation import ugettext_lazy as _
 from core.forms import RequestValidationMixin
 from core.widgets import SimpleMDEWidget
 from experiments.models import Experiment
-from .models import AbstractAnalysisModel, Report
+from .models import AbstractAnalysisModel, Report, GenomeReference
 from .fields import ExperimentChoiceField
 from .form_layouts import AnalysisCommonLayout, AnalysisFormActions, Include
 
@@ -109,3 +112,25 @@ class ReportUpdateForm(forms.ModelForm):
             kwargs={'pk': self.instance.pk}
         )
         return helper
+
+
+class GenomeReferenceCreateForm(forms.ModelForm):
+
+    class Meta:
+        model = GenomeReference
+        fields = '__all__'
+
+    def clean_identifier(self):
+        """Make sure the folder existed.
+
+        Potentially we can check whether the file structure
+        inside this folder follows certain rules here.
+        """
+        ref_id = self.cleaned_data['identifier']
+        ref_dir = Path(settings.BIOCLOUD_REFERENCES_DIR, ref_id)
+        if not ref_dir.is_dir():
+            raise forms.ValidationError(
+                _("Its folder does not exist, expected at %(ref_dir)s"),
+                params={'ref_id': ref_id, 'ref_dir': str(ref_dir)}
+            )
+        return ref_id

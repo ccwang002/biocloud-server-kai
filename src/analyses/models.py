@@ -1,3 +1,5 @@
+from pathlib import Path
+
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist, PermissionDenied
 from django.core.urlresolvers import reverse
@@ -87,6 +89,10 @@ class GenomeReference(models.Model):
 
     def __str__(self):
         return "{0.identifier} ({0.source})".format(self)
+
+    @property
+    def full_dir_path(self):
+        return Path(settings.BIOCLOUD_REFERENCES_DIR, self.identifier)
 
 
 class ReportQuerySet(models.QuerySet):

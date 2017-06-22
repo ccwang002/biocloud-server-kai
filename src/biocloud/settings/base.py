@@ -183,6 +183,16 @@ AUTH_USER_MODEL = 'users.EmailUser'
 # environ.Path() converts the path itself into str.
 # Path(env.path(...)()) finally converts the str into a pathlib.Path object.
 
+# Directory to BioCloud's references
+BIOCLOUD_REFERENCES_DIR = Path(env.path(
+    'BIOCLOUD_REFERENCES_DIR', required=True
+)())
+if not BIOCLOUD_REFERENCES_DIR.is_dir():
+    raise ImproperlyConfigured(
+        "BIOCLOUD_REFERENCES_DIR %s requires to be a directory."
+        % BIOCLOUD_REFERENCES_DIR
+    )
+
 # Directory to BioCloud's data sources
 BIOCLOUD_DATA_SOURCES_DIR = Path(env.path(
     'BIOCLOUD_DATA_SOURCES_DIR', required=True

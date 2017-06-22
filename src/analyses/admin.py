@@ -4,6 +4,7 @@ from django.utils.translation import ugettext_lazy as _
 
 from core.widgets import SimpleMDEWidget
 from .models import GenomeReference, Report
+from .forms import GenomeReferenceCreateForm
 
 
 @admin.register(GenomeReference)
@@ -19,6 +20,8 @@ class GenomeReferenceAdmin(admin.ModelAdmin):
     list_filter = (
         'organism', 'source',
     )
+
+    form = GenomeReferenceCreateForm
 
 
 @admin.register(Report)
