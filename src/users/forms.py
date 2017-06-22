@@ -97,6 +97,7 @@ class UserCreationForm(forms.ModelForm):
         user.set_password(password)
         if commit:
             user.save()
+            user.create_biocloud_folders()
         return user
 
 

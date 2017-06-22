@@ -1,5 +1,7 @@
 import datetime
 import random
+import logging
+from pathlib import Path
 
 from django.conf import settings
 from django.contrib.auth.models import (
@@ -13,6 +15,8 @@ from django.db import models
 from django.template.loader import render_to_string
 from django.utils import timezone
 from django.utils.translation import ugettext, ugettext_lazy as _
+
+logger = logging.getLogger(__name__)
 
 
 def random_auth_number():
@@ -216,3 +220,21 @@ class EmailUser(AbstractBaseUser, PermissionsMixin):
             ),
             message=message, fail_silently=False,
         )
+
+    def create_biocloud_folders(self):
+        """
+        Setup BioCloud related folders, including data sources,
+        results, and report.
+        """
+        logger.info('Create BioCloud folders for {}'.format(self))
+        for biocloud_root_folder in [
+            settings.BIOCLOUD_DATA_SOURCES_DIR,
+            settings.BIOCLOUD_RESULTS_DIR,
+            settings.BIOCLOUD_REPORTS_DIR,
+        ]:
+            user_folder = Path(biocloud_root_folder, str(self.pk))
+            if user_folder.exists():
+                logger.warning("User {} specific folder {} is existed. Skipped."
+                               .format(self, user_folder))
+            else:
+                user_folder.mkdir()
