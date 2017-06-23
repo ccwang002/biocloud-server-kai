@@ -267,12 +267,12 @@ class AbstractAnalysisModel(models.Model):
             cond_label = cond.label
             ordered_samples = []
             for sample, cond_sources in samples.items():
-                data_sources_full_path = []
+                data_sources_name = []
                 for cond in cond_sources:
                     ds = cond.data_source
                     raw_data_sources.append((ds, cond.strand))
-                    data_sources_full_path.append(str(ds.full_file_path))
-                ordered_samples.append({sample: data_sources_full_path})
+                    data_sources_name.append(ds.file_path)
+                ordered_samples.append({sample: data_sources_name})
             conditions.append({cond_label: ordered_samples})
 
         # Generate data sources information
@@ -280,7 +280,7 @@ class AbstractAnalysisModel(models.Model):
         for ds, strand in raw_data_sources:
             data_sources.append({
                 str(ds.full_file_path): {
-                    'path': str(ds.rel_file_path),
+                    'path': str(ds.full_file_path),
                     'type': ds.file_type,
                     'strand': strand,
                     'metadata': ds.metadata,
@@ -296,5 +296,6 @@ class AbstractAnalysisModel(models.Model):
             },
             'conditions': conditions,
             'data_sources': data_sources,
+            'parameters': {},
         }
         return analysis_info
