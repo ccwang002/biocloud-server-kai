@@ -98,7 +98,7 @@ class AbstractAnalysisCreateForm(
             pipeline.save()
 
             # Create the result folder
-            pipeline_dir = Path(settings.BIOCLOUD_RESULTS_DIR, str(pipeline.pk))
+            pipeline_dir = pipeline.result_dir
             if pipeline_dir.exists():
                 logger.warning(
                     'Analysis {} results folder existed at {}. Overwriting...'

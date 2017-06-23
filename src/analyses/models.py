@@ -164,6 +164,10 @@ class Report(models.Model):
             [user.email, user.auth_number, self.pk]
         )
 
+    @property
+    def full_path(self):
+        return settings.BIOCLOUD_REPORTS_DIR.joinpath(str(self.pk))
+
     def get_absolute_url(self):
         return reverse(
             'canonical_access_report',
@@ -299,3 +303,7 @@ class AbstractAnalysisModel(models.Model):
             'parameters': {},
         }
         return analysis_info
+
+    @property
+    def result_dir(self):
+        return settings.BIOCLOUD_RESULTS_DIR.joinpath(str(self.pk))
