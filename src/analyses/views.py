@@ -64,8 +64,11 @@ class SubmittedAnalysisListView(LoginRequiredMixin, TemplateView):
         user_analyses = {}
         for pipe_model in AVAILABLE_PIPELINE_MODELS:
             # pipe_model._meta.verbose_name.title()
-            user_jobs = pipe_model.objects.filter(owner=self.request.user)
-
+            user_jobs = (
+                pipe_model.objects
+                    .order_by('execution_status', '-date_finished')
+                    .filter(owner=self.request.user)
+            )
             user_analyses[pipe_model._meta.model_name] = user_jobs
         context['all_user_jobs'] = user_analyses
         return context
