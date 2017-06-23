@@ -133,6 +133,33 @@ class RNASeqModel(AbstractAnalysisModel):
         verbose_name = "RNA-Seq analysis"
         verbose_name_plural = "RNA-Seq analyses"
 
+    def generate_analysis_info(self):
+        # Get the analysis_info from base classs
+        # Including data_sources, conditions, and etc.
+        analysis_info = super().generate_analysis_info()
+
+        # Add RNA-seq specific analysis_info
+        parameters = {
+            'quality_check': self.quality_check,
+            'genome_aligner': self.genome_aligner,
+            'tophat_max_multihits': self.tophat_max_multihits,
+            'tophat_library_type': self.tophat_library_type,
+            'star_separate_unmapped_reads': self.star_separate_unmapped_reads,
+        }
+        # TODO: Instead of outputting all parameters,
+        # we can output those that are actually used.
+        # For example, if the analysis uses STAR,
+        # ignore all Tophat settings.
+        # if self.genome_aligner == 'Tophat':
+        # else:
+
+        # Overwrite existed analysis_info dic
+        analysis_info['parameters'] = {
+            **analysis_info['parameters'],
+            **parameters,
+        }
+        return analysis_info
+
 
 class RNASeqExeDetail(models.Model):
     analysis = models.OneToOneField(
