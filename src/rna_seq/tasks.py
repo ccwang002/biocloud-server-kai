@@ -5,7 +5,7 @@ from django.utils import timezone
 from django.utils.translation import ugettext, ugettext_lazy as _
 
 from .models import RNASeqModel
-from analyses.tasks import EXE, cd
+from analyses.tasks import cd
 from analyses.models import ExecutionStatus, StageStatus
 
 

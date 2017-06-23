@@ -83,5 +83,9 @@ class DataSource(models.Model):
         return full_file_path
 
     @property
+    def rel_file_path(self):
+        return self.get_rel_file_path()
+
+    @property
     def full_file_path(self):
         return self.get_full_file_path()

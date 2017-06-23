@@ -1,11 +1,6 @@
 from contextlib import contextmanager
 import os
 
-# define path to the executives
-EXE = {
-    'SAMTOOLS': 'samtools',
-}
-
 
 @contextmanager
 def cd(newdir: str):

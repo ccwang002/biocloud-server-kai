@@ -1,3 +1,4 @@
+import logging
 from pathlib import Path
 
 from crispy_forms.helper import FormHelper
@@ -10,13 +11,18 @@ from django.forms.utils import ErrorDict
 from django.utils.functional import cached_property
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext_lazy as _
+import yaml
 
 from core.forms import RequestValidationMixin
+from core.utils import setup_yaml
 from core.widgets import SimpleMDEWidget
 from experiments.models import Experiment
 from .models import AbstractAnalysisModel, Report, GenomeReference
 from .fields import ExperimentChoiceField
 from .form_layouts import AnalysisCommonLayout, AnalysisFormActions, Include
+
+logger = logging.getLogger(__name__)
+setup_yaml()
 
 
 class AbstractAnalysisCreateForm(
@@ -78,12 +84,36 @@ class AbstractAnalysisCreateForm(
         self.check_choice_exists()
 
     def save(self, commit=True):
-        """Fill user field on save.
+        """Save the analysis information
+
+        On saving a new analysis, it will:
+        1. Fill user field on save.
+        2. Create the corresponding result folder
+        3. Write the analysis_info.yaml into this folder
+           by calling ``pipeline.generate_analysis_info()``
         """
-        pipeline = super().save(commit=False)
+        pipeline = super().save(commit=False)  # type: AbstractAnalysisModel
         pipeline.owner = self._request.user
         if commit:
             pipeline.save()
+
+            # Create the result folder
+            pipeline_dir = Path(settings.BIOCLOUD_RESULTS_DIR, str(pipeline.pk))
+            if pipeline_dir.exists():
+                logger.warning(
+                    'Analysis {} results folder existed at {}. Overwriting...'
+                    .format(pipeline.pk, pipeline_dir)
+                )
+            else:
+                pipeline_dir.mkdir()
+
+            # Write analysis_info.yaml into this folder
+            analysis_info = pipeline.generate_analysis_info()
+            analysis_info_path = pipeline_dir.joinpath('analysis_info.yaml')
+
+            with analysis_info_path.open('w') as f:
+                yaml.dump(analysis_info, f, default_flow_style = False)
+
         return pipeline
 
     @cached_property

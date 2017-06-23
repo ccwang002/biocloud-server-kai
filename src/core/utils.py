@@ -1,6 +1,7 @@
+from collections import OrderedDict
 import enum
 import importlib
-
+import yaml
 
 def str_to_class(module_name, class_name):
     """
@@ -64,3 +65,15 @@ class ValueDescriptionChoiceEnum(ChoiceEnum):
             for member_name, member in cls.__members__.items()
         ]
 
+
+
+# Set up PyYAML
+# Ref: https://stackoverflow.com/a/31609484
+def setup_yaml():
+    """ https://stackoverflow.com/a/8661021 """
+    def represent_dict_order(dumper, data):
+        return dumper.represent_mapping(
+            'tag:yaml.org,2002:map', data.items(), flow_style=False
+        )
+
+    yaml.add_representer(OrderedDict, represent_dict_order)

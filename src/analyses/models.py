@@ -1,3 +1,4 @@
+from collections import OrderedDict
 from pathlib import Path
 
 from django.conf import settings
@@ -245,3 +246,55 @@ class AbstractAnalysisModel(models.Model):
         abstract = True
         get_latest_by = ("date_finished", "date_created")
         ordering = ("-date_created", )
+
+    def generate_analysis_info(self):
+        """
+        Generate analysis_info.yaml in result folder.
+
+        Child class should build on the return dict
+
+        Returns:
+            dict: Information about this analysis.
+        """
+        experiment = self.experiment
+        raw_conditions = experiment.group_data_sources
+
+        # Generate condition and data sources information
+        # since this is a database intensive operation
+        raw_data_sources = []
+        conditions = []
+        for cond, samples in raw_conditions.items():
+            cond_label = cond.label
+            ordered_samples = []
+            for sample, cond_sources in samples.items():
+                data_sources_full_path = []
+                for cond in cond_sources:
+                    ds = cond.data_source
+                    raw_data_sources.append((ds, cond.strand))
+                    data_sources_full_path.append(str(ds.full_file_path))
+                ordered_samples.append({sample: data_sources_full_path})
+            conditions.append({cond_label: ordered_samples})
+
+        # Generate data sources information
+        data_sources = []
+        for ds, strand in raw_data_sources:
+            data_sources.append({
+                str(ds.full_file_path): {
+                    'path': str(ds.rel_file_path),
+                    'type': ds.file_type,
+                    'strand': strand,
+                    'metadata': ds.metadata,
+                }
+            })
+
+        analysis_info = {
+            'name': self.name,
+            'genome_reference': self.genome_reference.identifier,
+            'experiment': {
+                'id': experiment.id,
+                'name': experiment.name,
+            },
+            'conditions': conditions,
+            'data_sources': data_sources,
+        }
+        return analysis_info
