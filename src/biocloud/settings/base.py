@@ -233,6 +233,7 @@ Q_CLUSTER = {
     'workers': 1,
     'recycle': 5,
     'timeout': None,  # what is timed out may never time out
+    'retry': 60 * 60 * 24 * 30,  # Retry in a month
     'compress': True,
     'save_limit': 10,
     'queue_limit': 1,
