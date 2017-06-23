@@ -229,8 +229,8 @@ class EmailUser(AbstractBaseUser, PermissionsMixin):
         logger.info('Create BioCloud folders for {}'.format(self))
         for biocloud_root_folder in [
             settings.BIOCLOUD_DATA_SOURCES_DIR,
-            settings.BIOCLOUD_RESULTS_DIR,
-            settings.BIOCLOUD_REPORTS_DIR,
+            # settings.BIOCLOUD_RESULTS_DIR,
+            # settings.BIOCLOUD_REPORTS_DIR,
         ]:
             user_folder = Path(biocloud_root_folder, str(self.pk))
             if user_folder.exists():
