@@ -36,3 +36,7 @@ psycopg2 >= 2.6, < 2.7
 # using Python multiprocessing.
 # https://django-q.readthedocs.io/
 django-q >=0.7, <0.8
+
+# PyYAML is a YAML implementations for Python
+# http://pyyaml.org/
+PyYAML >= 3.12, < 4.0
