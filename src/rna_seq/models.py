@@ -134,7 +134,7 @@ class RNASeqModel(AbstractAnalysisModel):
         verbose_name_plural = "RNA-Seq analyses"
 
     def generate_analysis_info(self):
-        # Get the analysis_info from base classs
+        # Get the analysis_info from base class
         # Including data_sources, conditions, and etc.
         analysis_info = super().generate_analysis_info()
 
