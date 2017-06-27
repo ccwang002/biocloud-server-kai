@@ -11,7 +11,7 @@ from analyses.tasks import cd
 from analyses.models import ExecutionStatus, StageStatus
 
 FASTQC_BIN = str(Path('~/miniconda3/envs/rnaseq/bin/fastqc').expanduser())
-
+STAR_BIN = str(Path('~/miniconda3/envs/rnaseq/bin/STAR').expanduser())
 
 def update_stage(job_detail, stage_name, new_status):
     setattr(job_detail, stage_name, new_status.name)
@@ -27,14 +27,51 @@ def run_fastqc(job: RNASeqModel, analysis_info):
             ds_dir = Path('fastqc/{}'.format(ds_pth.stem))
             if not ds_dir.exists():
                 ds_dir.mkdir()
+            # Run FastQC
             p = sp.run([
                 FASTQC_BIN,
                 '-o', str(ds_dir),
                 str(ds_pth)
             ])
-            p.check_returncode()
             if p.returncode:
                 return p.returncode
+    return 0
+
+
+def run_star(job: RNASeqModel, analysis_info, data_source_mapping):
+    # Get genome annotation
+    genome_root = job.genome_reference.full_dir_path
+    genes_gtf = genome_root.joinpath('genes.gtf')
+    sjdb_out = genome_root.joinpath('sjdbList.out.tab')
+    # Iterate each sample under all conditions
+    for condition in analysis_info['conditions']:
+        cond, samples = next(iter(condition.items()))
+        for sample in samples:
+            sample_name, fastqs = next(iter(sample.items()))
+            fastq_full_pths = [
+                data_source_mapping[fastq]['path']
+                for fastq in fastqs
+            ]
+            sample_dir = job.result_dir.joinpath('STAR', sample_name)
+            if not sample_dir.exists():
+                sample_dir.mkdir()
+            with cd(str(job.result_dir)):
+                # Run STAR
+                p = sp.run([
+                    STAR_BIN,
+                    '--genomeDir', str(genome_root),
+                    '--sjdbOverhang', '100',
+                    '--sjdbGTFfile', str(genes_gtf),
+                    '--sjdbFileChrStartEnd', str(sjdb_out),
+                    '--readFilesIn', *fastq_full_pths,
+                    '--runThreadN', '4',
+                    '--outSAMstrandField', 'intronMotif',
+                    '--outFilterIntronMotifs', 'RemoveNoncanonical',
+                    '--outSAMtype', 'BAM', 'SortedByCoordinate',
+                    '--outFileNamePrefix', str(sample_dir) + '/',
+                ])
+                if p.returncode:
+                    return p.returncode
     return 0
 
 
@@ -44,6 +81,12 @@ def run_pipeline(job_pk, job_url):
     job.execution_status = ExecutionStatus.RUNNING.name
     job.save()
     analysis_info = job.generate_analysis_info()
+
+    # Create a data_source mapping from its name so each stage can re-use this
+    data_source_mapping = {}
+    for data_source in analysis_info['data_sources']:
+        ds_pth, ds_info = next(iter(data_source.items()))
+        data_source_mapping[Path(ds_pth).name] = ds_info
 
     # Stage QC:
     fastqc_dir = job.result_dir.joinpath('fastqc')
@@ -61,10 +104,21 @@ def run_pipeline(job_pk, job_url):
     else:
         update_stage(job_detail, 'stage_qc', StageStatus.SKIPED)
 
-    # simulate running alignment
+    # Stage Alignment:
     update_stage(job_detail, 'stage_alignment', StageStatus.RUNNING)
-    time.sleep(5)
-    update_stage(job_detail, 'stage_alignment', StageStatus.SUCCESSFUL)
+    if job.genome_aligner.startswith('STAR'):
+        # STAR
+        star_dir = job.result_dir.joinpath('STAR')
+        if not star_dir.exists():
+            star_dir.mkdir()
+        returncode = run_star(job, analysis_info, data_source_mapping)
+        if returncode:
+            update_stage(job_detail, 'stage_alignment', StageStatus.FAILED)
+        else:
+            update_stage(job_detail, 'stage_alignment', StageStatus.SUCCESSFUL)
+    else:
+        # Tophat
+        update_stage(job_detail, 'stage_alignment', StageStatus.FAILED)
 
     # simluate running cufflinks
     update_stage(job_detail, 'stage_cufflinks', StageStatus.RUNNING)
