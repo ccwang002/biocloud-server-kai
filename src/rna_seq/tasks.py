@@ -13,6 +13,7 @@ from analyses.models import ExecutionStatus, StageStatus
 FASTQC_BIN = str(Path('~/miniconda3/envs/rnaseq/bin/fastqc').expanduser())
 STAR_BIN = str(Path('~/miniconda3/envs/rnaseq/bin/STAR').expanduser())
 SAMTOOLS_BIN = str(Path('~/miniconda3/envs/rnaseq/bin/samtools').expanduser())
+CUFFLINKS_BIN = str(Path('~/miniconda3/envs/rnaseq/bin/cufflinks').expanduser())
 
 
 def update_stage(job_detail, stage_name, new_status):
@@ -81,6 +82,41 @@ def run_star(job: RNASeqModel, analysis_info, data_source_mapping):
     return 0
 
 
+def run_cufflinks(job: RNASeqModel, analysis_info):
+    # Get genome annotation
+    genome_root = job.genome_reference.full_dir_path
+    genes_gtf = genome_root.joinpath('genes.gtf')
+
+    # Get all samples
+    sample_names = []
+    for condition in analysis_info['conditions']:
+        cond, samples = next(iter(condition.items()))
+        for sample in samples:
+            sample_name, _ = next(iter(sample.items()))
+            sample_names.append(sample_name)
+
+    for sample in sample_names:
+        sample_dir = job.result_dir.joinpath('cufflinks', sample_name)
+        sample_bam = job.result_dir.joinpath('STAR', sample_name, 'Aligned.sortedByCoord.out.bam')
+        if not sample_dir.exists():
+            sample_dir.mkdir()
+        with cd(str(job.result_dir)):
+            # Run Cufflinks
+            p = sp.run([
+                CUFFLINKS_BIN,
+                '-p', '4',
+                '-o', str(sample_dir),
+                '--library-type', 'fr-firststrand',
+                '--GTF', str(genes_gtf),
+                '--no-update-check',
+                str(sample_bam)
+            ])
+            if p.returncode:
+                return p.returncode
+
+    return 0
+
+
 def run_pipeline(job_pk, job_url):
     job = RNASeqModel.objects.get(pk=job_pk)
     job_detail = job.execution_detail
@@ -126,15 +162,22 @@ def run_pipeline(job_pk, job_url):
         # Tophat
         update_stage(job_detail, 'stage_alignment', StageStatus.FAILED)
 
-    # simluate running cufflinks
+    # Stage Cufflinks:
     update_stage(job_detail, 'stage_cufflinks', StageStatus.RUNNING)
-    time.sleep(5)
-    update_stage(job_detail, 'stage_cufflinks', StageStatus.SUCCESSFUL)
+    cufflinks_dir = job.result_dir.joinpath('cufflinks')
+    if not cufflinks_dir.exists():
+        cufflinks_dir.mkdir()
+    returncode = run_cufflinks(job, analysis_info)
+    if returncode:
+        update_stage(job_detail, 'stage_cufflinks', StageStatus.FAILED)
+    else:
+        update_stage(job_detail, 'stage_cufflinks', StageStatus.SUCCESSFUL)
 
     # intentionally skip stage_cuffdiff
 
     # generating report
     job_report = job.report
+    # TODO: check if report is successfully generated
     sp.run([
         'bc_report',
         '-p', 'bc_pipelines.rna_seq.report.RNASeqReport',
