@@ -150,7 +150,7 @@ class RNASeqModel(AbstractAnalysisModel):
         # we can output those that are actually used.
         # For example, if the analysis uses STAR,
         # ignore all Tophat settings.
-        # if self.genome_aligner == 'Tophat':
+        # if self.genome_aligner.startswith('Tophat'):
         # else:
 
         # Overwrite existed analysis_info dic

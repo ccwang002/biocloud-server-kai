@@ -1,5 +1,7 @@
 from crispy_forms.layout import Div, Field, Fieldset, HTML, Layout
+from django import forms
 from django.utils.functional import cached_property
+from django.utils.translation import ugettext_lazy as _
 from django_q.tasks import async
 
 from analyses.forms import (
@@ -19,6 +21,14 @@ class RNASeqCreateForm(AbstractAnalysisCreateForm):
         widgets = {
             **AbstractAnalysisCreateForm.Meta.widgets,
         }
+
+    def clean_genome_aligner(self):
+        aligner_choice = self.cleaned_data['genome_aligner']
+        if aligner_choice.startswith('Tophat'):
+            raise forms.ValidationError(_(
+                'Tophat aligner is not supported.'
+            ))
+        return aligner_choice
 
     def save(self, commit=True):
         job = super().save(commit)
