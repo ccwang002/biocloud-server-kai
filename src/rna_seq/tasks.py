@@ -12,6 +12,8 @@ from analyses.models import ExecutionStatus, StageStatus
 
 FASTQC_BIN = str(Path('~/miniconda3/envs/rnaseq/bin/fastqc').expanduser())
 STAR_BIN = str(Path('~/miniconda3/envs/rnaseq/bin/STAR').expanduser())
+SAMTOOLS_BIN = str(Path('~/miniconda3/envs/rnaseq/bin/samtools').expanduser())
+
 
 def update_stage(job_detail, stage_name, new_status):
     setattr(job_detail, stage_name, new_status.name)
@@ -72,6 +74,10 @@ def run_star(job: RNASeqModel, analysis_info, data_source_mapping):
                 ])
                 if p.returncode:
                     return p.returncode
+
+                # Run samtools index
+                for fastq_pth in fastq_full_pths:
+                    sp.run([SAMTOOLS_BIN, 'index', fastq_pth])
     return 0
 
 
