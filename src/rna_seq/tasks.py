@@ -1,6 +1,7 @@
+from collections import OrderedDict
 import subprocess as sp
+import os
 from pathlib import Path
-import time
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
 from django.utils import timezone
@@ -14,6 +15,9 @@ FASTQC_BIN = str(Path('~/miniconda3/envs/rnaseq/bin/fastqc').expanduser())
 STAR_BIN = str(Path('~/miniconda3/envs/rnaseq/bin/STAR').expanduser())
 SAMTOOLS_BIN = str(Path('~/miniconda3/envs/rnaseq/bin/samtools').expanduser())
 CUFFLINKS_BIN = str(Path('~/miniconda3/envs/rnaseq/bin/cufflinks').expanduser())
+CUFFMERGE_BIN = str(Path('~/miniconda3/envs/rnaseq/bin/cuffmerge').expanduser())
+CUFFQUANT_BIN = str(Path('~/miniconda3/envs/rnaseq/bin/cuffquant').expanduser())
+CUFFDIFF_BIN = str(Path('~/miniconda3/envs/rnaseq/bin/cuffquant').expanduser())
 
 
 def update_stage(job_detail, stage_name, new_status):
@@ -95,7 +99,7 @@ def run_cufflinks(job: RNASeqModel, analysis_info):
             sample_name, _ = next(iter(sample.items()))
             sample_names.append(sample_name)
 
-    for sample in sample_names:
+    for sample_name in sample_names:
         sample_dir = job.result_dir.joinpath('cufflinks', sample_name)
         sample_bam = job.result_dir.joinpath('STAR', sample_name, 'Aligned.sortedByCoord.out.bam')
         if not sample_dir.exists():
@@ -113,7 +117,93 @@ def run_cufflinks(job: RNASeqModel, analysis_info):
             ])
             if p.returncode:
                 return p.returncode
+    return 0
 
+
+def run_cuffdiff(job: RNASeqModel, analysis_info):
+    # Get genome annotation
+    genome_root = job.genome_reference.full_dir_path
+    genes_gtf = genome_root.joinpath('genes.gtf')
+    genome_fa = genome_root.joinpath('genome.fa')
+
+    # Get all samples and conditions
+    sample_names = []
+    conditions = OrderedDict()
+    for condition in analysis_info['conditions']:
+        cond, samples = next(iter(condition.items()))
+        conditions[cond] = []
+        for sample in samples:
+            sample_name, _ = next(iter(sample.items()))
+            sample_names.append(sample_name)
+            conditions[cond].append(sample_name)
+
+    # Result folders
+    cuffmerge_dir = job.result_dir.joinpath('cuffmerge')
+    cuffquant_dir = job.result_dir.joinpath('cuffquant')
+    cuffdiff_dir = job.result_dir.joinpath('cuffdiff')
+
+    # Since Cufflinks-related tools call external command,
+    # update the PATH environment variable here
+    env = os.environ.copy()
+    env['PATH'] = str(Path('~/miniconda3/envs/rnaseq/bin').expanduser()) + ':' + env['PATH']
+
+    # Cuffmerge
+    # generate the gtf list
+    merged_gtf = cuffmerge_dir.joinpath('assembly_GTF_list.txt')
+    with merged_gtf.open('w') as out:
+        for sample_name in sample_names:
+            print(
+                str(job.result_dir.joinpath('cufflinks', sample_name, 'transcripts.gtf')),
+                file=out
+            )
+    # Run Cuffmerge
+    with cd(str(job.result_dir)):
+        sp.run([
+            CUFFMERGE_BIN,
+            '-p', '4',
+            '-o', str(cuffmerge_dir),
+            '-g', str(genes_gtf),
+            '-s', str(genome_fa),
+            str(merged_gtf),
+        ], env=env)
+
+    # Run Cuffquant
+    with cd(str(job.result_dir)):
+        for sample_name in sample_names:
+            sample_dir = cuffquant_dir.joinpath(sample_name)
+            sample_bam = job.result_dir.joinpath('STAR', sample_name, 'Aligned.sortedByCoord.out.bam')
+            if not sample_dir.exists():
+                sample_dir.mkdir()
+            sp.run([
+                CUFFQUANT_BIN,
+                '-p', '4',
+                '--library-type', 'fr-firststrand',
+                '--no-update-check',
+                '-o', str(sample_dir),
+                str(merged_gtf),
+                str(sample_bam)
+            ], env=env)
+
+    # Run Cuffdiff
+    # TODO: support more than 2 conditions
+    labels = ','.join(conditions.keys())
+    samples_per_condition = [
+        ','.join(
+            cuffquant_dir.joinpath(sample_name, 'abundances.cxb')
+            for sample_name in sample_names
+        )
+        for cond, sample_names in conditions.items()
+    ]
+    with cd(str(job.result_dir)):
+        sp.run([
+            CUFFDIFF_BIN,
+            '-p', '4',
+            '-L', labels,
+            '--library-type', 'fr-firststrand',
+            '--no-update-check',
+            str(merged_gtf),
+            *samples_per_condition,
+        ], env=env)
     return 0
 
 
@@ -173,7 +263,19 @@ def run_pipeline(job_pk, job_url):
     else:
         update_stage(job_detail, 'stage_cufflinks', StageStatus.SUCCESSFUL)
 
-    # intentionally skip stage_cuffdiff
+    # Stage Cuffdiff:
+    update_stage(job_detail, 'stage_cuffdiff', StageStatus.RUNNING)
+    cuffmerge_dir = job.result_dir.joinpath('cuffmerge')
+    cuffquant_dir = job.result_dir.joinpath('cuffquant')
+    cuffdiff_dir = job.result_dir.joinpath('cuffdiff')
+    for cuff_dir in [cuffmerge_dir, cuffquant_dir, cuffdiff_dir]:
+        if not cuff_dir.exists():
+            cuff_dir.mkdir()
+    returncode = run_cuffdiff(job, analysis_info)
+    if returncode:
+        update_stage(job_detail, 'stage_cuffdiff', StageStatus.FAILED)
+    else:
+        update_stage(job_detail, 'stage_cuffdiff', StageStatus.SUCCESSFUL)
 
     # generating report
     job_report = job.report
