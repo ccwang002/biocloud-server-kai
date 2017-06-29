@@ -149,7 +149,11 @@ def run_cuffdiff(job: RNASeqModel, analysis_info):
     # Since Cufflinks-related tools call external command,
     # update the PATH environment variable here
     env = os.environ.copy()
-    env['PATH'] = str(Path('~/miniconda3/envs/rnaseq/bin').expanduser()) + ':' + env['PATH']
+    env['PATH'] = (
+        str(Path('~/miniconda3/envs/rnaseq/bin').expanduser()) +
+        ':/usr/bin:' +  # Fix cuffmerge require /usr/bin/sort command
+        env['PATH']
+    )
 
     # Cuffmerge
     # generate the gtf list
@@ -204,6 +208,7 @@ def run_cuffdiff(job: RNASeqModel, analysis_info):
             CUFFDIFF_BIN,
             '-p', '4',
             '-L', labels,
+            '-o', str(cuffdiff_dir),
             '--library-type', 'fr-firststrand',
             '--no-update-check',
             str(cuffmerge_merged_gtf),
