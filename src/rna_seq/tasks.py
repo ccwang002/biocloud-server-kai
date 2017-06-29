@@ -168,7 +168,6 @@ def run_cuffdiff(job: RNASeqModel, analysis_info):
             '-o', str(cuffmerge_dir),
             '-g', str(genes_gtf),
             '-s', str(genome_fa),
-            '--no-update-check',
             str(merged_gtf),
         ], env=env)
 
