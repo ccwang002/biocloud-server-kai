@@ -26,6 +26,10 @@ def update_stage(job_detail, stage_name, new_status):
 
 
 def run_fastqc(job: RNASeqModel, analysis_info):
+    # Ensure java is available, update the PATH environment variable here
+    env = os.environ.copy()
+    env['PATH'] = str(Path('~/miniconda3/envs/rnaseq/bin').expanduser()) + ':' + env['PATH']
+
     data_sources = analysis_info['data_sources']
     with cd(str(job.result_dir)):
         for ds in data_sources:
@@ -39,7 +43,7 @@ def run_fastqc(job: RNASeqModel, analysis_info):
                 FASTQC_BIN,
                 '-o', str(ds_dir),
                 str(ds_pth)
-            ])
+            ], env=env)
             if p.returncode:
                 return p.returncode
     return 0
