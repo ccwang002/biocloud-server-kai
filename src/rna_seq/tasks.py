@@ -17,7 +17,7 @@ SAMTOOLS_BIN = str(Path('~/miniconda3/envs/rnaseq/bin/samtools').expanduser())
 CUFFLINKS_BIN = str(Path('~/miniconda3/envs/rnaseq/bin/cufflinks').expanduser())
 CUFFMERGE_BIN = str(Path('~/miniconda3/envs/rnaseq/bin/cuffmerge').expanduser())
 CUFFQUANT_BIN = str(Path('~/miniconda3/envs/rnaseq/bin/cuffquant').expanduser())
-CUFFDIFF_BIN = str(Path('~/miniconda3/envs/rnaseq/bin/cuffquant').expanduser())
+CUFFDIFF_BIN = str(Path('~/miniconda3/envs/rnaseq/bin/cuffdiff').expanduser())
 
 
 def update_stage(job_detail, stage_name, new_status):
@@ -168,10 +168,12 @@ def run_cuffdiff(job: RNASeqModel, analysis_info):
             '-o', str(cuffmerge_dir),
             '-g', str(genes_gtf),
             '-s', str(genome_fa),
+            '--no-update-check',
             str(merged_gtf),
         ], env=env)
 
     # Run Cuffquant
+    cuffmerge_merged_gtf = cuffmerge_dir.joinpath('merged.gtf')
     with cd(str(job.result_dir)):
         for sample_name in sample_names:
             sample_dir = cuffquant_dir.joinpath(sample_name)
@@ -184,7 +186,7 @@ def run_cuffdiff(job: RNASeqModel, analysis_info):
                 '--library-type', 'fr-firststrand',
                 '--no-update-check',
                 '-o', str(sample_dir),
-                str(merged_gtf),
+                str(cuffmerge_merged_gtf),
                 str(sample_bam)
             ], env=env)
 
@@ -205,7 +207,7 @@ def run_cuffdiff(job: RNASeqModel, analysis_info):
             '-L', labels,
             '--library-type', 'fr-firststrand',
             '--no-update-check',
-            str(merged_gtf),
+            str(cuffmerge_merged_gtf),
             *samples_per_condition,
         ], env=env)
     return 0
