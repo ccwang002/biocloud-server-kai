@@ -198,7 +198,7 @@ def run_cuffdiff(job: RNASeqModel, analysis_info):
     labels = ','.join(conditions.keys())
     samples_per_condition = [
         ','.join(
-            cuffquant_dir.joinpath(sample_name, 'abundances.cxb')
+            str(cuffquant_dir.joinpath(sample_name, 'abundances.cxb'))
             for sample_name in sample_names
         )
         for cond, sample_names in conditions.items()
